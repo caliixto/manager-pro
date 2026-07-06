@@ -1,0 +1,30 @@
+<form class="auth-form" (ngSubmit)="onSubmit()">
+  <h2>Bienvenido de nuevo</h2>
+  <p class="form-subtitle">Introduce tus datos para acceder a tu panel</p>
+
+  <div class="field">
+    <label for="login-email">Correo electrónico</label>
+    <input 
+      id="login-email"
+      type="email" 
+      name="email"
+      [(ngModel)]="email" 
+      placeholder="tucorreo@ejemplo.com"
+      required>
+  </div>
+
+  <div class="field">
+    <label for="login-password">Contraseña</label>
+    <input 
+      id="login-password"
+      type="password" 
+      name="password"
+      [(ngModel)]="password" 
+      placeholder="••••••••"
+      required>
+  </div>
+
+  <a href="#" class="forgot-link">¿Olvidaste tu contraseña?</a>
+
+  <button type="submit" class="btn-primary">Iniciar Sesión</button>
+</form>

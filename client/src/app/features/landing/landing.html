@@ -1,0 +1,57 @@
+<header class="layout__header">
+    <!-- Lado Izquierdo: Branding -->
+    <div class="manager">
+        <i class="pi pi-shield"></i> <!-- Ejemplo de icono de PrimeIcons -->
+        <span class="font-bold">Manager Pro</span>
+    </div>
+
+    <!-- Lado Derecho: Acciones -->
+    <div class="info">
+        <i class="pi pi-bell"></i> <!-- Icono de notificaciones visto en la imagen -->
+        <div class="user-profile">
+            <img src="/img/perfil.jpg" alt="Perfil">
+            <i class="pi pi-chevron-down"></i> <!-- La flechita de desplegable que se ve -->
+        </div>
+    </div>
+</header>
+
+<main class="landing-main">
+    
+    <!-- Columna Izquierda: Texto y Botones -->
+    <div class="landing-main__content">
+        <h1>
+            Domina el Campo: Tu Manager de Fútbol Amateur Definitivo.
+        </h1>
+        <p class="subtitle">
+            Organiza, Táctica y Analiza a tu equipo como un profesional. ¡Gratis para entrenadores!
+        </p>
+        
+        <div class="landing-main__buttons">
+            <button pButton label="Regístrate Ahora" class="p-button-success font-semibold" (click)="openAuth('register')"></button>
+            <button pButton label="Iniciar Sesión" class="p-button-outlined" (click)="openAuth('login')"></button>
+        </div>
+
+        <app-auth-modal 
+            *ngIf="showAuthModal" 
+            [initialTab]="initialTab"
+            (close)="showAuthModal = false">
+        </app-auth-modal>
+        
+        <p class="stats">
+            Ya somos <b>1,250</b> entrenadores gestionando sus equipos.
+        </p>
+    </div>
+
+    <!-- Columna Derecha: Imagen del campo -->
+    <div class="landing-main__image">
+        <img src="/img/football.jpg" 
+             alt="Vista previa táctica" 
+             class="shadow-7">
+    </div>
+
+</main>
+
+<!-- 3. Footer Simple -->
+<footer class="surface-900 p-4 text-center text-color-secondary border-top-1 surface-border">
+    <i class="pi pi-github mr-2"></i> Powered by Angular & MongoDB
+</footer>

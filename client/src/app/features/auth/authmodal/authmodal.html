@@ -1,0 +1,28 @@
+<div class="modal-backdrop" (click)="onBackdropClick($event)">
+  <div class="modal-card">
+    
+    <button class="modal-close" (click)="close.emit()">✕</button>
+
+    <div class="modal-tabs">
+      <button 
+        class="tab" 
+        [class.active]="activeTab === 'login'"
+        (click)="setTab('login')">
+        Iniciar Sesión
+      </button>
+      <button 
+        class="tab" 
+        [class.active]="activeTab === 'register'"
+        (click)="setTab('register')">
+        Registrarse
+      </button>
+      <div class="tab-indicator" [class.right]="activeTab === 'register'"></div>
+    </div>
+
+    <div class="modal-body">
+        <app-login *ngIf="activeTab === 'login'"></app-login>
+        <app-register *ngIf="activeTab === 'register'"></app-register>
+    </div>
+
+  </div>
+</div>

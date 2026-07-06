@@ -1,0 +1,50 @@
+<form class="auth-form" (ngSubmit)="onSubmit()">
+  <h2>Crea tu cuenta</h2>
+  <p class="form-subtitle">Empieza a gestionar tu equipo gratis</p>
+
+  <div class="field">
+    <label for="register-name">Nombre completo</label>
+    <input 
+      id="register-name"
+      type="text" 
+      name="name"
+      [(ngModel)]="name" 
+      placeholder="Tu nombre"
+      required>
+  </div>
+
+  <div class="field">
+    <label for="register-email">Correo electrónico</label>
+    <input 
+      id="register-email"
+      type="email" 
+      name="email"
+      [(ngModel)]="email" 
+      placeholder="tucorreo@ejemplo.com"
+      required>
+  </div>
+
+  <div class="field">
+    <label for="register-password">Contraseña</label>
+    <input 
+      id="register-password"
+      type="password" 
+      name="password"
+      [(ngModel)]="password" 
+      placeholder="••••••••"
+      required>
+  </div>
+
+  <div class="field">
+    <label for="register-confirm">Confirmar contraseña</label>
+    <input 
+      id="register-confirm"
+      type="password" 
+      name="confirmPassword"
+      [(ngModel)]="confirmPassword" 
+      placeholder="••••••••"
+      required>
+  </div>
+
+  <button type="submit" class="btn-primary">Regístrate Ahora</button>
+</form>
