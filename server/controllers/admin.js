@@ -1,11 +1,13 @@
 const Admin = require("../models/admin");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const { solicitarResetPassword, confirmarResetPassword } = require("../utils/passwordReset");
 
 
 const registrarAdmin = async(req, res)=>{
 
     try{
-        const {usuario, password} = req.body;
+        const {nombrecompleto,email, password} = req.body;
 
         const params = req.body;
         console.log("Datos recibidos en el controlador:", params);
@@ -19,7 +21,8 @@ const registrarAdmin = async(req, res)=>{
 
 
         const admin = new Admin({
-            usuario,
+            nombrecompleto,
+            email,
             password:passwordHash
         });
 
@@ -33,7 +36,7 @@ const registrarAdmin = async(req, res)=>{
         console.log(error);
         return res.status(500).send({
                 status:"error",
-                message:"error al guardar usuario"
+                message:"error"
         });
     }
 
@@ -41,37 +44,81 @@ const registrarAdmin = async(req, res)=>{
 
 const loginAdmin = async (req,res) =>{
     try{
-        const {usuario, password} = req.body;
-        console.log("LOGIN INTENTADO - Usuario:", usuario, "Password:", password);
+        const {nombrecompleto,email, password} = req.body;
 
-        const usuarioEncontrado = await Usuario.findOne({usuario:usuario});
-        console.log("¿Usuario encontrado en BD?:", usuarioEncontrado ? "Sí" : "No");
+        const emailEncontrado = await Admin.findOne({email:email});
 
-        if (!usuarioEncontrado) {
-            return res.status(400).json({ status: "error", message: "Usuario no registrado" });
+        if (!emailEncontrado) {
+            return res.status(400).json({ status: "error", message: "email no registrado" });
         }
-        console.log("Password guardada en BD:", usuarioEncontrado.password);
+        console.log("Password guardada en BD:", emailEncontrado.password);
 
-        const passwordCorrecta = await bcrypt.compare(password, usuarioEncontrado.password);
-        console.log("¿Contraseña correcta?:", passwordCorrecta);
-        console.log("Contraseña recibida del form:", req.body.password);
-        console.log("Hash en la base de datos:", usuarioEncontrado.password);
+        const passwordCorrecta = await bcrypt.compare(password, emailEncontrado.password);
+
+        const token = jwt.sign(
+            { id: emailEncontrado._id, email: emailEncontrado.email },
+            process.env.JWT_SECRET,
+            { expiresIn: "2h" }
+        );
 
         if (!passwordCorrecta) {
             return res.status(401).json({ status: "error", mensaje: "Contraseña incorrecta" });
         }
-        return res.json({ status: "success", mensaje: "¡Bienvenido, admin!" });
+        return res.json({ status: "success", mensaje: "¡Bienvenido, admin!", token,  user: { name: emailEncontrado.nombrecompleto, role: "admin" }  });
 
     }catch(error){
         console.log(error);
         return res.status(500).send({
-                status:"error",
-                message:"error en el servidor"
+            status:"error",
+            message:"error en el servidor"
         });
     }
 }
 
+const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const adminEncontrado = await Admin.findOne({ email });
+
+    if (!adminEncontrado) {
+      // Por seguridad, no revelamos si el email existe o no
+      return res.json({ 
+        status: "success", 
+        mensaje: "Si el correo existe, recibirás un enlace de recuperación." 
+      });
+    }
+
+    // Genera un token aleatorio y seguro
+    const token = crypto.randomBytes(32).toString("hex");
+
+    // Guarda el token y su caducidad (1 hora desde ahora)
+    adminEncontrado.resetPasswordToken = token;
+    adminEncontrado.resetPasswordExpires = Date.now() + 3600000; // 1 hora en milisegundos
+    await adminEncontrado.save();
+
+    // Construye el enlace que irá en el correo
+    const resetLink = `${process.env.FRONTEND_URL}/reset-password/${token}`;
+
+    await enviarEmailRecuperacion(adminEncontrado.email, resetLink);
+
+    return res.json({ 
+      status: "success", 
+      mensaje: "Si el correo existe, recibirás un enlace de recuperación." 
+    });
+
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ 
+      status: "error", 
+      message: "Error en el servidor" 
+    });
+  }
+};
+
+
 module.exports={
     registrarAdmin,
-    loginAdmin
+    loginAdmin,
+    forgotPassword,
 };

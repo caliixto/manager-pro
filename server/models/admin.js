@@ -6,9 +6,14 @@ const { trim } = require("validator");
 //Creamos el esquema (la estrucutra de cada documento de tipo proyecto);
 
 const adminSchema = new Schema({
-  usuario: {
+  nombrecompleto:{
+    type:String,
+    required: [true, 'El nombre es obligatorio'],
+    trim: true
+  },
+  email: {
     type: String,
-    required: [true, 'El Usuario es obligatorio'],
+    required: [true, 'El Email es obligatorio'],
     unique: true,
     trim: true
   },
@@ -16,6 +21,12 @@ const adminSchema = new Schema({
     type: String,
     required: [true, 'La contraseña es obligatorio'],
     trim: true
+  },
+  resetPasswordToken: {
+    type: String
+  },
+  resetPasswordExpires: {
+    type: Date
   },
   createdAt: {
     type: Date,

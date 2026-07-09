@@ -24,7 +24,10 @@
       required>
   </div>
 
-  <a href="#" class="forgot-link">¿Olvidaste tu contraseña?</a>
+  <a href="" class="forgot-link" (click)="forgotPassword.emit(); $event.preventDefault()">
+    ¿Olvidaste tu contraseña?
+  </a>
 
+  <p *ngIf="errorMsg" class="error-msg">{{ errorMsg }}</p>
   <button type="submit" class="btn-primary">Iniciar Sesión</button>
 </form>
