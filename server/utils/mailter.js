@@ -10,7 +10,7 @@ const transporter = nodemailer.createTransport({
 });
 
 /**
- * Envía el correo de recuperación de contraseña
+ * 
  * @param {string} to - Email del destinatario
  * @param {string} resetLink - Enlace completo con el token para resetear la contraseña
  */

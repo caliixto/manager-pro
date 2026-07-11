@@ -10,6 +10,15 @@
   --text-color-secondary: #a1a1aa;
 }
 
+* {
+  box-sizing: border-box;
+}
+
+html, body{
+  overflow-x: hidden;
+  width: 100%;
+}
+
 body {
   margin: 0;
   font-family: var(--font-family, 'Inter', sans-serif);

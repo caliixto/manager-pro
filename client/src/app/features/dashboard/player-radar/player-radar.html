@@ -1,0 +1,32 @@
+<svg [attr.viewBox]="'0 0 ' + size + ' ' + size" class="radar-svg">
+  
+  <!-- Líneas de los ejes -->
+  <line 
+    *ngFor="let axis of axisLines"
+    [attr.x1]="axis.x1" [attr.y1]="axis.y1"
+    [attr.x2]="axis.x2" [attr.y2]="axis.y2"
+    class="radar-axis">
+  </line>
+
+  <!-- Círculo de referencia (borde exterior) -->
+  <circle 
+    [attr.cx]="center" [attr.cy]="center" [attr.r]="maxRadius"
+    class="radar-outline">
+  </circle>
+
+  <!-- El polígono relleno con los valores reales -->
+  <polygon 
+    [attr.points]="polygonPoints"
+    class="radar-shape">
+  </polygon>
+
+  <!-- Etiquetas de cada estadística -->
+  <text 
+    *ngFor="let label of labelPositions"
+    [attr.x]="label.x" [attr.y]="label.y"
+    class="radar-label"
+    text-anchor="middle">
+    {{ label.text }}
+  </text>
+
+</svg>

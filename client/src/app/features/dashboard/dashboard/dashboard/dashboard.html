@@ -1,1 +1,231 @@
-<button (click)="logout()">Cerrar Session</button>
+
+<header class="layout__header">
+    <!-- Lado Izquierdo: Branding -->
+    <div class="manager">
+        <i class="pi pi-shield"></i> <!-- Ejemplo de icono de PrimeIcons -->
+        <span class="font-bold">Manager Pro</span>
+    </div>
+
+    <!-- Lado Derecho: Acciones -->
+    <div class="info">
+        <i class="pi pi-bell"></i> <!-- Icono de notificaciones visto en la imagen -->
+        <div class="user-profile">
+            <img src="/img/perfil.jpg" alt="Perfil">
+            <i class="pi pi-chevron-down"></i> <!-- La flechita de desplegable que se ve -->
+        </div>
+    </div>
+</header>
+
+<main class="layout">
+  
+  <!-- Sidebar fijo a la izquierda -->
+  <aside class="sidebar">
+    <div class="sidebar__logo">
+      <i class="pi pi-shield"></i>
+    </div>
+    <nav class="sidebar__nav">
+      <a class="nav__item active">
+        <i class="pi pi-th-large"></i>
+        <span>Dashboard</span>
+      </a>
+      <a class="nav__item">
+        <i class="pi pi-users"></i>
+        <span>Plantilla</span>
+      </a>
+      <a class="nav__item">
+        <i class="pi pi-sitemap"></i>
+        <span>Tácticas</span>
+      </a>
+      <a class="nav__item">
+        <i class="pi pi-calendar"></i>
+        <span>Calendario</span>
+      </a>
+      <a class="nav__item">
+        <i class="pi pi-chart-bar"></i>
+        <span>Estadísticas</span>
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Contenido principal -->
+  <section class="content">
+    <h1 class="content__title">Dashboard: Próximo Partido - vs. Los Leones FC</h1>
+
+    <div class="dashboard-grid">
+      <div class="card card--convocatoria ccv">
+                    <div class="card card--convocatoria">
+            <div class="card__header">
+                <h3>Convocatoria</h3>
+                <span class="card__badge">18/22 Confirmados</span>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-bar__fill" style="width: 82%;"></div>
+            </div>
+
+            <div class="players-row">
+                <div class="player-check confirmed"><i class="pi pi-check"></i></div>
+                <div class="player-check confirmed"><i class="pi pi-check"></i></div>
+                <div class="player-check confirmed"><i class="pi pi-check"></i></div>
+                <div class="player-check confirmed"><i class="pi pi-check"></i></div>
+                <div class="player-check confirmed"><i class="pi pi-check"></i></div>
+                <div class="player-check pending"><i class="pi pi-question"></i></div>
+            </div>
+            </div>
+      </div>
+      <div class="card card--resultados">
+            <div class="card card--resultados">
+                <div class="card__header">
+                    <h3>Últimos Resultados</h3>
+                </div>
+
+                <div class="results-row">
+                    <div class="result-item">
+                        <div class="result-circle win">W</div>
+                        <span class="result-label">W-D</span>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-circle draw">D</div>
+                        <span class="result-label">D-D</span>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-circle loss">L</div>
+                        <span class="result-label">L-L</span>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-circle loss">L</div>
+                        <span class="result-label">L-L</span>
+                    </div>
+                     <div class="result-item">
+                        <div class="result-circle win">W</div>
+                        <span class="result-label">W-D</span>
+                    </div>
+                </div>
+            </div>
+      </div>
+      <div class="card card--pizarra">
+                        <div class="card card--pizarra">
+            <div class="card__header">
+                <h3>Pizarra Táctica</h3>
+            </div>
+
+            <div class="pitch-container">
+                <svg viewBox="0 0 300 450" class="pitch-svg">
+                <!-- Fondo del campo -->
+                <rect x="0" y="0" width="300" height="450" class="pitch-bg" />
+
+                <!-- Línea de banda exterior -->
+                <rect x="10" y="10" width="280" height="430" class="pitch-line" fill="none" />
+
+                <!-- Línea de medio campo -->
+                <line x1="10" y1="225" x2="290" y2="225" class="pitch-line" />
+
+                <!-- Círculo central -->
+                <circle cx="150" cy="225" r="40" class="pitch-line" fill="none" />
+                <circle cx="150" cy="225" r="2" class="pitch-line" fill="var(--pitch-line-color)" />
+
+                <!-- Área grande superior (rival) -->
+                <rect x="70" y="10" width="160" height="60" class="pitch-line" fill="none" />
+                <!-- Área pequeña superior -->
+                <rect x="110" y="10" width="80" height="25" class="pitch-line" fill="none" />
+
+                <!-- Área grande inferior (propia) -->
+                <rect x="70" y="380" width="160" height="60" class="pitch-line" fill="none" />
+                <!-- Área pequeña inferior -->
+                <rect x="110" y="415" width="80" height="25" class="pitch-line" fill="none" />
+
+                <!-- Jugadores posicionados según formación 4-3-3 -->
+                <g *ngFor="let player of players">
+                    <circle 
+                    [attr.cx]="player.x" [attr.cy]="player.y" r="12" 
+                    class="player-dot"
+                    [class.player-dot--gk]="player.isGoalkeeper">
+                    </circle>
+                    <text 
+                    [attr.x]="player.x" [attr.y]="player.y + 4" 
+                    text-anchor="middle" class="player-number">
+                    {{ player.number }}
+                    </text>
+                </g>
+                <line 
+                    x1="150" y1="240" 
+                    x2="150" y2="90" 
+                    class="pass-line" 
+                    stroke-dasharray="4,4">
+                </line>
+                </svg>
+            </div>
+            </div>
+      </div>
+      <div class="card card--balance">
+         <div class="card card--balance">
+                <div class="card__header">
+                    <h3>Balance Táctico</h3>
+                </div>
+
+                <div class="balance-item">
+                    <div class="balance-label">
+                    <i class="pi pi-bolt"></i>
+                    <span>Ataque</span>
+                    </div>
+                    <div class="balance-bar">
+                    <div class="balance-bar__fill balance-bar__fill--attack" style="width: 78%;"></div>
+                    </div>
+                </div>
+
+                <div class="balance-item">
+                    <div class="balance-label">
+                    <i class="pi pi-shield"></i>
+                    <span>Defensa</span>
+                    </div>
+                    <div class="balance-bar">
+                    <div class="balance-bar__fill balance-bar__fill--defense" style="width: 65%;"></div>
+                    </div>
+                </div>
+
+                <div class="balance-item">
+                    <div class="balance-label">
+                    <i class="pi pi-refresh"></i>
+                    <span>Control</span>
+                    </div>
+                    <div class="balance-bar">
+                    <div class="balance-bar__fill balance-bar__fill--control" style="width: 82%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      <div class="card card--rendimiento">
+        <div class="card__header">
+                <h3>Rendimiento clave del jugador</h3>
+            </div>
+        <app-player-radar></app-player-radar>
+      </div>
+      <div class="card card--rival">
+            <div class="card card--rival">
+                <div class="card__header">
+                    <h3>Próximo Rival</h3>
+                </div>
+
+                <div class="rival-content">
+                    <div class="rival-shield">
+                    <i class="pi pi-shield"></i>
+                    </div>
+
+                    <div class="rival-info">
+                    <span class="rival-coach-label">Coach</span>
+                    <span class="rival-formation">4-3-3 FD</span>
+                    </div>
+                </div>
+
+                <div class="rival-form">
+                    <i class="pi pi-chart-line"></i>
+                    <span>Forma: W-D-W-L-W</span>
+                </div>
+            </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<button (click)="logout()">cerrar Session</button>

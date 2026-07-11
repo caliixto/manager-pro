@@ -1,6 +1,503 @@
-p{
-    color: red;
-    font-size: 3rem;
-    background-color: lightgrey;
-    
+.layout__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--color-header);
+  padding: 1rem 2rem;
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+}
+
+.manager {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.manager i {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background-color: var(--color-accent);
+  color: #0e0e0e;
+  font-size: 1rem;
+  box-shadow: 0 0 12px rgba(34, 197, 94, 0.4);
+}
+
+.manager span {
+  color: #fff;
+  font-size: 1.1rem;
+}
+
+.info {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.info i {
+  font-size: 1.2rem;
+  color: var(--text-color-secondary);
+  cursor: pointer;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+}
+
+.user-profile img {
+  width: 32px;
+  height: 32px;
+  border: 2px solid var(--color-border);
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.user-profile i {
+  font-size: 0.65rem;
+  color: var(--text-color-secondary);
+}
+
+/*Main*/
+
+.layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--color-principal);
+}
+
+.sidebar {
+  width: 80px;
+  background-color: var(--color-header);
+  border-right: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem 0;
+  gap: 2rem;
+}
+
+.sidebar__logo i {
+  width: 36px;
+  height: 36px;
+  background-color: var(--color-accent);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0e0e0e;
+  font-size: 1.1rem;
+}
+
+.sidebar__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.nav__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  color: var(--text-color-secondary);
+  font-size: 0.65rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.nav__item i {
+  font-size: 1.2rem;
+}
+
+.nav__item.active {
+  color: var(--color-accent);
+}
+
+.nav__item:hover {
+  color: #fff;
+}
+
+.content {
+  flex: 1;
+  padding: 2rem 2.5rem;
+  overflow-y: auto;
+}
+
+.content__title {
+  color: #fff;
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+/* El grid de tarjetas, con las áreas nombradas para que sea fácil de leer */
+.dashboard-grid {
+  display: grid;
+   grid-template-columns: 1fr 1fr 1.8fr 0.6fr;
+  grid-template-rows: auto auto;
+  gap: 1.25rem;
+  grid-template-areas:
+    "convocatoria resultados pizarra balance"
+    "rendimiento  rival      pizarra .";
+}
+
+
+.card {
+  background-color: var(--color-header);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 1.25rem;
+  color: #fff;
+}
+
+.card--convocatoria  { grid-area: convocatoria; }
+.card--resultados    { grid-area: resultados; }
+.card--pizarra       { grid-area: pizarra; }
+.card--balance       { grid-area: balance; }
+.card--rendimiento   { grid-area: rendimiento; }
+.card--rival         { grid-area: rival; }
+
+
+
+/*CONVOCATORIA*/
+
+.card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+
+.card__header h3 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+}
+
+.card__badge {
+  font-size: 0.8rem;
+  color: var(--text-color-secondary);
+}
+
+.progress-bar {
+  width: 100%;
+  height: 6px;
+  background-color: var(--color-principal);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.progress-bar__fill {
+  height: 100%;
+  background-color: var(--color-accent);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.players-row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.player-check {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+}
+
+.player-check.confirmed {
+  background-color: var(--color-accent);
+  color: #0e0e0e;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15);
+}
+
+.player-check.pending {
+  background-color: var(--color-border);
+  color: var(--text-color-secondary);
+}
+
+/*ULTIMOS RESULTADOS*/
+
+.results-row {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.result-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.result-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.result-circle.win {
+  background-color: var(--color-accent);
+  color: #0e0e0e;
+}
+
+.result-circle.draw {
+  background-color: #6b7280;
+  color: #fff;
+}
+
+.result-circle.loss {
+  background-color: #ef4444;
+  color: #fff;
+}
+
+.result-label {
+  font-size: 0.75rem;
+  color: var(--text-color-secondary);
+}
+
+/*PRIXIMO RIVAL*/
+
+.rival-content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.rival-shield {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background-color: var(--color-principal);
+  border: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: var(--text-color-secondary);
+}
+
+.rival-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.rival-coach-label {
+  font-size: 0.75rem;
+  color: var(--text-color-secondary);
+}
+
+.rival-formation {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.rival-form {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--color-accent);
+}
+
+.rival-form i {
+  font-size: 0.9rem;
+}
+
+/*BALANCE TACTICO*/
+
+.balance-item {
+  margin-bottom: 1.25rem;
+}
+
+.balance-item:last-child {
+  margin-bottom: 0;
+}
+
+.balance-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-color-secondary);
+}
+
+.balance-label i {
+  font-size: 0.9rem;
+}
+
+.balance-bar {
+  width: 100%;
+  height: 6px;
+  background-color: var(--color-principal);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.balance-bar__fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.balance-bar__fill--attack {
+  background-color: var(--color-accent);
+}
+
+.balance-bar__fill--defense {
+  background-color: #3b82f6;
+}
+
+.balance-bar__fill--control {
+  background-color: #a855f7;
+}
+
+/*RENDIMIENTO CLAVE*/
+
+
+.card--rendimiento {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+}
+
+.card--rendimiento h3 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #fff;
+  padding-bottom: 1.4rem;
+}
+/*PIZARRA*/
+
+.pitch-container {
+  display: flex;
+  justify-content: center;
+}
+
+.pitch-svg {
+  width: 100%;
+  max-width: 280px;
+  height: auto;
+}
+
+.pitch-bg {
+  fill: #1a4d2e; /* verde oscuro tipo césped */
+}
+
+.pitch-line {
+  stroke: rgba(255, 255, 255, 0.4);
+  stroke-width: 1.5;
+}
+
+.player-dot {
+  fill: #1e1e1e;
+  stroke: #ffffff;
+  stroke-width: 1.5;
+}
+
+.player-dot--gk {
+  fill: #eab308; /* amarillo para diferenciar al portero */
+}
+
+.player-number {
+  fill: #ffffff;
+  font-size: 10px;
+  font-weight: 600;
+  pointer-events: none;
+}
+
+.pass-line {
+  stroke: var(--color-accent);
+  stroke-width: 1.5;
+  opacity: 0.6;
+}
+
+/*MOVIL*/
+
+@media (max-width: 768px) {
+  .layout {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 0.75rem 0;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    order: 2; /* la manda al final visualmente, aunque esté antes en el HTML */
+    z-index: 50;
+  }
+
+  .sidebar__logo {
+    display: none; /* el logo no suele ir en la barra inferior */
+  }
+
+  .sidebar__nav {
+    flex-direction: row;
+    gap: 0;
+    width: 100%;
+    justify-content: space-around;
+  }
+
+  .content {
+    padding-bottom: 5rem; /* deja hueco para que la barra inferior no tape contenido */
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "convocatoria"
+      "resultados"
+      "pizarra"
+      "balance"
+      "rendimiento"
+      "rival";
+  }
+
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem; /* Asegúrate de usar 'rem' o '%' y no píxeles fijos grandes */
+    padding: 1rem; /* Asegúrate de que el padding del contenedor no empuje hacia afuera */
+    width: 100%;
+  }
+
+  /* Asegura que los hijos no sobresalgan */
+  .dashboard-grid > div {
+    width: 100%;
+    min-width: 0; /* Esto es vital para que los elementos dentro de un grid se encojan */
+  }
 }

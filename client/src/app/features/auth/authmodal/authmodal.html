@@ -18,10 +18,7 @@
         *ngIf="activeTab === 'login'"
         (forgotPassword)="setTab('forgot')">
       </app-login>
-      <app-register 
-        *ngIf="activeTab === 'register'"
-        (registerSuccess)="setTab('login')">
-      </app-register>
+      <app-register *ngIf="activeTab === 'register'" (onRegisterSuccess)="setTab('login')"></app-register>
       <app-forgot-password 
         *ngIf="activeTab === 'forgot'"
         (backToLogin)="setTab('login')">

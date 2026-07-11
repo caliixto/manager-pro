@@ -1,0 +1,61 @@
+<div class="plantilla-page">
+  
+  <div class="plantilla-header">
+    <div>
+      <h1>Plantilla del Equipo</h1>
+      <p class="plantilla-subtitle">{{ jugadores.length }} futbolistas</p>
+    </div>
+    <button class="btn-primary">+ Añadir Jugador</button>
+  </div>
+
+  <div class="plantilla-table-wrapper" *ngIf="!loading">
+    <table class="plantilla-table">
+      <thead>
+        <tr>
+          <th>Foto</th>
+          <th>Nombre</th>
+          <th>Posición</th>
+          <th>Edad</th>
+          <th>Estado Físico</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let jugador of jugadores">
+          <td>
+            <div class="player-avatar" *ngIf="!jugador.foto">
+              {{ getIniciales(jugador.nombre) }}
+            </div>
+            <img *ngIf="jugador.foto" [src]="jugador.foto" class="player-avatar-img" [alt]="jugador.nombre">
+          </td>
+          <td class="player-name">{{ jugador.nombre }}</td>
+          <td>
+            <span class="position-badge">{{ jugador.posicion }}</span>
+          </td>
+          <td>{{ jugador.edad }}</td>
+          <td>
+            <div class="estado-bar">
+              <div 
+                class="estado-bar__fill" 
+                [style.width.%]="jugador.estadoFisico"
+                [style.background-color]="getColorEstado(jugador.estadoFisico)">
+              </div>
+            </div>
+          </td>
+          <td class="actions">
+            <i class="pi pi-pencil"></i>
+            <i class="pi pi-trash" (click)="eliminarJugador(jugador._id)"></i>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p *ngIf="jugadores.length === 0" class="empty-state">
+      Aún no tienes jugadores en tu plantilla. ¡Añade el primero!
+    </p>
+  </div>
+
+  <p *ngIf="loading" class="loading-state">Cargando plantilla...</p>
+  <p *ngIf="errorMsg" class="error-msg">{{ errorMsg }}</p>
+
+</div>

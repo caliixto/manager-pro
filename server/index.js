@@ -21,10 +21,12 @@ app.use(express.urlencoded({ extended: true }));
 const Usersrouter = require("./routers/users");
 const Adminrouter = require("./routers/admin");
 const authRouter = require("./routers/auth");
+const playersRouter = require("./routers/player");
 
 app.use("/api/admin", Adminrouter);
 app.use('/api/users', Usersrouter);
 app.use("/api/auth", authRouter);
+app.use("/api/players",playersRouter)
 
 // 5. Ruta base
 app.get('/', (req, res) => {

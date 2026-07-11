@@ -1,0 +1,28 @@
+.radar-svg {
+  width: 100%;
+  height: 160px;
+  display: block;
+  margin: 0 auto;
+}
+
+.radar-axis {
+  stroke: var(--color-border);
+  stroke-width: 1;
+}
+
+.radar-outline {
+  fill: none;
+  stroke: var(--color-border);
+  stroke-width: 1;
+}
+
+.radar-shape {
+  fill: rgba(34, 197, 94, 0.25);
+  stroke: var(--color-accent);
+  stroke-width: 2;
+}
+
+.radar-label {
+  fill: var(--text-color-secondary);
+  font-size: 9px;
+}
