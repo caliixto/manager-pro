@@ -3,12 +3,12 @@
   <div class="plantilla-header">
     <div>
       <h1>Plantilla del Equipo</h1>
-      <p class="plantilla-subtitle">{{ jugadores.length }} futbolistas</p>
+      <p class="plantilla-subtitle">{{ jugadores().length }} futbolistas</p>
     </div>
     <button class="btn-primary">+ Añadir Jugador</button>
   </div>
 
-  <div class="plantilla-table-wrapper" *ngIf="!loading">
+  <div class="plantilla-table-wrapper" *ngIf="!loading()">
     <table class="plantilla-table">
       <thead>
         <tr>
@@ -21,7 +21,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let jugador of jugadores">
+        <tr *ngFor="let jugador of jugadores()">
           <td>
             <div class="player-avatar" *ngIf="!jugador.foto">
               {{ getIniciales(jugador.nombre) }}
@@ -50,12 +50,12 @@
       </tbody>
     </table>
 
-    <p *ngIf="jugadores.length === 0" class="empty-state">
+    <p *ngIf="jugadores().length === 0" class="empty-state">
       Aún no tienes jugadores en tu plantilla. ¡Añade el primero!
     </p>
   </div>
 
-  <p *ngIf="loading" class="loading-state">Cargando plantilla...</p>
-  <p *ngIf="errorMsg" class="error-msg">{{ errorMsg }}</p>
+  <p *ngIf="loading()" class="loading-state">Cargando plantilla...</p>
+  <p *ngIf="errorMsg()" class="error-msg">{{ errorMsg() }}</p>
 
 </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { JugadorService, Jugador } from '../jugador';
 
@@ -9,34 +9,31 @@ import { JugadorService, Jugador } from '../jugador';
   styleUrl: './plantilla.css',
 })
 export class Plantilla implements OnInit {
-  jugadores: Jugador[] = [];
-  loading = true;
-  errorMsg = '';
+  jugadores = signal<Jugador[]>([]);
+  loading = signal(true);
+  errorMsg = signal('');
 
   constructor(private jugadorService: JugadorService) {}
 
   ngOnInit() {
-    console.log('ngOnInit ejecutado');
     this.cargarJugadores();
   }
 
   cargarJugadores() {
-    console.log('cargarJugadores ejecutado'); 
-    this.loading = true;
-    this.jugadorService.listarJugadores().subscribe({
+    this.loading.set(true);
+    this.jugadorService.listar().subscribe({
       next: (response) => {
-      this.jugadores = response.jugadores;
-      this.loading = false;
+        this.jugadores.set(response.jugadores);
+        this.loading.set(false);
       },
       error: (err) => {
         console.error(err);
-        this.errorMsg = 'No se pudo cargar la plantilla';
-        this.loading = false;
+        this.errorMsg.set('No se pudo cargar la plantilla');
+        this.loading.set(false);
       }
     });
   }
 
-  // Genera iniciales para el avatar placeholder, ej: "Calixto Bocamba" → "CB"
   getIniciales(nombre: string): string {
     return nombre
       .split(' ')
@@ -46,11 +43,10 @@ export class Plantilla implements OnInit {
       .toUpperCase();
   }
 
-  // Color según el estado físico, para la barra de progreso
   getColorEstado(valor: number): string {
-    if (valor >= 70) return '#22c55e'; // verde
-    if (valor >= 40) return '#eab308'; // amarillo
-    return '#ef4444'; // rojo
+    if (valor >= 70) return '#22c55e';
+    if (valor >= 40) return '#eab308';
+    return '#ef4444';
   }
 
   eliminarJugador(id: string | undefined) {
@@ -59,7 +55,7 @@ export class Plantilla implements OnInit {
 
     this.jugadorService.eliminarJugador(id).subscribe({
       next: () => {
-        this.jugadores = this.jugadores.filter(j => j._id !== id);
+        this.jugadores.update(actuales => actuales.filter(j => j._id !== id));
       },
       error: (err) => console.error(err)
     });

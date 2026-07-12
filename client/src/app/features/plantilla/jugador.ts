@@ -37,7 +37,9 @@ interface JugadorResponse {
 export class JugadorService {
   private apiUrl = 'http://192.168.1.22:5000/api/players';
 
-  constructor(private http: HttpClient, private auth: AuthService) {}
+  constructor(private http: HttpClient, private auth: AuthService) {
+    console.log('Instancia de Plantilla creada');
+  }
 
   private getHeaders(): HttpHeaders {
   const token = this.auth.getToken();
@@ -54,6 +56,10 @@ export class JugadorService {
 
   crearJugador(jugador: Partial<Jugador>): Observable<JugadorResponse> {
     return this.http.post<JugadorResponse>(this.apiUrl, jugador, { headers: this.getHeaders() });
+  }
+
+  listar(): Observable<JugadoresResponse> {
+    return this.http.get<JugadoresResponse>(`${this.apiUrl}/listar`, { headers: this.getHeaders() });
   }
 
   obtenerJugador(id: string): Observable<JugadorResponse> {
