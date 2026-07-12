@@ -23,7 +23,6 @@ export class Dashboard {
   constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit() {
-     console.log('Dashboard cargado'); 
     const user = this.authService.getUser();
     console.log('Usuario:', user);
     if (user) {
