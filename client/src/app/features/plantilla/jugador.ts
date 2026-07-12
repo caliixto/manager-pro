@@ -35,14 +35,18 @@ interface JugadorResponse {
   providedIn: 'root'
 })
 export class JugadorService {
-  private apiUrl = 'http://localhost:5000/api/players';
+  private apiUrl = 'http://192.168.1.22:5000/api/players';
 
   constructor(private http: HttpClient, private auth: AuthService) {}
 
   private getHeaders(): HttpHeaders {
-    const token = this.auth.getToken();
-    return new HttpHeaders({ Authorization: `Bearer ${token}` });
-  }
+  const token = this.auth.getToken();
+  return new HttpHeaders({
+    Authorization: `Bearer ${token}`,
+    'Cache-Control': 'no-cache',
+    'Pragma': 'no-cache'
+  });
+}
 
   listarJugadores(): Observable<JugadoresResponse> {
     return this.http.get<JugadoresResponse>(`${this.apiUrl}/jugadores`, { headers: this.getHeaders() });

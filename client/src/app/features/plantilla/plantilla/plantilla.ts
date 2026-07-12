@@ -16,15 +16,17 @@ export class Plantilla implements OnInit {
   constructor(private jugadorService: JugadorService) {}
 
   ngOnInit() {
+    console.log('ngOnInit ejecutado');
     this.cargarJugadores();
   }
 
   cargarJugadores() {
+    console.log('cargarJugadores ejecutado'); 
     this.loading = true;
     this.jugadorService.listarJugadores().subscribe({
       next: (response) => {
-        this.jugadores = response.jugadores;
-        this.loading = false;
+      this.jugadores = response.jugadores;
+      this.loading = false;
       },
       error: (err) => {
         console.error(err);

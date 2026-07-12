@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../../../auth/auth';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
 import { PlayerRadar } from '../../player-radar/player-radar';
 import { CommonModule } from '@angular/common';
@@ -14,7 +14,7 @@ interface Player {
 
 @Component({
   selector: 'app-dashboard',
-  imports: [PlayerRadar, CommonModule],
+  imports: [PlayerRadar, CommonModule, RouterLink],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })

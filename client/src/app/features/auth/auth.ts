@@ -25,7 +25,7 @@ interface ResetPasswordResponse {
 export class AuthService {
 
   //URL
-   private apiUrl = 'http://192.168.1.21:5000/api';
+   private apiUrl = 'http://192.168.1.22:5000/api';
    private tokenKey = 'auth_token';
 
   constructor (private http:HttpClient){}
