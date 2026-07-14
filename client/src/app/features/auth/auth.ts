@@ -25,7 +25,7 @@ interface ResetPasswordResponse {
 export class AuthService {
 
   //URL
-   private apiUrl = 'http://192.168.1.22:5000/api';
+   private apiUrl = 'http://localhost:5000/api';
    private tokenKey = 'auth_token';
 
   constructor (private http:HttpClient){}
@@ -67,6 +67,7 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem(this.tokenKey);
     localStorage.removeItem('auth_user');
+    sessionStorage.removeItem(this.welcomeShownKey);
   }
 
   forgotPassword(email: string): Observable<ForgotPasswordResponse> {
@@ -75,6 +76,16 @@ export class AuthService {
 
   resetPassword(token: string, newPassword: string): Observable<ResetPasswordResponse> {
     return this.http.post<ResetPasswordResponse>(`${this.apiUrl}/auth/resetpassword`, { token, newPassword });
+  }
+
+  private welcomeShownKey = 'welcome_shown';
+
+  markWelcomeAsShown(): void {
+    sessionStorage.setItem(this.welcomeShownKey, 'true');
+  }
+
+  wasWelcomeShown(): boolean {
+      return sessionStorage.getItem(this.welcomeShownKey) === 'true';
   }
 
 

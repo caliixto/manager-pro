@@ -1,0 +1,36 @@
+<div class="calendario-page">
+
+  <div class="calendario-header">
+    <div>
+      <h1>Calendario</h1>
+      <p class="calendario-subtitle">{{ partidos().length }} partidos</p>
+    </div>
+  </div>
+
+  <div class="partidos-list" *ngIf="!loading()">
+    <div class="partido-card" *ngFor="let partido of partidos()">
+      
+      <div class="partido-fecha">
+        <span class="fecha-dia">{{ formatearFecha(partido.fecha) }}</span>
+        <span class="fecha-lugar">{{ partido.lugar === 'casa' ? '🏠 Casa' : '✈️ Fuera' }}</span>
+      </div>
+
+      <div class="partido-rival">
+        <span class="rival-nombre">{{ partido.rival }}</span>
+        <span class="rival-formacion" *ngIf="partido.formacionRival">{{ partido.formacionRival }}</span>
+      </div>
+
+      <div class="partido-estado">
+        <span *ngIf="!partido.jugado" class="badge-pendiente">Pendiente</span>
+        <span *ngIf="partido.jugado" class="badge-resultado" [class]="getResultadoClase(partido)">
+          {{ getResultadoTexto(partido) }}
+        </span>
+      </div>
+
+    </div>
+  </div>
+
+  <p *ngIf="loading()" class="loading-state">Cargando calendario...</p>
+  <p *ngIf="errorMsg()" class="error-msg">{{ errorMsg() }}</p>
+
+</div>

@@ -1,0 +1,110 @@
+.calendario-page {
+  padding: 2rem 2.5rem;
+}
+
+.calendario-header {
+  margin-bottom: 1.5rem;
+}
+
+.calendario-header h1 {
+  color: #fff;
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+.calendario-subtitle {
+  color: var(--text-color-secondary);
+  font-size: 0.85rem;
+  margin: 0.25rem 0 0 0;
+}
+
+.partidos-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.partido-card {
+  background-color: var(--color-header);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.partido-fecha {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 120px;
+}
+
+.fecha-dia {
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.fecha-lugar {
+  color: var(--text-color-secondary);
+  font-size: 0.75rem;
+}
+
+.partido-rival {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.rival-nombre {
+  color: #fff;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.rival-formacion {
+  color: var(--text-color-secondary);
+  font-size: 0.8rem;
+}
+
+.badge-pendiente {
+  background-color: var(--color-principal);
+  border: 1px solid var(--color-border);
+  color: var(--text-color-secondary);
+  padding: 0.4rem 0.9rem;
+  border-radius: 8px;
+  font-size: 0.8rem;
+}
+
+.badge-resultado {
+  padding: 0.4rem 0.9rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.badge-resultado.win {
+  background-color: rgba(34, 197, 94, 0.15);
+  color: var(--color-accent);
+}
+
+.badge-resultado.draw {
+  background-color: rgba(107, 114, 128, 0.2);
+  color: #9ca3af;
+}
+
+.badge-resultado.loss {
+  background-color: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+.loading-state,
+.error-msg {
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-color-secondary);
+}

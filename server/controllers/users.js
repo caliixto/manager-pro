@@ -27,6 +27,7 @@ const registrarUsers = async(req, res)=>{
         });
 
         await user.save();
+        await generarEquipoInicial(user._id);
 
         return res.status(201).send({
             status:"success",

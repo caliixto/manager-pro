@@ -24,8 +24,7 @@ export class Dashboard {
 
   ngOnInit() {
     const user = this.authService.getUser();
-    console.log('Usuario:', user);
-    if (user) {
+    if (user && !this.authService.wasWelcomeShown()) {
       Swal.fire({
         toast: true,
         position: 'top-end',
@@ -38,6 +37,7 @@ export class Dashboard {
         color: '#ffffff',
         iconColor: '#22c55e'
       });
+      this.authService.markWelcomeAsShown();
     }
   }
 
