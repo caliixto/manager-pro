@@ -2,6 +2,7 @@ const Users = require("../models/users");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { solicitarResetPassword, confirmarResetPassword } = require("../utils/passwordReset");
+const {generarEquipoInicial} = require ("../utils/generarEquipoInicial");
 
 
 const registrarUsers = async(req, res)=>{
