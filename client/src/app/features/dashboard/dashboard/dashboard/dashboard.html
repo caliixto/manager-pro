@@ -3,11 +3,12 @@
 
   <!-- Contenido principal -->
   <section class="content">
-    <h1 class="content__title">Dashboard: Próximo Partido - vs. Los Leones FC</h1>
+    <div *ngIf="proximoPartido() as partido">
+        <h1 class="content__title" >Dashboard: Próximo Partido - vs. {{ partido.rival }}</h1>
+    </div>
 
     <div class="dashboard-grid">
       <div class="card card--convocatoria ccv">
-                    <div class="card card--convocatoria">
             <div class="card__header">
                 <h3>Convocatoria</h3>
                 <span class="card__badge">18/22 Confirmados</span>
@@ -25,40 +26,26 @@
                 <div class="player-check confirmed"><i class="pi pi-check"></i></div>
                 <div class="player-check pending"><i class="pi pi-question"></i></div>
             </div>
-            </div>
       </div>
-      <div class="card card--resultados">
-            <div class="card card--resultados">
-                <div class="card__header">
-                    <h3>Últimos Resultados</h3>
-                </div>
+        <div class="card card--resultados">
+            <div class="card__header">
+                <h3>Últimos Resultados</h3>
+            </div>
 
-                <div class="results-row">
-                    <div class="result-item">
-                        <div class="result-circle win">W</div>
-                        <span class="result-label">W-D</span>
-                    </div>
-                    <div class="result-item">
-                        <div class="result-circle draw">D</div>
-                        <span class="result-label">D-D</span>
-                    </div>
-                    <div class="result-item">
-                        <div class="result-circle loss">L</div>
-                        <span class="result-label">L-L</span>
-                    </div>
-                    <div class="result-item">
-                        <div class="result-circle loss">L</div>
-                        <span class="result-label">L-L</span>
-                    </div>
-                     <div class="result-item">
-                        <div class="result-circle win">W</div>
-                        <span class="result-label">W-D</span>
-                    </div>
+            <div class="results-row" *ngIf="ultimosResultados().length > 0">
+                <div class="result-item" *ngFor="let partido of ultimosResultados()">
+                <div class="result-circle" [class]="getResultadoTipo(partido)">
+                    {{ getResultadoLetra(partido) }}
+                </div>
+                <span class="result-label">{{ partido.resultado.golesPropios }}-{{ partido.resultado.golesRival }}</span>
                 </div>
             </div>
+
+            <p *ngIf="ultimosResultados().length === 0" class="empty-state-small">
+                Aún no se han disputado partidos
+            </p>
       </div>
       <div class="card card--pizarra">
-                        <div class="card card--pizarra">
             <div class="card__header">
                 <h3>Pizarra Táctica</h3>
             </div>
@@ -109,10 +96,8 @@
                 </line>
                 </svg>
             </div>
-            </div>
       </div>
       <div class="card card--balance">
-         <div class="card card--balance">
                 <div class="card__header">
                     <h3>Balance Táctico</h3>
                 </div>
@@ -146,7 +131,6 @@
                     <div class="balance-bar__fill balance-bar__fill--control" style="width: 82%;"></div>
                     </div>
                 </div>
-            </div>
         </div>
       <div class="card card--rendimiento">
         <div class="card__header">
@@ -154,29 +138,34 @@
             </div>
         <app-player-radar></app-player-radar>
       </div>
-      <div class="card card--rival">
-            <div class="card card--rival">
-                <div class="card__header">
-                    <h3>Próximo Rival</h3>
+
+
+     <div class="card card--rival">
+        <div class="card__header">
+            <h3>Próximo Rival</h3>
+            </div>
+            <ng-container *ngIf="proximoPartido() as partido; else sinPartido">
+                <div class="rival-content">
+                <div class="rival-shield">
+                    <i class="pi pi-shield"></i>
                 </div>
 
-                <div class="rival-content">
-                    <div class="rival-shield">
-                    <i class="pi pi-shield"></i>
-                    </div>
-
-                    <div class="rival-info">
-                    <span class="rival-coach-label">Coach</span>
-                    <span class="rival-formation">4-3-3 FD</span>
-                    </div>
+                <div class="rival-info">
+                    <span class="rival-coach-label">Rival</span>
+                    <span class="rival-formation">{{ partido.rival }}</span>
+                </div>
                 </div>
 
                 <div class="rival-form">
-                    <i class="pi pi-chart-line"></i>
-                    <span>Forma: W-D-W-L-W</span>
+                    <i class="pi pi-calendar"></i>
+                    <span>{{ partido.formacionRival || 'Formación no disponible' }}</span>
                 </div>
-            </div>
-      </div>
+            </ng-container>
+
+            <ng-template #sinPartido>
+                <p class="empty-state-small">No hay partidos programados</p>
+            </ng-template>
+        </div>
     </div>
   </section>
 

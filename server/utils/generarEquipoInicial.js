@@ -85,28 +85,14 @@ const generarEquipoInicial = async (equipoId) => {
   await Jugador.insertMany(jugadoresGenerados);
 
   // Partidos
-  const partidosGenerados = [];
-  rivalesJugados.forEach((info, index) => {
-    partidosGenerados.push({
-      rival: info.rival,
-      fecha: fechaHaceDias((index + 1) * 7),
-      lugar: lugares[randomEntre(0, 1)],
-      formacionRival: info.formacion,
-      jugado: true,
-      resultado: generarResultado(),
-      equipo: equipoId,
-    });
-  });
-  rivalesFuturos.forEach((info, index) => {
-    partidosGenerados.push({
+   const partidosGenerados= rivalesFuturos.map((info, index) => ({
       rival: info.rival,
       fecha: fechaEnDias((index + 1) * 7),
       lugar: lugares[randomEntre(0, 1)],
       formacionRival: info.formacion,
       jugado: false,
       equipo: equipoId,
-    });
-  });
+  }));
   await Partido.insertMany(partidosGenerados);
 };
 

@@ -20,16 +20,14 @@ export class Calendario implements OnInit {
   }
 
   cargarPartidos() {
-  console.log('Iniciando carga de partidos'); // 👈 nuevo
   this.loading.set(true);
   this.partidoService.listarPartidos().subscribe({
     next: (response) => {
-      console.log('Respuesta recibida:', response); // 👈 nuevo
       this.partidos.set(response.partidos);
       this.loading.set(false);
     },
     error: (err) => {
-      console.log('Error recibido:', err); // 👈 nuevo
+      console.log('Error recibido:', err);
       this.errorMsg.set('No se pudo cargar el calendario');
       this.loading.set(false);
     }

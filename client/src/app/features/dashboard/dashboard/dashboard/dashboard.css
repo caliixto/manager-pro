@@ -279,6 +279,13 @@
   color: var(--text-color-secondary);
 }
 
+.empty-state-small {
+  color: var(--text-color-secondary);
+  font-size: 0.85rem;
+  text-align: center;
+  padding: 1rem 0;
+}
+
 /*PRIXIMO RIVAL*/
 
 .rival-content {

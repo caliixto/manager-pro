@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { AuthService } from '../../../auth/auth';
 import { Router, RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
 import { PlayerRadar } from '../../player-radar/player-radar';
 import { CommonModule } from '@angular/common';
+import { PartidoService, Partido } from '../../../calendario/partido';
 
 interface Player {
   number: number;
@@ -19,8 +20,10 @@ interface Player {
   styleUrl: './dashboard.css',
 })
 export class Dashboard {
+  proximoPartido= signal<Partido | null>(null);
+  ultimosResultados = signal<Partido[]>([]);
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router, private partido:PartidoService) {}
 
   ngOnInit() {
     const user = this.authService.getUser();
@@ -39,11 +42,45 @@ export class Dashboard {
       });
       this.authService.markWelcomeAsShown();
     }
+    this.cargarProximoPartido();
+    this.cargarResultados()
   }
 
   logout() {
     this.authService.logout();
     this.router.navigate(['/']);
+  }
+
+  cargarProximoPartido() {
+    this.partido.obtenerProximoPartido().subscribe({
+      next: (response) => {
+        this.proximoPartido.set(response.partido);
+      },
+      error: (err) => console.error(err)
+    });
+  }
+
+
+  cargarResultados(){
+    this.partido.obtenerUltimosResultados(5).subscribe({
+      next: (response)=>{
+        this.ultimosResultados.set(response.resultados);
+      },
+      error: (err) => console.error(err)
+    })
+  }
+
+  // Determinamos si fue victoria, empate o derrota
+  getResultadoTipo(p: Partido): 'win' | 'draw' | 'loss' {
+    const { golesPropios, golesRival } = p.resultado;
+    if (golesPropios! > golesRival!) return 'win';
+    if (golesPropios === golesRival) return 'draw';
+    return 'loss';
+  }
+
+  getResultadoLetra(p: Partido): string {
+    const tipo = this.getResultadoTipo(p);
+    return tipo === 'win' ? 'W' : tipo === 'draw' ? 'D' : 'L';
   }
 
   players: Player[] = [
