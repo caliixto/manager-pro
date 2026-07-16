@@ -1,4 +1,7 @@
 {
+  "buildCommand": "cd client && npm run build",
+  "installCommand": "cd client && npm install --legacy-peer-deps --force",
+  "outputDirectory": "client/dist/manager-pro/browser",
   "rewrites": [
     {
       "source": "/(.*)",
