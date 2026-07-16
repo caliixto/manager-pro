@@ -12,21 +12,28 @@ const port = process.env.PORT || 5000 || '0.0.0.0';
 
 
 //Cors
+
 const whitelist = [
+  'https://manager-lyxe325dv-maneger-pro.vercel.app',
   'https://manager-50xeljyps-maneger-pro.vercel.app',
   'http://localhost:4200'
 ];
 
-const corsOptions = {
+app.use(cors({
   origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1 || !origin) {
+    // Permite peticiones sin origen (como las de herramientas tipo Postman o curl)
+    if (!origin || whitelist.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
       callback(new Error('No permitido por CORS'));
     }
   },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
-};
+}));
+
+app.options('*', cors());
 
 
 // 4. Cargar rutas
