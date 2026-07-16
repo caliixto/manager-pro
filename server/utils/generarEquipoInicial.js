@@ -14,8 +14,12 @@ const apellidos = [
 ];
 
 const posicionesBase = [
+  // Titulares (11): 1 POR + 4 DEF + 3 CEN + 3 DEL
   "POR", "DEF", "DEF", "DEF", "DEF", "CEN", "CEN", "CEN", "DEL", "DEL", "DEL",
-  "POR", "DEF", "DEF", "CEN", "CEN", "DEL", "DEL"
+  // Suplentes (11): Igual que los titulares
+  "POR", "DEF", "DEF", "DEF", "DEF", "CEN", "CEN", "CEN", "DEL", "DEL", "DEL",
+  // Extra (3): margen para rotación (RESERVAS)
+  "DEF", "CEN", "DEL"
 ];
 
 const rivalesFuturos = [
