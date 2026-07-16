@@ -36,7 +36,7 @@ interface JugadorResponse {
   providedIn: 'root'
 })
 export class JugadorService {
-  private apiUrl = `${environment.apiUrl}/api/players`;
+  private apiUrl = `${environment.apiUrl}/players`;
 
   constructor(private http: HttpClient, private auth: AuthService) {
     console.log('Instancia de Plantilla creada');
