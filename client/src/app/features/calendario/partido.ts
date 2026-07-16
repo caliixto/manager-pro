@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from '../auth/auth';
+import { environment } from '../../../environments/environment';
 
 export interface Partido {
   _id?: string;
@@ -36,7 +37,7 @@ interface ResultadosResponse {
   providedIn: 'root'
 })
 export class PartidoService {
-  private apiUrl = 'http://localhost:5000/api/partidos';
+  private apiUrl = `${environment.apiUrl}/partidos`;
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 

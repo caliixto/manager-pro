@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
+import { environment } from '../../../environments/environment';
 
 interface LoginResponse {
   status: string;
@@ -25,7 +26,7 @@ interface ResetPasswordResponse {
 export class AuthService {
 
   //URL
-   private apiUrl = 'http://localhost:5000/api';
+   private apiUrl = `${environment.apiUrl}/api`;
    private tokenKey = 'auth_token';
 
   constructor (private http:HttpClient){}

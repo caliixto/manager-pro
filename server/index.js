@@ -12,9 +12,21 @@ const port = process.env.PORT || 5000 || '0.0.0.0';
 
 
 //Cors
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+const whitelist = [
+  'https://manager-50xeljyps-maneger-pro.vercel.app',
+  'http://localhost:4200'
+];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('No permitido por CORS'));
+    }
+  },
+  credentials: true
+};
 
 
 // 4. Cargar rutas

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from '../auth/auth';
+import { environment } from '../../../environments/environment';
 
 export interface Jugador {
   _id?: string;
@@ -35,7 +36,7 @@ interface JugadorResponse {
   providedIn: 'root'
 })
 export class JugadorService {
-  private apiUrl = 'http://localhost:5000/api/players';
+  private apiUrl = `${environment.apiUrl}/api/players`;
 
   constructor(private http: HttpClient, private auth: AuthService) {
     console.log('Instancia de Plantilla creada');
