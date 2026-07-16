@@ -14,7 +14,7 @@ const port = process.env.PORT || 5000 || '0.0.0.0';
 //Cors
 
 const whitelist = [
-  'https://manager-lyxe325dv-maneger-pro.vercel.app',
+  'https://manager-pro-phi.vercel.app',
   'https://manager-50xeljyps-maneger-pro.vercel.app',
   'http://localhost:4200'
 ];
