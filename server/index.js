@@ -33,7 +33,6 @@ app.use(cors({
   credentials: true
 }));
 
-app.options('*', cors());
 
 
 // 4. Cargar rutas
