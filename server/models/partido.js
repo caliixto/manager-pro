@@ -33,6 +33,10 @@ const partidoSchema = new Schema({
     ref: 'Users',
     required: true
   },
+  convocados: [{
+    type: Schema.Types.ObjectId,
+    ref: 'player'
+  }],
   createdAt: {
     type: Date,
     default: Date.now

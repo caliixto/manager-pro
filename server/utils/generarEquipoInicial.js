@@ -2,13 +2,20 @@ const Jugador = require("../models/player");
 const Partido = require("../models/partido");
 
 const nombres = [
-  "Marcos", "Iker", "Adrián", "Diego", "Álvaro", "Hugo", "Mario", "Pablo",
+  "Ruben", "Iker", "Adrián", "Diego", "Álvaro", "Hugo", "Mario", "Pablo",
   "Sergio", "Rubén", "Javier", "Daniel", "Carlos", "Raúl", "Víctor",
   "Nacho", "Fernando", "Gonzalo", "Bruno", "Samuel"
 ];
 
+const jugadoresFijos = [
+  { nombre: "Calixto Bocamba", posicion: "CEN", edad: 26 },
+  { nombre: "Andrés García", posicion: "DEL", edad: 24 }, 
+  { nombre: "Alexander Minaya", posicion: "POR", edad: 24 }, 
+  { nombre: "Daniel Bonilla", posicion: "DEF", edad: 25 }, 
+];
+
 const apellidos = [
-  "García", "Martínez", "López", "Sánchez", "Pérez", "Gómez", "Fernández",
+  "Castro", "Martínez", "López", "Sánchez", "Pérez", "Gómez", "Fernández",
   "Ruiz", "Díaz", "Torres", "Romero", "Alonso", "Gil", "Vega", "Castro",
   "Ortiz", "Rubio", "Marín", "Nuñez", "Iglesias"
 ];
@@ -76,28 +83,51 @@ const fechaEnDias = (dias) => { const f = new Date(); f.setDate(f.getDate() + di
  * @param {string} equipoId - El _id del usuario/coach recién creado
  */
 const generarEquipoInicial = async (equipoId) => {
-  // Jugadores
-  const jugadoresGenerados = posicionesBase.map((posicion, index) => ({
+  // Jugadores fijos (tú y tus amigos)
+  const jugadoresFijosGenerados = jugadoresFijos.map((info, index) => ({
+    nombre: info.nombre,
+    posicion: info.posicion,
+    edad: info.edad,
+    dorsal: index + 1,
+    estadoFisico: randomEntre(70, 100),
+    stats: generarStatsPorPosicion(info.posicion),
+    equipo: equipoId,
+  }));
+
+  //Jugadores aleatorios para completar la plantilla
+  const posicionesRestantes = posicionesBase.slice(jugadoresFijos.length);
+  
+  const jugadoresAleatoriosGenerados = posicionesRestantes.map((posicion, index) => ({
     nombre: generarNombreAleatorio(),
     posicion,
     edad: randomEntre(18, 34),
-    dorsal: index + 1,
+    dorsal: jugadoresFijos.length + index + 1, // continúa la numeración de dorsales
     estadoFisico: randomEntre(70, 100),
     stats: generarStatsPorPosicion(posicion),
     equipo: equipoId,
   }));
-  await Jugador.insertMany(jugadoresGenerados);
+
+  const todosLosJugadores = [...jugadoresFijosGenerados, ...jugadoresAleatoriosGenerados];
+  const jugadoresCreados = await Jugador.insertMany(todosLosJugadores);
 
   // Partidos
-   const partidosGenerados= rivalesFuturos.map((info, index) => ({
-      rival: info.rival,
-      fecha: fechaEnDias((index + 1) * 7),
-      lugar: lugares[randomEntre(0, 1)],
-      formacionRival: info.formacion,
-      jugado: false,
-      equipo: equipoId,
+  const partidosGenerados = rivalesFuturos.map((info, index) => ({
+    rival: info.rival,
+    fecha: fechaEnDias((index + 1) * 7),
+    lugar: lugares[randomEntre(0, 1)],
+    formacionRival: info.formacion,
+    jugado: false,
+    equipo: equipoId,
   }));
-  await Partido.insertMany(partidosGenerados);
+  const partidosCreados = await Partido.insertMany(partidosGenerados);
+
+  // Convocatoria automática con todos los disponibles
+  const idsJugadores = jugadoresCreados.map(j => j._id);
+  const primerPartido = partidosCreados[0];
+
+  await Partido.findByIdAndUpdate(primerPartido._id, {
+    convocados: idsJugadores
+  });
 };
 
 const listar = async (req, res) => {

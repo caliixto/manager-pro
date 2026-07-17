@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import { PlayerRadar } from '../../player-radar/player-radar';
 import { CommonModule } from '@angular/common';
 import { PartidoService, Partido } from '../../../calendario/partido';
+import { JugadorService } from '../../../plantilla/jugador';
 
 interface Player {
   number: number;
@@ -22,8 +23,9 @@ interface Player {
 export class Dashboard {
   proximoPartido= signal<Partido | null>(null);
   ultimosResultados = signal<Partido[]>([]);
+  totalJugadores = signal<number>(0);
 
-  constructor(private authService: AuthService, private router: Router, private partido:PartidoService) {}
+  constructor(private authService: AuthService, private router: Router, private partido:PartidoService, private jugador:JugadorService) {}
 
   ngOnInit() {
     const user = this.authService.getUser();
@@ -58,6 +60,13 @@ export class Dashboard {
       },
       error: (err) => console.error(err)
     });
+
+    this.jugador.listar().subscribe({
+    next: (response) => {
+      this.totalJugadores.set(response.jugadores.length);
+    },
+    error: (err) => console.error(err)
+  });
   }
 
 

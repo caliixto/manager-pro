@@ -15,6 +15,7 @@ export interface Partido {
     golesPropios: number | null;
     golesRival: number | null;
   };
+  convocados?: string[];
 }
 
 interface PartidosResponse {
@@ -65,4 +66,8 @@ export class PartidoService {
   editarPartido(id: string, cambios: Partial<Partido>): Observable<any> {
     return this.http.put(`${this.apiUrl}/${id}`, cambios, { headers: this.getHeaders() });
   }
+
+  generarConvocatoria(partidoId: string): Observable<any> {
+  return this.http.post(`${this.apiUrl}/${partidoId}/convocatoria`, {}, { headers: this.getHeaders() });
+}
 }

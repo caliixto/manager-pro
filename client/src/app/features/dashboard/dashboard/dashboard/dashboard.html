@@ -12,23 +12,19 @@
       <div class="dashboard-carousel">
 
         <div class="card card--convocatoria ccv">
-              <div class="card__header">
-                  <h3>Convocatoria</h3>
-                  <span class="card__badge">18/22 Confirmados</span>
-              </div>
+            <div class="card__header">
+                <h3>Convocatoria</h3>
+                <span class="card__badge" *ngIf="proximoPartido() as partido">
+                {{ partido.convocados?.length || 0 }}/{{ totalJugadores() }} Confirmados
+                </span>
+            </div>
 
-              <div class="progress-bar">
-                  <div class="progress-bar__fill" style="width: 82%;"></div>
-              </div>
-
-              <div class="players-row">
-                  <div class="player-check confirmed"><i class="pi pi-check"></i></div>
-                  <div class="player-check confirmed"><i class="pi pi-check"></i></div>
-                  <div class="player-check confirmed"><i class="pi pi-check"></i></div>
-                  <div class="player-check confirmed"><i class="pi pi-check"></i></div>
-                  <div class="player-check confirmed"><i class="pi pi-check"></i></div>
-                  <div class="player-check pending"><i class="pi pi-question"></i></div>
-              </div>
+            <div class="progress-bar">
+                <div 
+                class="progress-bar__fill" 
+                [style.width.%]="((proximoPartido()?.convocados?.length || 0) / totalJugadores()) * 100">
+                </div>
+            </div>
         </div>
 
         <div class="card card--resultados">

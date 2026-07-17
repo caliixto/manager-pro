@@ -1,4 +1,5 @@
 const Partido = require("../models/partido");
+const Jugador = require("../models/player");
 
 const crearPartido = async (req, res) => {
   try {
@@ -97,11 +98,47 @@ const eliminarPartido = async (req, res) => {
   }
 };
 
+const generarConvocatoria = async (req, res) => {
+  try {
+    const { id } = req.params
+    const equipo = req.user.id;
+
+    const jugadoresDisponibles = await Jugador.find({
+      equipo,
+      lesionado: false,
+      sancionado: false
+    });
+
+    const idsConvocados = jugadoresDisponibles.map(j => j._id);
+
+    const partidoActualizado = await Partido.findByIdAndUpdate(
+      id,
+      { convocados: idsConvocados },
+      { new: true }
+    );
+
+    if (!partidoActualizado) {
+      return res.status(404).json({ status: "error", message: "Partido no encontrado" });
+    }
+
+    return res.json({
+      status: "success",
+      mensaje: "Convocatoria generada correctamente",
+      totalConvocados: idsConvocados.length,
+      partido: partidoActualizado
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ status: "error", message: "Error en el servidor" });
+  }
+};
+
 module.exports = {
   crearPartido,
   listarPartidos,
   obtenerProximoPartido,
   obtenerUltimosResultados,
   editarPartido,
-  eliminarPartido
+  eliminarPartido,
+  generarConvocatoria
 };

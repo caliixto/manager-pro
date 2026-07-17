@@ -40,6 +40,14 @@ const jugadorSchema = new Schema({
     ref: 'Users',
     required: true
   },
+  lesionado: {
+    type: Boolean,
+    default: false
+  },
+  sancionado: {
+    type: Boolean,
+    default: false
+  },
   createdAt: {
     type: Date,
     default: Date.now
