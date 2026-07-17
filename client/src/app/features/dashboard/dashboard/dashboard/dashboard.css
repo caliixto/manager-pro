@@ -448,6 +448,10 @@
 
 /*MOVIL*/
 
+.dashboard-carousel {
+  display: contents;
+}
+
 @media (max-width: 900px) {
   .dashboard-grid {
     display: block; /* dejamos de usar grid en móvil */
