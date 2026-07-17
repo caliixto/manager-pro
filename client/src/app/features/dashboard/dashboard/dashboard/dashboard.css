@@ -190,6 +190,9 @@
 .card__badge {
   font-size: 0.8rem;
   color: var(--text-color-secondary);
+  white-space: nowrap;
+  flex-shrink: 0;
+  padding-left: 1rem;
 }
 
 .progress-bar {

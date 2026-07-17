@@ -8,46 +8,6 @@
 
     <div class="dashboard-grid">
 
-      <!-- Pizarra Táctica: fuera del carrusel, a ancho completo -->
-      <div class="card card--pizarra">
-            <div class="card__header">
-                <h3>Pizarra Táctica</h3>
-            </div>
-
-            <div class="pitch-container">
-                <svg viewBox="0 0 300 450" class="pitch-svg">
-                <rect x="0" y="0" width="300" height="450" class="pitch-bg" />
-                <rect x="10" y="10" width="280" height="430" class="pitch-line" fill="none" />
-                <line x1="10" y1="225" x2="290" y2="225" class="pitch-line" />
-                <circle cx="150" cy="225" r="40" class="pitch-line" fill="none" />
-                <circle cx="150" cy="225" r="2" class="pitch-line" fill="var(--pitch-line-color)" />
-                <rect x="70" y="10" width="160" height="60" class="pitch-line" fill="none" />
-                <rect x="110" y="10" width="80" height="25" class="pitch-line" fill="none" />
-                <rect x="70" y="380" width="160" height="60" class="pitch-line" fill="none" />
-                <rect x="110" y="415" width="80" height="25" class="pitch-line" fill="none" />
-
-                <g *ngFor="let player of players">
-                    <circle 
-                    [attr.cx]="player.x" [attr.cy]="player.y" r="12" 
-                    class="player-dot"
-                    [class.player-dot--gk]="player.isGoalkeeper">
-                    </circle>
-                    <text 
-                    [attr.x]="player.x" [attr.y]="player.y + 4" 
-                    text-anchor="middle" class="player-number">
-                    {{ player.number }}
-                    </text>
-                </g>
-                <line 
-                    x1="150" y1="240" 
-                    x2="150" y2="90" 
-                    class="pass-line" 
-                    stroke-dasharray="4,4">
-                </line>
-                </svg>
-            </div>
-      </div>
-
       <!-- Carrusel con las 5 tarjetas secundarias -->
       <div class="dashboard-carousel">
 
@@ -162,6 +122,46 @@
 
       </div>
       <!-- fin dashboard-carousel -->
+
+      <!-- Pizarra Táctica: fuera del carrusel, a ancho completo -->
+      <div class="card card--pizarra">
+            <div class="card__header">
+                <h3>Pizarra Táctica</h3>
+            </div>
+
+            <div class="pitch-container">
+                <svg viewBox="0 0 300 450" class="pitch-svg">
+                <rect x="0" y="0" width="300" height="450" class="pitch-bg" />
+                <rect x="10" y="10" width="280" height="430" class="pitch-line" fill="none" />
+                <line x1="10" y1="225" x2="290" y2="225" class="pitch-line" />
+                <circle cx="150" cy="225" r="40" class="pitch-line" fill="none" />
+                <circle cx="150" cy="225" r="2" class="pitch-line" fill="var(--pitch-line-color)" />
+                <rect x="70" y="10" width="160" height="60" class="pitch-line" fill="none" />
+                <rect x="110" y="10" width="80" height="25" class="pitch-line" fill="none" />
+                <rect x="70" y="380" width="160" height="60" class="pitch-line" fill="none" />
+                <rect x="110" y="415" width="80" height="25" class="pitch-line" fill="none" />
+
+                <g *ngFor="let player of players">
+                    <circle 
+                    [attr.cx]="player.x" [attr.cy]="player.y" r="12" 
+                    class="player-dot"
+                    [class.player-dot--gk]="player.isGoalkeeper">
+                    </circle>
+                    <text 
+                    [attr.x]="player.x" [attr.y]="player.y + 4" 
+                    text-anchor="middle" class="player-number">
+                    {{ player.number }}
+                    </text>
+                </g>
+                <line 
+                    x1="150" y1="240" 
+                    x2="150" y2="90" 
+                    class="pass-line" 
+                    stroke-dasharray="4,4">
+                </line>
+                </svg>
+            </div>
+      </div>
 
     </div>
   </section>
