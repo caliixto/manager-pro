@@ -448,6 +448,35 @@
 
 /*MOVIL*/
 
+@media (max-width: 900px) {
+  .dashboard-grid {
+    display: block; /* dejamos de usar grid en móvil */
+  }
+
+  .card--pizarra {
+    margin-bottom: 1.25rem;
+  }
+
+  .dashboard-carousel {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 1rem;
+    padding-bottom: 0.5rem;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .dashboard-carousel .card {
+    flex: 0 0 85%; /* cada tarjeta ocupa el 85% del ancho, dejando ver un poco de la siguiente */
+    scroll-snap-align: start;
+  }
+
+  /* Oculta la barra de scroll visualmente, pero sigue siendo deslizable */
+  .dashboard-carousel::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 @media (max-width: 768px) {
   .layout {
     flex-direction: column;

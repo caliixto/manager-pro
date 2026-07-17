@@ -1,4 +1,3 @@
-
 <main class="layout">
 
   <!-- Contenido principal -->
@@ -8,43 +7,8 @@
     </div>
 
     <div class="dashboard-grid">
-      <div class="card card--convocatoria ccv">
-            <div class="card__header">
-                <h3>Convocatoria</h3>
-                <span class="card__badge">18/22 Confirmados</span>
-            </div>
 
-            <div class="progress-bar">
-                <div class="progress-bar__fill" style="width: 82%;"></div>
-            </div>
-
-            <div class="players-row">
-                <div class="player-check confirmed"><i class="pi pi-check"></i></div>
-                <div class="player-check confirmed"><i class="pi pi-check"></i></div>
-                <div class="player-check confirmed"><i class="pi pi-check"></i></div>
-                <div class="player-check confirmed"><i class="pi pi-check"></i></div>
-                <div class="player-check confirmed"><i class="pi pi-check"></i></div>
-                <div class="player-check pending"><i class="pi pi-question"></i></div>
-            </div>
-      </div>
-        <div class="card card--resultados">
-            <div class="card__header">
-                <h3>Últimos Resultados</h3>
-            </div>
-
-            <div class="results-row" *ngIf="ultimosResultados().length > 0">
-                <div class="result-item" *ngFor="let partido of ultimosResultados()">
-                <div class="result-circle" [class]="getResultadoTipo(partido)">
-                    {{ getResultadoLetra(partido) }}
-                </div>
-                <span class="result-label">{{ partido.resultado.golesPropios }}-{{ partido.resultado.golesRival }}</span>
-                </div>
-            </div>
-
-            <p *ngIf="ultimosResultados().length === 0" class="empty-state-small">
-                Aún no se han disputado partidos
-            </p>
-      </div>
+      <!-- Pizarra Táctica: fuera del carrusel, a ancho completo -->
       <div class="card card--pizarra">
             <div class="card__header">
                 <h3>Pizarra Táctica</h3>
@@ -52,30 +16,16 @@
 
             <div class="pitch-container">
                 <svg viewBox="0 0 300 450" class="pitch-svg">
-                <!-- Fondo del campo -->
                 <rect x="0" y="0" width="300" height="450" class="pitch-bg" />
-
-                <!-- Línea de banda exterior -->
                 <rect x="10" y="10" width="280" height="430" class="pitch-line" fill="none" />
-
-                <!-- Línea de medio campo -->
                 <line x1="10" y1="225" x2="290" y2="225" class="pitch-line" />
-
-                <!-- Círculo central -->
                 <circle cx="150" cy="225" r="40" class="pitch-line" fill="none" />
                 <circle cx="150" cy="225" r="2" class="pitch-line" fill="var(--pitch-line-color)" />
-
-                <!-- Área grande superior (rival) -->
                 <rect x="70" y="10" width="160" height="60" class="pitch-line" fill="none" />
-                <!-- Área pequeña superior -->
                 <rect x="110" y="10" width="80" height="25" class="pitch-line" fill="none" />
-
-                <!-- Área grande inferior (propia) -->
                 <rect x="70" y="380" width="160" height="60" class="pitch-line" fill="none" />
-                <!-- Área pequeña inferior -->
                 <rect x="110" y="415" width="80" height="25" class="pitch-line" fill="none" />
 
-                <!-- Jugadores posicionados según formación 4-3-3 -->
                 <g *ngFor="let player of players">
                     <circle 
                     [attr.cx]="player.x" [attr.cy]="player.y" r="12" 
@@ -97,75 +47,122 @@
                 </svg>
             </div>
       </div>
-      <div class="card card--balance">
-                <div class="card__header">
-                    <h3>Balance Táctico</h3>
-                </div>
 
-                <div class="balance-item">
-                    <div class="balance-label">
-                    <i class="pi pi-bolt"></i>
-                    <span>Ataque</span>
-                    </div>
-                    <div class="balance-bar">
-                    <div class="balance-bar__fill balance-bar__fill--attack" style="width: 78%;"></div>
-                    </div>
-                </div>
+      <!-- Carrusel con las 5 tarjetas secundarias -->
+      <div class="dashboard-carousel">
 
-                <div class="balance-item">
-                    <div class="balance-label">
-                    <i class="pi pi-shield"></i>
-                    <span>Defensa</span>
-                    </div>
-                    <div class="balance-bar">
-                    <div class="balance-bar__fill balance-bar__fill--defense" style="width: 65%;"></div>
-                    </div>
-                </div>
+        <div class="card card--convocatoria ccv">
+              <div class="card__header">
+                  <h3>Convocatoria</h3>
+                  <span class="card__badge">18/22 Confirmados</span>
+              </div>
 
-                <div class="balance-item">
-                    <div class="balance-label">
-                    <i class="pi pi-refresh"></i>
-                    <span>Control</span>
-                    </div>
-                    <div class="balance-bar">
-                    <div class="balance-bar__fill balance-bar__fill--control" style="width: 82%;"></div>
-                    </div>
-                </div>
+              <div class="progress-bar">
+                  <div class="progress-bar__fill" style="width: 82%;"></div>
+              </div>
+
+              <div class="players-row">
+                  <div class="player-check confirmed"><i class="pi pi-check"></i></div>
+                  <div class="player-check confirmed"><i class="pi pi-check"></i></div>
+                  <div class="player-check confirmed"><i class="pi pi-check"></i></div>
+                  <div class="player-check confirmed"><i class="pi pi-check"></i></div>
+                  <div class="player-check confirmed"><i class="pi pi-check"></i></div>
+                  <div class="player-check pending"><i class="pi pi-question"></i></div>
+              </div>
         </div>
-      <div class="card card--rendimiento">
-        <div class="card__header">
-                <h3>Rendimiento clave del jugador</h3>
-            </div>
-        <app-player-radar></app-player-radar>
+
+        <div class="card card--resultados">
+              <div class="card__header">
+                  <h3>Últimos Resultados</h3>
+              </div>
+
+              <div class="results-row" *ngIf="ultimosResultados().length > 0">
+                  <div class="result-item" *ngFor="let partido of ultimosResultados()">
+                  <div class="result-circle" [class]="getResultadoTipo(partido)">
+                      {{ getResultadoLetra(partido) }}
+                  </div>
+                  <span class="result-label">{{ partido.resultado.golesPropios }}-{{ partido.resultado.golesRival }}</span>
+                  </div>
+              </div>
+
+              <p *ngIf="ultimosResultados().length === 0" class="empty-state-small">
+                  Aún no se han disputado partidos
+              </p>
+        </div>
+
+        <div class="card card--rendimiento">
+          <div class="card__header">
+                  <h3>Rendimiento clave del jugador</h3>
+              </div>
+          <app-player-radar></app-player-radar>
+        </div>
+
+        <div class="card card--rival">
+          <div class="card__header">
+              <h3>Próximo Rival</h3>
+              </div>
+              <ng-container *ngIf="proximoPartido() as partido; else sinPartido">
+                  <div class="rival-content">
+                  <div class="rival-shield">
+                      <i class="pi pi-shield"></i>
+                  </div>
+
+                  <div class="rival-info">
+                      <span class="rival-coach-label">Rival</span>
+                      <span class="rival-formation">{{ partido.rival }}</span>
+                  </div>
+                  </div>
+
+                  <div class="rival-form">
+                      <i class="pi pi-calendar"></i>
+                      <span>{{ partido.formacionRival || 'Formación no disponible' }}</span>
+                  </div>
+              </ng-container>
+
+              <ng-template #sinPartido>
+                  <p class="empty-state-small">No hay partidos programados</p>
+              </ng-template>
+        </div>
+
+        <div class="card card--balance">
+                  <div class="card__header">
+                      <h3>Balance Táctico</h3>
+                  </div>
+
+                  <div class="balance-item">
+                      <div class="balance-label">
+                      <i class="pi pi-bolt"></i>
+                      <span>Ataque</span>
+                      </div>
+                      <div class="balance-bar">
+                      <div class="balance-bar__fill balance-bar__fill--attack" style="width: 78%;"></div>
+                      </div>
+                  </div>
+
+                  <div class="balance-item">
+                      <div class="balance-label">
+                      <i class="pi pi-shield"></i>
+                      <span>Defensa</span>
+                      </div>
+                      <div class="balance-bar">
+                      <div class="balance-bar__fill balance-bar__fill--defense" style="width: 65%;"></div>
+                      </div>
+                  </div>
+
+                  <div class="balance-item">
+                      <div class="balance-label">
+                      <i class="pi pi-refresh"></i>
+                      <span>Control</span>
+                      </div>
+                      <div class="balance-bar">
+                      <div class="balance-bar__fill balance-bar__fill--control" style="width: 82%;"></div>
+                      </div>
+                  </div>
+        </div>
+
       </div>
+      <!-- fin dashboard-carousel -->
 
-
-     <div class="card card--rival">
-        <div class="card__header">
-            <h3>Próximo Rival</h3>
-            </div>
-            <ng-container *ngIf="proximoPartido() as partido; else sinPartido">
-                <div class="rival-content">
-                <div class="rival-shield">
-                    <i class="pi pi-shield"></i>
-                </div>
-
-                <div class="rival-info">
-                    <span class="rival-coach-label">Rival</span>
-                    <span class="rival-formation">{{ partido.rival }}</span>
-                </div>
-                </div>
-
-                <div class="rival-form">
-                    <i class="pi pi-calendar"></i>
-                    <span>{{ partido.formacionRival || 'Formación no disponible' }}</span>
-                </div>
-            </ng-container>
-
-            <ng-template #sinPartido>
-                <p class="empty-state-small">No hay partidos programados</p>
-            </ng-template>
-        </div>
     </div>
   </section>
 
