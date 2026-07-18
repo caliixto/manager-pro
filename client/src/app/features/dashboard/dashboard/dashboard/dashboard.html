@@ -47,10 +47,20 @@
         </div>
 
         <div class="card card--rendimiento">
-          <div class="card__header">
-                  <h3>Rendimiento clave del jugador</h3>
-              </div>
-          <app-player-radar></app-player-radar>
+            <div class="card__header">
+                <h3>Rendimiento clave del jugador</h3>
+            </div>
+            
+            <div class="jugador-destacado-info" *ngIf="jugadorDestacado() as jugador">
+                <span class="jugador-nombre">{{ jugador.nombre }}</span>
+                <span class="jugador-posicion-badge">{{ jugador.posicion }}</span>
+            </div>
+
+            <app-player-radar 
+                *ngIf="jugadorDestacado() as jugador"
+                [jugadorStats]="jugador.stats" 
+                [posicion]="jugador.posicion">
+            </app-player-radar>
         </div>
 
         <div class="card card--rival">

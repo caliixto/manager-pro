@@ -133,6 +133,41 @@ const generarConvocatoria = async (req, res) => {
   }
 };
 
+const obtenerBalanceTactico = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const partido = await Partido.findById(id).populate('convocados');
+
+    if (!partido || !partido.convocados || partido.convocados.length === 0) {
+      return res.json({ 
+        status: "success", 
+        balance: { ataque: 0, defensa: 0, control: 0 } 
+      });
+    }
+
+    const jugadores = partido.convocados;
+    const total = jugadores.length;
+
+    const suma = jugadores.reduce((acc, j) => {
+      acc.ataque += (j.stats.tiro + j.stats.regate + j.stats.aceleracion + j.stats.posicionamiento) / 4;
+      acc.defensa += (j.stats.defensa + j.stats.fisico + j.stats.determinacion) / 3;
+      acc.control += (j.stats.pase + j.stats.vision + j.stats.resistencia) / 3;
+      return acc;
+    }, { ataque: 0, defensa: 0, control: 0 });
+
+    const balance = {
+      ataque: Math.round(suma.ataque / total),
+      defensa: Math.round(suma.defensa / total),
+      control: Math.round(suma.control / total),
+    };
+
+    return res.json({ status: "success", balance });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ status: "error", message: "Error en el servidor" });
+  }
+};
+
 module.exports = {
   crearPartido,
   listarPartidos,
@@ -140,5 +175,6 @@ module.exports = {
   obtenerUltimosResultados,
   editarPartido,
   eliminarPartido,
-  generarConvocatoria
+  generarConvocatoria,
+  obtenerBalanceTactico
 };

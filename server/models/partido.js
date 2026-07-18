@@ -35,7 +35,7 @@ const partidoSchema = new Schema({
   },
   convocados: [{
     type: Schema.Types.ObjectId,
-    ref: 'player'
+    ref: 'Jugador'
   }],
   createdAt: {
     type: Date,

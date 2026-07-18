@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 import { PlayerRadar } from '../../player-radar/player-radar';
 import { CommonModule } from '@angular/common';
 import { PartidoService, Partido } from '../../../calendario/partido';
-import { JugadorService } from '../../../plantilla/jugador';
+import { JugadorService, Jugador } from '../../../plantilla/jugador';
 
 interface Player {
   number: number;
@@ -24,6 +24,7 @@ export class Dashboard {
   proximoPartido= signal<Partido | null>(null);
   ultimosResultados = signal<Partido[]>([]);
   totalJugadores = signal<number>(0);
+  jugadorDestacado = signal<Jugador | null>(null);
 
   constructor(private authService: AuthService, private router: Router, private partido:PartidoService, private jugador:JugadorService) {}
 
@@ -45,7 +46,8 @@ export class Dashboard {
       this.authService.markWelcomeAsShown();
     }
     this.cargarProximoPartido();
-    this.cargarResultados()
+    this.cargarResultados();
+    this.cargarJugadorDestacado();
   }
 
   logout() {
@@ -109,4 +111,14 @@ export class Dashboard {
   { number: 9, x: 150, y: 90 },
   { number: 11, x: 230, y: 110 },
 ];
+
+cargarJugadorDestacado() {
+  this.jugador.listar().subscribe({
+    next: (response) => {
+      // Por ahora, el primero de la lista. Más adelante podrías elegir el de mejor media, por ejemplo
+      this.jugadorDestacado.set(response.jugadores[0] || null);
+    },
+    error: (err) => console.error(err)
+  });
+}
 }

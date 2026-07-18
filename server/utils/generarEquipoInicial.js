@@ -8,10 +8,42 @@ const nombres = [
 ];
 
 const jugadoresFijos = [
-  { nombre: "Calixto Bocamba", posicion: "CEN", edad: 26 },
-  { nombre: "Andrés García", posicion: "DEL", edad: 24 }, 
-  { nombre: "Alexander Minaya", posicion: "POR", edad: 24 }, 
-  { nombre: "Daniel Bonilla", posicion: "DEF", edad: 25 }, 
+  { 
+    nombre: "Alexander Minaya", posicion: "POR", edad: 24, estadoFisico: 95,
+    stats: {
+      velocidad: 68, aceleracion: 62, fisico: 90, resistencia: 88,
+      tiro: 25, pase: 78, regate: 35, defensa: 45,
+      posicionamiento: 92, vision: 70, determinacion: 90,
+      porteria: 96
+    }
+  },
+  { 
+    nombre: "Daniel Bonilla", posicion: "DEF", edad:25, estadoFisico: 95,
+    stats: {
+      velocidad: 90, aceleracion: 85, fisico: 93, resistencia: 90,
+      tiro: 89, pase: 85, regate: 65, defensa: 95,
+      posicionamiento: 90, vision: 75, determinacion: 95,
+      porteria: 10
+    }
+  },
+  { 
+    nombre: "Calixto Bocamba", posicion: "CEN", edad: 26, estadoFisico: 95,
+    stats: {
+      velocidad: 93, aceleracion: 96, fisico: 85, resistencia: 82,
+      tiro: 95, pase: 94, regate: 88, defensa: 68,
+      posicionamiento: 90, vision: 93, determinacion: 88,
+      porteria: 10
+    }
+  },
+  { 
+    nombre: "Andrés García", posicion: "DEL", edad: 24, estadoFisico: 95,
+    stats: {
+      velocidad: 89, aceleracion: 85, fisico: 85, resistencia: 82,
+      tiro: 88, pase: 75, regate: 60, defensa: 30,
+      posicionamiento: 74, vision: 75, determinacion: 90,
+      porteria: 10
+    }
+  },
 ];
 
 const apellidos = [
@@ -55,15 +87,71 @@ const generarNombreAleatorio = () => {
 const generarStatsPorPosicion = (posicion) => {
   switch (posicion) {
     case "POR":
-      return { velocidad: randomEntre(40, 60), pase: randomEntre(45, 65), tiro: randomEntre(20, 35), resistencia: randomEntre(50, 70) };
+      return {
+        velocidad: randomEntre(40, 65),
+        aceleracion: randomEntre(35, 60),
+        fisico: randomEntre(65, 88),
+        resistencia: randomEntre(60, 85),
+        tiro: randomEntre(15, 30),
+        pase: randomEntre(45, 70),
+        regate: randomEntre(20, 40),
+        defensa: randomEntre(30, 50),
+        posicionamiento: randomEntre(65, 90),
+        vision: randomEntre(40, 65),
+        determinacion: randomEntre(55, 80),
+        porteria: randomEntre(70, 95),
+      };
     case "DEF":
-      return { velocidad: randomEntre(45, 65), pase: randomEntre(50, 70), tiro: randomEntre(30, 50), resistencia: randomEntre(60, 80) };
+      return {
+        velocidad: randomEntre(55, 80),
+        aceleracion: randomEntre(50, 75),
+        fisico: randomEntre(68, 90),
+        resistencia: randomEntre(65, 88),
+        tiro: randomEntre(25, 50),
+        pase: randomEntre(50, 75),
+        regate: randomEntre(35, 60),
+        defensa: randomEntre(70, 92),
+        posicionamiento: randomEntre(65, 88),
+        vision: randomEntre(45, 70),
+        determinacion: randomEntre(60, 85),
+        porteria: randomEntre(5, 15),
+      };
     case "CEN":
-      return { velocidad: randomEntre(55, 75), pase: randomEntre(65, 85), tiro: randomEntre(50, 70), resistencia: randomEntre(65, 85) };
+      return {
+        velocidad: randomEntre(60, 82),
+        aceleracion: randomEntre(58, 80),
+        fisico: randomEntre(60, 82),
+        resistencia: randomEntre(70, 90),
+        tiro: randomEntre(50, 75),
+        pase: randomEntre(70, 92),
+        regate: randomEntre(60, 85),
+        defensa: randomEntre(45, 70),
+        posicionamiento: randomEntre(65, 88),
+        vision: randomEntre(65, 90),
+        determinacion: randomEntre(55, 80),
+        porteria: randomEntre(5, 15),
+      };
     case "DEL":
-      return { velocidad: randomEntre(65, 85), pase: randomEntre(50, 70), tiro: randomEntre(65, 90), resistencia: randomEntre(55, 75) };
+      return {
+        velocidad: randomEntre(70, 92),
+        aceleracion: randomEntre(70, 92),
+        fisico: randomEntre(60, 85),
+        resistencia: randomEntre(55, 80),
+        tiro: randomEntre(70, 93),
+        pase: randomEntre(50, 75),
+        regate: randomEntre(65, 88),
+        defensa: randomEntre(20, 40),
+        posicionamiento: randomEntre(70, 92),
+        vision: randomEntre(50, 75),
+        determinacion: randomEntre(60, 88),
+        porteria: randomEntre(5, 15),
+      };
     default:
-      return { velocidad: 50, pase: 50, tiro: 50, resistencia: 50 };
+      return {
+        velocidad: 50, aceleracion: 50, fisico: 50, resistencia: 50,
+        tiro: 50, pase: 50, regate: 50, defensa: 50,
+        posicionamiento: 50, vision: 50, determinacion: 50, porteria: 50,
+      };
   }
 };
 
@@ -78,19 +166,19 @@ const fechaHaceDias = (dias) => { const f = new Date(); f.setDate(f.getDate() - 
 const fechaEnDias = (dias) => { const f = new Date(); f.setDate(f.getDate() + dias); return f; };
 
 /**
- * Genera la plantilla de 18 jugadores y el calendario inicial de partidos
+ * Generamos un la plantilla de 25 jugadores y el calendario inicial de partidos
  * para un usuario recién registrado.
  * @param {string} equipoId - El _id del usuario/coach recién creado
  */
 const generarEquipoInicial = async (equipoId) => {
   // Jugadores fijos (tú y tus amigos)
-  const jugadoresFijosGenerados = jugadoresFijos.map((info, index) => ({
+    const jugadoresFijosGenerados = jugadoresFijos.map((info, index) => ({
     nombre: info.nombre,
     posicion: info.posicion,
     edad: info.edad,
     dorsal: index + 1,
-    estadoFisico: randomEntre(70, 100),
-    stats: generarStatsPorPosicion(info.posicion),
+    estadoFisico: info.estadoFisico,
+    stats: info.stats,
     equipo: equipoId,
   }));
 

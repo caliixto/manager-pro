@@ -30,11 +30,26 @@ const jugadorSchema = new Schema({
     default: 100
   },
   stats: {
-    velocidad: { type: Number, min: 0, max: 100, default: 50 },
-    pase: { type: Number, min: 0, max: 100, default: 50 },
-    tiro: { type: Number, min: 0, max: 100, default: 50 },
-    resistencia: { type: Number, min: 0, max: 100, default: 50 },
-  },
+  // Físico
+  velocidad: { type: Number, min: 0, max: 100, default: 50 },
+  aceleracion: { type: Number, min: 0, max: 100, default: 50 },
+  fisico: { type: Number, min: 0, max: 100, default: 50 },
+  resistencia: { type: Number, min: 0, max: 100, default: 50 },
+  
+  // Técnico
+  tiro: { type: Number, min: 0, max: 100, default: 50 },
+  pase: { type: Number, min: 0, max: 100, default: 50 },
+  regate: { type: Number, min: 0, max: 100, default: 50 },
+  defensa: { type: Number, min: 0, max: 100, default: 50 },
+  
+  // Mental
+  posicionamiento: { type: Number, min: 0, max: 100, default: 50 },
+  vision: { type: Number, min: 0, max: 100, default: 50 },
+  determinacion: { type: Number, min: 0, max: 100, default: 50 },
+  
+  // Portero
+  porteria: { type: Number, min: 0, max: 100, default: 50 },
+},
   equipo: {
     type: Schema.Types.ObjectId,
     ref: 'Users',

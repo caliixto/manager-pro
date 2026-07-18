@@ -404,6 +404,28 @@
   color: #fff;
   padding-bottom: 1.4rem;
 }
+
+.jugador-destacado-info {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.5rem;
+}
+
+.jugador-nombre {
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.jugador-posicion-badge {
+  background-color: var(--color-principal);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 0.15rem 0.5rem;
+  font-size: 0.7rem;
+  color: var(--text-color-secondary);
+}
 /*PIZARRA*/
 
 .pitch-container {
