@@ -1,33 +1,46 @@
 <div class="calendario-page">
 
   <div class="calendario-header">
-    <div>
-      <h1>Calendario</h1>
-      <p class="calendario-subtitle">{{ partidos().length }} partidos</p>
-    </div>
+    <h1>Calendario de Partidos</h1>
   </div>
 
-  <div class="partidos-list" *ngIf="!loading()">
-    <div class="partido-card" *ngFor="let partido of partidos()">
-      
-      <div class="partido-fecha">
-        <span class="fecha-dia">{{ formatearFecha(partido.fecha) }}</span>
-        <span class="fecha-lugar">{{ partido.lugar === 'casa' ? '🏠 Casa' : '✈️ Fuera' }}</span>
-      </div>
+  <div class="calendario-nav">
+    <button class="nav-btn" (click)="mesAnterior()">‹</button>
+    <span class="mes-nombre">{{ nombreMesActual() }}</span>
+    <button class="nav-btn" (click)="mesSiguiente()">›</button>
+  </div>
 
-      <div class="partido-rival">
-        <span class="rival-nombre">{{ partido.rival }}</span>
-        <span class="rival-formacion" *ngIf="partido.formacionRival">{{ partido.formacionRival }}</span>
-      </div>
+  <div class="calendar-grid" *ngIf="!loading()">
+    
+    <!-- Cabecera con los días de la semana -->
+    <div class="calendar-grid__weekday" *ngFor="let dia of diasSemana">{{ dia }}</div>
 
-      <div class="partido-estado">
-        <span *ngIf="!partido.jugado" class="badge-pendiente">Pendiente</span>
-        <span *ngIf="partido.jugado" class="badge-resultado" [class]="getResultadoClase(partido)">
-          {{ getResultadoTexto(partido) }}
-        </span>
-      </div>
+    <!-- Las semanas, cada una con 7 días -->
+    <ng-container *ngFor="let semana of semanasDelMes">
+      <div 
+        class="calendar-day" 
+        *ngFor="let dia of semana"
+        [class.calendar-day--empty]="!dia.numero">
+        
+        <span class="calendar-day__number" *ngIf="dia.numero">{{ dia.numero }}</span>
 
-    </div>
+        <div class="calendar-day__match" *ngIf="dia.partido as partido">
+          <div class="match-shield">
+            <i class="pi pi-shield"></i>
+          </div>
+          <span class="match-rival">{{ partido.rival }}</span>
+          <span 
+            class="match-result" 
+            [class]="getResultadoClase(partido)"
+            *ngIf="partido.jugado">
+            {{ getResultadoTexto(partido) }}
+          </span>
+          <span class="match-pending" *ngIf="!partido.jugado">Pendiente</span>
+        </div>
+
+      </div>
+    </ng-container>
+
   </div>
 
   <p *ngIf="loading()" class="loading-state">Cargando calendario...</p>

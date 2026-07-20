@@ -2,104 +2,130 @@
   padding: 2rem 2.5rem;
 }
 
-.calendario-header {
-  margin-bottom: 1.5rem;
-}
-
 .calendario-header h1 {
   color: #fff;
   font-size: 1.5rem;
-  margin: 0;
+  margin: 0 0 1rem 0;
 }
 
-.calendario-subtitle {
-  color: var(--text-color-secondary);
-  font-size: 0.85rem;
-  margin: 0.25rem 0 0 0;
-}
-
-.partidos-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.partido-card {
-  background-color: var(--color-header);
-  border: 1px solid var(--color-border);
-  border-radius: 12px;
-  padding: 1rem 1.5rem;
+.calendario-nav {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
-.partido-fecha {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-  min-width: 120px;
+.nav-btn {
+  background: var(--color-header);
+  border: 1px solid var(--color-border);
+  color: #fff;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.1rem;
 }
 
-.fecha-dia {
+.nav-btn:hover {
+  background: var(--color-principal);
+}
+
+.mes-nombre {
   color: #fff;
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 1.1rem;
+  min-width: 160px;
+  text-align: center;
 }
 
-.fecha-lugar {
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.5rem;
+}
+
+.calendar-grid__weekday {
+  text-align: center;
+  color: var(--text-color-secondary);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding-bottom: 0.5rem;
+}
+
+.calendar-day {
+  background-color: var(--color-header);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  min-height: 100px;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.calendar-day--empty {
+  background-color: transparent;
+  border: none;
+}
+
+.calendar-day__number {
   color: var(--text-color-secondary);
   font-size: 0.75rem;
+  margin-bottom: 0.4rem;
 }
 
-.partido-rival {
-  flex: 1;
+.calendar-day__match {
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
+  align-items: center;
+  gap: 0.3rem;
+  margin-top: auto;
 }
 
-.rival-nombre {
-  color: #fff;
-  font-weight: 600;
-  font-size: 1rem;
-}
-
-.rival-formacion {
-  color: var(--text-color-secondary);
-  font-size: 0.8rem;
-}
-
-.badge-pendiente {
+.match-shield {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
   background-color: var(--color-principal);
   border: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: var(--text-color-secondary);
-  padding: 0.4rem 0.9rem;
-  border-radius: 8px;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
 }
 
-.badge-resultado {
-  padding: 0.4rem 0.9rem;
-  border-radius: 8px;
-  font-size: 0.9rem;
+.match-rival {
+  font-size: 0.65rem;
+  color: #fff;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.match-result {
+  font-size: 0.7rem;
   font-weight: 700;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
 }
 
-.badge-resultado.win {
+.match-result.win {
   background-color: rgba(34, 197, 94, 0.15);
   color: var(--color-accent);
 }
 
-.badge-resultado.draw {
+.match-result.draw {
   background-color: rgba(107, 114, 128, 0.2);
   color: #9ca3af;
 }
 
-.badge-resultado.loss {
+.match-result.loss {
   background-color: rgba(239, 68, 68, 0.15);
   color: #ef4444;
+}
+
+.match-pending {
+  font-size: 0.65rem;
+  color: var(--text-color-secondary);
 }
 
 .loading-state,
@@ -109,25 +135,3 @@
   color: var(--text-color-secondary);
 }
 
-@media (max-width: 480px) {
-  .partido-card {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.75rem;
-  }
-
-  .partido-fecha {
-    flex-direction: row;
-    gap: 0.75rem;
-    align-items: center;
-  }
-
-  .partido-estado {
-    align-self: flex-start;
-  }
-
-  .badge-resultado,
-  .badge-pendiente {
-    white-space: nowrap;
-  }
-}
