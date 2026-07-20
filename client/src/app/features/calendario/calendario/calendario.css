@@ -135,3 +135,76 @@
   color: var(--text-color-secondary);
 }
 
+@media (max-width: 768px) {
+  .calendario-page {
+    padding: 1.5rem 1rem;
+  }
+
+  .calendario-header h1 {
+    font-size: 1.2rem;
+  }
+
+  .calendario-nav {
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .mes-nombre {
+    font-size: 0.95rem;
+    min-width: 120px;
+  }
+
+  .calendar-grid {
+    gap: 0.3rem;
+  }
+
+  .calendar-grid__weekday {
+    font-size: 0.65rem;
+    padding-bottom: 0.3rem;
+  }
+
+  .calendar-day {
+    min-height: 60px;
+    padding: 0.3rem;
+    border-radius: 8px;
+  }
+
+  .calendar-day__number {
+    font-size: 0.65rem;
+    margin-bottom: 0.2rem;
+  }
+
+  .calendar-day__match {
+    gap: 0.15rem;
+  }
+
+  .match-shield {
+    width: 18px;
+    height: 18px;
+    font-size: 0.6rem;
+  }
+
+  .match-rival {
+    font-size: 0.5rem;
+    line-height: 1.1;
+  }
+
+  .match-result {
+    font-size: 0.55rem;
+    padding: 0.05rem 0.25rem;
+  }
+
+  .match-pending {
+    font-size: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .calendar-day {
+    min-height: 50px;
+  }
+
+  .match-rival {
+    display: none; /* en pantallas muy pequeñas, oculta el nombre del rival para no saturar */
+  }
+}
