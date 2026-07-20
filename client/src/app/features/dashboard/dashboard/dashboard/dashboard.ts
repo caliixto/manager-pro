@@ -7,11 +7,11 @@ import { CommonModule } from '@angular/common';
 import { PartidoService, Partido } from '../../../calendario/partido';
 import { JugadorService, Jugador } from '../../../plantilla/jugador';
 
-interface Player {
-  number: number;
+interface PlayerPosicionado {
   x: number;
   y: number;
   isGoalkeeper?: boolean;
+  jugador: Jugador | null;
 }
 
 @Component({
@@ -25,6 +25,8 @@ export class Dashboard {
   ultimosResultados = signal<Partido[]>([]);
   totalJugadores = signal<number>(0);
   jugadorDestacado = signal<Jugador | null>(null);
+  balanceTactico = signal<{ ataque: number; defensa: number; control: number }>({ ataque: 0, defensa: 0, control: 0 });
+  playersEnCampo = signal<PlayerPosicionado[]>([]);
 
   constructor(private authService: AuthService, private router: Router, private partido:PartidoService, private jugador:JugadorService) {}
 
@@ -59,6 +61,11 @@ export class Dashboard {
     this.partido.obtenerProximoPartido().subscribe({
       next: (response) => {
         this.proximoPartido.set(response.partido);
+
+        if (response.partido?._id) {
+          this.cargarBalanceTactico(response.partido._id);
+          this.cargarTitulares(response.partido._id);
+        }
       },
       error: (err) => console.error(err)
     });
@@ -94,31 +101,58 @@ export class Dashboard {
     return tipo === 'win' ? 'W' : tipo === 'draw' ? 'D' : 'L';
   }
 
-  players: Player[] = [
-  // Portero
-  { number: 1, x: 150, y: 400, isGoalkeeper: true },
-  // Defensas (4)
-  { number: 2, x: 50, y: 330 },
-  { number: 4, x: 110, y: 340 },
-  { number: 5, x: 190, y: 340 },
-  { number: 3, x: 250, y: 330 },
-  // Centrocampistas (3)
-  { number: 6, x: 90, y: 240 },
-  { number: 8, x: 150, y: 220 },
-  { number: 10, x: 210, y: 240 },
-  // Delanteros (3)
-  { number: 7, x: 70, y: 110 },
-  { number: 9, x: 150, y: 90 },
-  { number: 11, x: 230, y: 110 },
+  private posicionesCampo = [
+  { x: 150, y: 400, isGoalkeeper: true }, // Portero
+  { x: 50, y: 330 }, { x: 110, y: 340 }, { x: 190, y: 340 }, { x: 250, y: 330 }, // Defensas
+  { x: 90, y: 240 }, { x: 150, y: 220 }, { x: 210, y: 240 }, // Centrocampistas
+  { x: 70, y: 110 }, { x: 150, y: 90 }, { x: 230, y: 110 }, // Delanteros
 ];
 
-cargarJugadorDestacado() {
-  this.jugador.listar().subscribe({
-    next: (response) => {
-      // Por ahora, el primero de la lista. Más adelante podrías elegir el de mejor media, por ejemplo
-      this.jugadorDestacado.set(response.jugadores[0] || null);
-    },
-    error: (err) => console.error(err)
-  });
+  //Jugador Destacado
+  cargarJugadorDestacado() {
+    this.jugador.listar().subscribe({
+      next: (response) => {
+        // De momento, el primero de la lista
+        this.jugadorDestacado.set(response.jugadores[0] || null);
+      },
+      error: (err) => console.error(err)
+    });
+  }
+
+  //Balance Tactico
+  cargarBalanceTactico(partidoId: string) {
+    this.partido.obtenerBalanceTactico(partidoId).subscribe({
+      next: (response) => {
+        this.balanceTactico.set(response.balance);
+      },
+      error: (err) => console.error(err)
+    });
+  }
+
+  //Titular Esquema Tactico
+  cargarTitulares(partidoId: string) {
+    this.partido.obtenerTitulares(partidoId).subscribe({
+      next: (response) => {
+        const titulares = response.titulares;
+        
+        const combinados = this.posicionesCampo.map((pos, index) => ({
+          ...pos,
+          jugador: titulares[index] || null
+        }));
+        
+        this.playersEnCampo.set(combinados);
+      },
+      error: (err) => console.error(err)
+    });
+  }
+ 
+  //Nombre Jugadores
+  getNombreCorto(nombreCompleto: string): string {
+  const partes = nombreCompleto.split(' ');
+  if (partes.length === 1) return partes[0];
+  
+  return `${partes[0]} ${partes[1][0]}.`;
 }
+
+
 }

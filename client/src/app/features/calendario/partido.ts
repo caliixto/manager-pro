@@ -68,6 +68,14 @@ export class PartidoService {
   }
 
   generarConvocatoria(partidoId: string): Observable<any> {
-  return this.http.post(`${this.apiUrl}/${partidoId}/convocatoria`, {}, { headers: this.getHeaders() });
+    return this.http.post(`${this.apiUrl}/${partidoId}/convocatoria`, {}, { headers: this.getHeaders() });
+  }
+
+  obtenerBalanceTactico(partidoId: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/${partidoId}/balance`, { headers: this.getHeaders() });
+  }
+
+  obtenerTitulares(partidoId: string): Observable<any> {
+  return this.http.get(`${this.apiUrl}/${partidoId}/titulares`, { headers: this.getHeaders() });
 }
 }

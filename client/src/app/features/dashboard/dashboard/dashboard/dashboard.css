@@ -471,6 +471,13 @@
   opacity: 0.6;
 }
 
+.player-name-label {
+  fill: #ffffff;
+  font-size: 12px;
+  text-anchor: middle;
+  opacity: 0.85;
+}
+
 /*MOVIL*/
 
 .dashboard-carousel {

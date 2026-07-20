@@ -90,41 +90,50 @@
               </ng-template>
         </div>
 
-        <div class="card card--balance">
-                  <div class="card__header">
-                      <h3>Balance Táctico</h3>
-                  </div>
-
-                  <div class="balance-item">
-                      <div class="balance-label">
-                      <i class="pi pi-bolt"></i>
-                      <span>Ataque</span>
-                      </div>
-                      <div class="balance-bar">
-                      <div class="balance-bar__fill balance-bar__fill--attack" style="width: 78%;"></div>
-                      </div>
-                  </div>
-
-                  <div class="balance-item">
-                      <div class="balance-label">
-                      <i class="pi pi-shield"></i>
-                      <span>Defensa</span>
-                      </div>
-                      <div class="balance-bar">
-                      <div class="balance-bar__fill balance-bar__fill--defense" style="width: 65%;"></div>
-                      </div>
-                  </div>
-
-                  <div class="balance-item">
-                      <div class="balance-label">
-                      <i class="pi pi-refresh"></i>
-                      <span>Control</span>
-                      </div>
-                      <div class="balance-bar">
-                      <div class="balance-bar__fill balance-bar__fill--control" style="width: 82%;"></div>
-                      </div>
-                  </div>
+    <div class="card card--balance">
+        <div class="card__header">
+            <h3>Balance Táctico</h3>
         </div>
+
+        <div class="balance-item">
+            <div class="balance-label">
+            <i class="pi pi-bolt"></i>
+            <span>Ataque</span>
+            </div>
+            <div class="balance-bar">
+            <div 
+                class="balance-bar__fill balance-bar__fill--attack" 
+                [style.width.%]="balanceTactico().ataque">
+            </div>
+            </div>
+        </div>
+
+        <div class="balance-item">
+            <div class="balance-label">
+            <i class="pi pi-shield"></i>
+            <span>Defensa</span>
+            </div>
+            <div class="balance-bar">
+            <div 
+                class="balance-bar__fill balance-bar__fill--defense" 
+                [style.width.%]="balanceTactico().defensa">
+            </div>
+            </div>
+        </div>
+
+        <div class="balance-item">
+            <div class="balance-label">
+            <i class="pi pi-refresh"></i>
+            <span>Control</span>
+            </div>
+            <div class="balance-bar">
+            <div 
+                class="balance-bar__fill balance-bar__fill--control" 
+                [style.width.%]="balanceTactico().control">
+            </div>
+            </div>
+        </div>
+    </div>
 
       </div>
       <!-- fin dashboard-carousel -->
@@ -147,16 +156,24 @@
                 <rect x="70" y="380" width="160" height="60" class="pitch-line" fill="none" />
                 <rect x="110" y="415" width="80" height="25" class="pitch-line" fill="none" />
 
-                <g *ngFor="let player of players">
+                <g *ngFor="let item of playersEnCampo()">
                     <circle 
-                    [attr.cx]="player.x" [attr.cy]="player.y" r="12" 
-                    class="player-dot"
-                    [class.player-dot--gk]="player.isGoalkeeper">
+                        *ngIf="item.jugador"
+                        [attr.cx]="item.x" [attr.cy]="item.y" r="12" 
+                        class="player-dot"
+                        [class.player-dot--gk]="item.isGoalkeeper">
                     </circle>
                     <text 
-                    [attr.x]="player.x" [attr.y]="player.y + 4" 
-                    text-anchor="middle" class="player-number">
-                    {{ player.number }}
+                        *ngIf="item.jugador"
+                        [attr.x]="item.x" [attr.y]="item.y + 4" 
+                        text-anchor="middle" class="player-number">
+                        {{ item.jugador.dorsal }}
+                    </text>
+                    <text 
+                        *ngIf="item.jugador"
+                        [attr.x]="item.x" [attr.y]="item.y + 24" 
+                        text-anchor="middle" class="player-name-label">
+                        {{ getNombreCorto(item.jugador.nombre) }}
                     </text>
                 </g>
                 <line 

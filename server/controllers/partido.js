@@ -1,5 +1,6 @@
 const Partido = require("../models/partido");
 const Jugador = require("../models/player");
+const {seleccionarTitulares,puedeJugarPartido} = require("../utils/generarEquipoInicial");
 
 const crearPartido = async (req, res) => {
   try {
@@ -141,14 +142,27 @@ const obtenerBalanceTactico = async (req, res) => {
     if (!partido || !partido.convocados || partido.convocados.length === 0) {
       return res.json({ 
         status: "success", 
-        balance: { ataque: 0, defensa: 0, control: 0 } 
+        balance: { ataque: 0, defensa: 0, control: 0 },
+        alerta: "Sin jugadores convocados"
       });
     }
 
-    const jugadores = partido.convocados;
-    const total = jugadores.length;
+    const totalDisponibles = partido.convocados.length;
 
-    const suma = jugadores.reduce((acc, j) => {
+    // Caso crítico: menos de 7 disponibles, no se puede jugar
+    if (!puedeJugarPartido(totalDisponibles)) {
+      return res.json({
+        status: "success",
+        balance: { ataque: 0, defensa: 0, control: 0 },
+        alerta: "Plantilla insuficiente para jugar (menos de 7 disponibles). El partido se perdería por incomparecencia.",
+        jugablePartido: false
+      });
+    }
+
+    const titulares = seleccionarTitulares(partido.convocados);
+    const total = titulares.length;
+
+    const suma = titulares.reduce((acc, j) => {
       acc.ataque += (j.stats.tiro + j.stats.regate + j.stats.aceleracion + j.stats.posicionamiento) / 4;
       acc.defensa += (j.stats.defensa + j.stats.fisico + j.stats.determinacion) / 3;
       acc.control += (j.stats.pase + j.stats.vision + j.stats.resistencia) / 3;
@@ -161,12 +175,36 @@ const obtenerBalanceTactico = async (req, res) => {
       control: Math.round(suma.control / total),
     };
 
-    return res.json({ status: "success", balance });
+    return res.json({ 
+      status: "success", 
+      balance,
+      totalTitulares: total,
+      jugablePartido: true
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ status: "error", message: "Error en el servidor" });
   }
 };
+
+const obtenerTitulares = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const partido = await Partido.findById(id).populate('convocados');
+
+    if (!partido || !partido.convocados || partido.convocados.length === 0) {
+      return res.json({ status: "success", titulares: [] });
+    }
+
+    const titulares = seleccionarTitulares(partido.convocados);
+
+    return res.json({ status: "success", titulares });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ status: "error", message: "Error en el servidor" });
+  }
+};
+
 
 module.exports = {
   crearPartido,
@@ -176,5 +214,6 @@ module.exports = {
   editarPartido,
   eliminarPartido,
   generarConvocatoria,
-  obtenerBalanceTactico
+  obtenerBalanceTactico,
+  obtenerTitulares
 };

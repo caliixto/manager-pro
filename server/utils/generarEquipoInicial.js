@@ -218,6 +218,35 @@ const generarEquipoInicial = async (equipoId) => {
   });
 };
 
+const seleccionarTitulares = (jugadoresConvocados) => {
+  const porteros = jugadoresConvocados.filter(j => j.posicion === 'POR');
+  const defensas = jugadoresConvocados.filter(j => j.posicion === 'DEF');
+  const centrocampistas = jugadoresConvocados.filter(j => j.posicion === 'CEN');
+  const delanteros = jugadoresConvocados.filter(j => j.posicion === 'DEL');
+
+  // Formación ideal (1-4-3-3)
+  let titulares = [
+    ...porteros.slice(0, 1),
+    ...defensas.slice(0, 4),
+    ...centrocampistas.slice(0, 3),
+    ...delanteros.slice(0, 3),
+  ];
+
+  // Si faltan para llegar a 11, completa con quien quede disponible
+  if (titulares.length < 11) {
+    const yaSeleccionadosIds = titulares.map(j => j._id.toString());
+    const restantes = jugadoresConvocados.filter(j => !yaSeleccionadosIds.includes(j._id.toString()));
+    const faltan = 11 - titulares.length;
+    titulares = [...titulares, ...restantes.slice(0, faltan)];
+  }
+
+  return titulares;
+};
+
+const puedeJugarPartido = (totalConvocados) => {
+  return totalConvocados >= 7;
+};
+
 const listar = async (req, res) => {
   try {
     const equipo = req.user.id;
@@ -234,4 +263,4 @@ const listar = async (req, res) => {
   }
 };
 
-module.exports = { generarEquipoInicial, listar };
+module.exports = { generarEquipoInicial, listar, seleccionarTitulares, puedeJugarPartido};
