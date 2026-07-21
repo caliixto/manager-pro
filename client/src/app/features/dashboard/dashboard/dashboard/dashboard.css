@@ -546,7 +546,7 @@
   }
 }
 
-@media (orientation: landscape) and (max-width: 900px) {
+@media (orientation: landscape){
   .dashboard-grid {
     display: grid !important;
     grid-template-columns: 1fr 1fr 1.8fr 0.6fr;
