@@ -484,26 +484,6 @@
   display: contents;
 }
 
-@media (orientation: landscape) and (max-width: 900px) {
-  .dashboard-grid {
-    display: grid !important; /* recupera el grid de desktop en vez del carrusel */
-    grid-template-columns: 1fr 1fr 1.8fr 0.6fr;
-    grid-template-rows: auto auto;
-    gap: 0.75rem;
-    grid-template-areas:
-      "convocatoria resultados pizarra balance"
-      "rendimiento  rival      pizarra .";
-  }
-
-  .dashboard-carousel {
-    display: contents; /* vuelve a comportarse como en desktop */
-  }
-
-  .card {
-    padding: 0.85rem; /* un poco más compacto que en desktop completo */
-    font-size: 0.9em; /* reduce ligeramente el texto para que quepa mejor */
-  }
-}
 
 @media (max-width: 768px) {
   .layout {
@@ -563,5 +543,56 @@
   .dashboard-grid > div {
     width: 100%;
     min-width: 0; /* Esto es vital para que los elementos dentro de un grid se encojan */
+  }
+}
+
+@media (orientation: landscape) and (max-width: 900px) {
+  .dashboard-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr 1.8fr 0.6fr;
+    grid-template-rows: auto auto;
+    gap: 0.5rem;
+  }
+
+  .content {
+    padding: 0.75rem 1rem;
+  }
+
+  .content__title {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .card {
+    padding: 0.6rem;
+  }
+
+  .card__header {
+    margin-bottom: 0.5rem;
+  }
+
+  .card__header h3 {
+    font-size: 0.75rem;
+  }
+
+  /* La pizarra es la pieza clave: limita su altura máxima */
+  .card--pizarra .pitch-svg {
+    max-width: 160px; /* mucho más pequeño que los 280px de desktop */
+  }
+
+  .rival-shield,
+  .match-shield {
+    width: 32px;
+    height: 32px;
+  }
+
+  .result-circle {
+    width: 28px;
+    height: 28px;
+    font-size: 0.7rem;
+  }
+
+  .balance-item {
+    margin-bottom: 0.6rem;
   }
 }
