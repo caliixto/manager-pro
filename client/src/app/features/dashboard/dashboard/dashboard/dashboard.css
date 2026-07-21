@@ -597,16 +597,3 @@
   }
 }
 
-.debug-orientation-test {
-  display: none;
-}
-
-@media (orientation: landscape) {
-  .debug-orientation-test {
-    display: block;
-    background: red;
-    color: white;
-    padding: 1rem;
-    font-size: 2rem;
-  }
-}
