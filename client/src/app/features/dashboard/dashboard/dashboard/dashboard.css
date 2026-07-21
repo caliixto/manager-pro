@@ -484,32 +484,24 @@
   display: contents;
 }
 
-@media (max-width: 900px) {
+@media (orientation: landscape) and (max-width: 900px) {
   .dashboard-grid {
-    display: block; /* dejamos de usar grid en móvil */
-  }
-
-  .card--pizarra {
-    margin-bottom: 1.25rem;
+    display: grid !important; /* recupera el grid de desktop en vez del carrusel */
+    grid-template-columns: 1fr 1fr 1.8fr 0.6fr;
+    grid-template-rows: auto auto;
+    gap: 0.75rem;
+    grid-template-areas:
+      "convocatoria resultados pizarra balance"
+      "rendimiento  rival      pizarra .";
   }
 
   .dashboard-carousel {
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    gap: 1rem;
-    padding-bottom: 0.5rem;
-    -webkit-overflow-scrolling: touch;
+    display: contents; /* vuelve a comportarse como en desktop */
   }
 
-  .dashboard-carousel .card {
-    flex: 0 0 85%; /* cada tarjeta ocupa el 85% del ancho, dejando ver un poco de la siguiente */
-    scroll-snap-align: start;
-  }
-
-  /* Oculta la barra de scroll visualmente, pero sigue siendo deslizable */
-  .dashboard-carousel::-webkit-scrollbar {
-    display: none;
+  .card {
+    padding: 0.85rem; /* un poco más compacto que en desktop completo */
+    font-size: 0.9em; /* reduce ligeramente el texto para que quepa mejor */
   }
 }
 
