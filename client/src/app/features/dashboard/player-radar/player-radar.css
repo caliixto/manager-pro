@@ -26,3 +26,11 @@
   fill: var(--text-color-secondary);
   font-size: 9px;
 }
+
+
+@media (orientation: landscape) and (max-height: 500px) {
+  .radar-svg {
+    height: 100px;
+    width: 100px;
+  }
+}

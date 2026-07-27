@@ -546,7 +546,7 @@
   }
 }
 
-@media (orientation: landscape) {
+@media (orientation: landscape) and (max-height: 500px){
   .layout {
     height: 100vh;
     min-height: auto;
@@ -586,6 +586,40 @@
 
   .card__header h3 {
     font-size: 0.6rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .card--rendimiento {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 0.3rem;
+  }
+
+  .card--rendimiento .card__header {
+    flex-shrink: 0;
+    margin-bottom: 0.15rem;
+  }
+
+  .jugador-destacado-info {
+    flex-shrink: 0;
+    margin-bottom: 0.2rem;
+  }
+
+  app-player-radar {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  /* El SVG interno del radar necesita ajustarse también */
+  .radar-svg {
+    width: auto;
+    height: 100%;
+    max-height: 100%;
   }
 
   .card__badge {
@@ -630,6 +664,36 @@
 
   .balance-label {
     font-size: 0.5rem;
+  }
+
+  .card--pizarra {
+    padding: 0.3rem; /* reduce el padding del contenedor de la tarjeta */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .card--pizarra .card__header {
+    margin-bottom: 0.2rem;
+    flex-shrink: 0;
+  }
+
+  .pitch-container {
+    flex: 1; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0; /* sin padding extra alrededor del SVG */
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .card--pizarra .pitch-svg {
+    max-width: none; /* quita el límite de ancho */
+    width: auto;
+    height: 100%; /* que crezca hasta ocupar toda la altura disponible */
+    max-height: 100%;
+    object-fit: contain;
   }
 }
 
