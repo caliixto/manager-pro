@@ -133,7 +133,13 @@ export class Dashboard {
   cargarTitulares(partidoId: string) {
     this.partido.obtenerTitulares(partidoId).subscribe({
       next: (response) => {
+        console.log("jugadores", response)
         const titulares = response.titulares;
+
+        // Si no hay titulares, puedes decidir qué mostrar
+      if (titulares.length === 0) {
+        console.warn("Este partido no tiene titulares asignados todavía.");
+      }
         
         const combinados = this.posicionesCampo.map((pos, index) => ({
           ...pos,

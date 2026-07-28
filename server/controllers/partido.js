@@ -37,11 +37,31 @@ const listarPartidos = async (req, res) => {
 const obtenerProximoPartido = async (req, res) => {
   try {
     const equipo = req.user.id;
-    const proximoPartido = await Partido.findOne({ 
+    let proximoPartido = await Partido.findOne({ 
       equipo, 
       jugado: false,
-      fecha: { $gte: new Date() } // solo fechas futuras o de hoy
+      fecha: { $gte: new Date() }
     }).sort({ fecha: 1 });
+
+    if (!proximoPartido) {
+      return res.json({ status: "success", partido: null });
+    }
+
+    // Si el partido no tiene convocatoria generada, la generamos ahora mismo
+    if (!proximoPartido.convocados || proximoPartido.convocados.length === 0) {
+      const jugadoresDisponibles = await Jugador.find({
+        equipo,
+        lesionado: false,
+        sancionado: false
+      });
+      const idsConvocados = jugadoresDisponibles.map(j => j._id);
+
+      proximoPartido = await Partido.findByIdAndUpdate(
+        proximoPartido._id,
+        { convocados: idsConvocados },
+        { new: true }
+      );
+    }
 
     return res.json({ status: "success", partido: proximoPartido });
   } catch (error) {
