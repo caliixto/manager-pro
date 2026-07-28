@@ -546,19 +546,19 @@
   }
 }
 
-@media (orientation: landscape) and (max-height: 500px){
+@media (orientation: landscape) and (max-height: 500px) {
   .layout {
     height: 100vh;
     min-height: auto;
-    overflow: hidden; /* evita cualquier scroll a nivel de toda la página */
+    overflow: hidden;
   }
 
   .content {
     height: 100vh;
     padding: 0.4rem 0.6rem;
-    overflow: hidden; /* nada de scroll aquí tampoco */
     display: flex;
     flex-direction: column;
+    overflow-y: auto; /* permite scroll si algo no cabe, en vez de cortar */
   }
 
   .content__title {
@@ -576,69 +576,32 @@
       "rendimiento  rival      pizarra ." !important;
     gap: 0.3rem;
     flex: 1;
-    min-height: 0; /* clave para que el grid respete la altura restante sin desbordar */
+    min-height: 0;
   }
 
   .card {
     padding: 0.3rem;
-    overflow: hidden;
+    overflow: visible;
+  }
+
+  .card__header {
+    margin-bottom: 0.2rem;
+    flex-shrink: 0;
   }
 
   .card__header h3 {
     font-size: 0.6rem;
-    padding-bottom: 0.5rem;
-  }
-
-  .card--rendimiento {
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    padding: 0.3rem;
-  }
-
-  .card--rendimiento .card__header {
-    flex-shrink: 0;
-    margin-bottom: 0.15rem;
-  }
-
-  .jugador-destacado-info {
-    flex-shrink: 0;
-    margin-bottom: 0.2rem;
-  }
-
-  app-player-radar {
-    display: flex;
-    flex: 1;
-    min-height: 0;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-  }
-
-  /* El SVG interno del radar necesita ajustarse también */
-  .radar-svg {
-    width: auto;
-    height: 100%;
-    max-height: 100%;
   }
 
   .card__badge {
     font-size: 0.5rem;
   }
 
-  .card--pizarra .pitch-svg {
-    max-width: 90px;
-    max-height: 100%;
-  }
-
-  .pitch-container {
-    height: 100%;
-    align-items: center;
-  }
-
-  .card--pizarra {
+  /* ===== CONVOCATORIA ===== */
+  .card--convocatoria {
     display: flex;
     flex-direction: column;
+    padding: 0.3rem;
   }
 
   .player-check {
@@ -646,65 +609,108 @@
     height: 14px;
   }
 
+  /* ===== ÚLTIMOS RESULTADOS ===== */
+  .card--resultados {
+    display: flex;
+    flex-direction: column;
+    padding: 0.3rem;
+  }
+
+  .results-row {
+    gap: 0.4rem;
+  }
+
   .result-circle {
-    width: 20px;
-    height: 20px;
-    font-size: 0.55rem;
+    width: 22px;
+    height: 22px;
+    font-size: 0.6rem;
   }
 
-  .rival-shield {
-    width: 20px;
-    height: 20px;
-    font-size: 0.75rem;
-  }
-
-  .balance-item {
-    margin-bottom: 0.25rem;
-  }
-
-  .balance-label {
+  .result-label {
     font-size: 0.5rem;
   }
 
-  .card--pizarra {
-    padding: 0.3rem; /* reduce el padding del contenedor de la tarjeta */
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
+  .empty-state-small {
+    font-size: 0.6rem;
+    padding: 0.2rem 0;
   }
 
-  .card--pizarra .card__header {
-    margin-bottom: 0.2rem;
-    flex-shrink: 0;
+  /* ===== PIZARRA TÁCTICA ===== */
+  .card--pizarra {
+    display: flex;
+    flex-direction: column;
+    padding: 0.3rem;
+    overflow: hidden; /* el SVG del campo sí necesita contenerse estrictamente */
   }
 
   .pitch-container {
-    flex: 1; 
+    flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0; /* sin padding extra alrededor del SVG */
+    padding: 0;
     min-height: 0;
     overflow: hidden;
   }
 
   .card--pizarra .pitch-svg {
-    max-width: none; /* quita el límite de ancho */
+    max-width: none;
     width: auto;
-    height: 100%; /* que crezca hasta ocupar toda la altura disponible */
+    height: 100%;
     max-height: 100%;
     object-fit: contain;
   }
-  .card--rival {
+
+  /* ===== BALANCE TÁCTICO ===== */
+  .card--balance {
     display: flex;
     flex-direction: column;
-    overflow: hidden;
     padding: 0.3rem;
   }
 
-  .card--rival .card__header {
-    flex-shrink: 0;
+  .balance-item {
+    margin-bottom: 0.3rem;
+  }
+
+  .balance-label {
+    font-size: 0.55rem;
     margin-bottom: 0.15rem;
+    gap: 0.3rem;
+  }
+
+  .balance-label i {
+    font-size: 0.6rem;
+  }
+
+  .balance-bar {
+    height: 4px;
+  }
+
+  /* ===== RENDIMIENTO CLAVE DEL JUGADOR ===== */
+  .card--rendimiento {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0.3rem;
+  }
+
+  .jugador-destacado-info {
+    flex-shrink: 0;
+  }
+
+  app-player-radar {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  /* ===== PRÓXIMO RIVAL ===== */
+  .card--rival {
+    display: flex;
+    flex-direction: column;
+    padding: 0.3rem;
   }
 
   .rival-content {
@@ -727,29 +733,6 @@
 
   .rival-form {
     font-size: 0.55rem;
-  }
-   .card--rendimiento {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start; /* en vez de center, para que no se desborde por arriba/abajo */
-    overflow: visible; /* permite que se vea completo, sin cortar */
-    padding: 0.3rem;
-  }
-
-  .card--rendimiento .card__header {
-    flex-shrink: 0;
-  }
-
-  .jugador-destacado-info {
-    flex-shrink: 0;
-  }
-
-  app-player-radar {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    flex-shrink: 0; /* no permitas que se comprima de forma impredecible */
   }
 }
 
