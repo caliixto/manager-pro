@@ -7,6 +7,7 @@ import { ResetPassword } from './features/reset-password/reset-password';
 import { Plantilla } from './features/plantilla/plantilla/plantilla';
 import { AppLayout } from './shared/app-layout/app-layout';
 import { Calendario } from './features/calendario/calendario/calendario';
+import { ConvocatoriaDetalle } from './features/calendario/convocatoria-detalle/convocatoria-detalle';
 
 export const routes: Routes = [
     { path: '', component: Landing },
@@ -17,6 +18,7 @@ export const routes: Routes = [
 	  { path: 'register', component: Register },
     { path: 'dashboard', component: Dashboard },
     { path: 'plantilla', component: Plantilla },
+    { path: 'convocatoria/:id', component: ConvocatoriaDetalle },
 //  { path: 'tacticas', component: Tacticas },       // 
     { path: 'calendario', component: Calendario },
 //  { path: 'estadisticas', component: Estadisticas }, // 

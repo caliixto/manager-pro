@@ -11,5 +11,6 @@ router.delete("/:id", verificarToken, partido.eliminarPartido);
 router.post("/:id/convocatoria", verificarToken, partido.generarConvocatoria);
 router.get("/:id/balance", verificarToken, partido.obtenerBalanceTactico);
 router.get("/:id/titulares", verificarToken, partido.obtenerTitulares);
+router.get("/:id/convocatoria-detalle", verificarToken, partido.obtenerConvocatoriaDetallada);
 
 module.exports = router;

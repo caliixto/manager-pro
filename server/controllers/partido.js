@@ -154,6 +154,42 @@ const generarConvocatoria = async (req, res) => {
   }
 };
 
+const obtenerConvocatoriaDetallada = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const equipo = req.user.id;
+
+    const partido = await Partido.findById(id).populate('convocados');
+    const todosLosJugadores = await Jugador.find({ equipo });
+
+    if (!partido) {
+      return res.status(404).json({ status: "error", message: "Partido no encontrado" });
+    }
+
+    const idsConvocados = partido.convocados.map(j => j._id.toString());
+
+    const jugadoresConEstado = todosLosJugadores.map(j => ({
+      _id: j._id,
+      nombre: j.nombre,
+      posicion: j.posicion,
+      foto: j.foto,
+      lesionado: j.lesionado,
+      sancionado: j.sancionado,
+      convocado: idsConvocados.includes(j._id.toString())
+    }));
+
+    return res.json({ 
+      status: "success", 
+      rival: partido.rival,
+      fecha: partido.fecha,
+      jugadores: jugadoresConEstado 
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ status: "error", message: "Error en el servidor" });
+  }
+};
+
 const obtenerBalanceTactico = async (req, res) => {
   try {
     const { id } = req.params;
@@ -235,5 +271,6 @@ module.exports = {
   eliminarPartido,
   generarConvocatoria,
   obtenerBalanceTactico,
-  obtenerTitulares
+  obtenerTitulares,
+  obtenerConvocatoriaDetallada
 };

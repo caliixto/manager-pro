@@ -1,0 +1,28 @@
+<div class="convocatoria-page">
+
+  <div class="convocatoria-header">
+    <a routerLink="/dashboard" class="back-link">← Volver</a>
+    <h1>Convocatoria vs. {{ rival() }}</h1>
+    <p class="convocatoria-subtitle">{{ jugadores().length }} jugadores en plantilla</p>
+  </div>
+
+  <div class="convocatoria-list" *ngIf="!loading()">
+    <div class="jugador-row" *ngFor="let jugador of jugadores()">
+      <div class="jugador-avatar" *ngIf="!jugador.foto">{{ getIniciales(jugador.nombre) }}</div>
+      <img *ngIf="jugador.foto" [src]="jugador.foto" class="jugador-avatar-img">
+      
+      <div class="jugador-info">
+        <span class="jugador-nombre">{{ jugador.nombre }}</span>
+        <span class="jugador-posicion">{{ jugador.posicion }}</span>
+      </div>
+
+      <span class="estado-badge" [class]="getEstadoClase(jugador)">
+        {{ getEstadoTexto(jugador) }}
+      </span>
+    </div>
+  </div>
+
+  <p *ngIf="loading()" class="loading-state">Cargando convocatoria...</p>
+  <p *ngIf="errorMsg()" class="error-msg">{{ errorMsg() }}</p>
+
+</div>

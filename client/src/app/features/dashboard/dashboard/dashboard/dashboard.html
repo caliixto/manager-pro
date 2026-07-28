@@ -12,7 +12,7 @@
       <!-- Carrusel con las 5 tarjetas secundarias -->
       <div class="dashboard-carousel">
 
-        <div class="card card--convocatoria ccv">
+        <div class="card card--convocatoria ccv" (click)="irAConvocatoria()" style="cursor: pointer;">
             <div class="card__header">
                 <h3>Convocatoria</h3>
                 <span class="card__badge" *ngIf="proximoPartido() as partido">

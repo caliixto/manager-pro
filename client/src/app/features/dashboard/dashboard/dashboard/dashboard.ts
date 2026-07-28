@@ -160,6 +160,12 @@ export class Dashboard {
   return `${partes[0]} ${partes[1][0]}.`;
 }
 
+irAConvocatoria() {
+  const partido = this.proximoPartido();
+  if (partido?._id) {
+    this.router.navigate(['/convocatoria', partido._id]);
+  }
+}
 
 
 }

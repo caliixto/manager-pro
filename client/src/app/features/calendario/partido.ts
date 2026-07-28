@@ -76,6 +76,10 @@ export class PartidoService {
   }
 
   obtenerTitulares(partidoId: string): Observable<any> {
-  return this.http.get(`${this.apiUrl}/${partidoId}/titulares`, { headers: this.getHeaders() });
-}
+    return this.http.get(`${this.apiUrl}/${partidoId}/titulares`, { headers: this.getHeaders() });
+  }
+
+  obtenerConvocatoriaDetallada(partidoId: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/${partidoId}/convocatoria-detalle`, { headers: this.getHeaders() });
+  }
 }
