@@ -732,16 +732,24 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    overflow: hidden;
+    justify-content: flex-start; /* en vez de center, para que no se desborde por arriba/abajo */
+    overflow: visible; /* permite que se vea completo, sin cortar */
     padding: 0.3rem;
+  }
+
+  .card--rendimiento .card__header {
+    flex-shrink: 0;
+  }
+
+  .jugador-destacado-info {
+    flex-shrink: 0;
   }
 
   app-player-radar {
     width: 100%;
     display: flex;
     justify-content: center;
-    flex: 1;
-    min-height: 0;
+    flex-shrink: 0; /* no permitas que se comprima de forma impredecible */
   }
 }
 

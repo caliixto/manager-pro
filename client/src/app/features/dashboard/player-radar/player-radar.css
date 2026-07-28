@@ -30,7 +30,11 @@
 
 @media (orientation: landscape) and (max-height: 500px) {
   .radar-svg {
-    height: 100px;
-    width: 100px;
+    height: 90px; /* reduce más agresivamente, en vez de 100px */
+    width: 90px;
+  }
+
+  .radar-label {
+    font-size: 7px; /* las etiquetas también más pequeñas */
   }
 }
