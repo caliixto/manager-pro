@@ -695,5 +695,53 @@
     max-height: 100%;
     object-fit: contain;
   }
+  .card--rival {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 0.3rem;
+  }
+
+  .card--rival .card__header {
+    flex-shrink: 0;
+    margin-bottom: 0.15rem;
+  }
+
+  .rival-content {
+    margin-bottom: 0.3rem;
+  }
+
+  .rival-shield {
+    width: 20px;
+    height: 20px;
+    font-size: 0.7rem;
+  }
+
+  .rival-formation {
+    font-size: 0.65rem;
+  }
+
+  .rival-coach-label {
+    font-size: 0.55rem;
+  }
+
+  .rival-form {
+    font-size: 0.55rem;
+  }
+   .card--rendimiento {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+    padding: 0.3rem;
+  }
+
+  app-player-radar {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex: 1;
+    min-height: 0;
+  }
 }
 
