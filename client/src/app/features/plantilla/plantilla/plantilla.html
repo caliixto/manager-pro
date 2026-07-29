@@ -23,10 +23,7 @@
       <tbody>
         <tr *ngFor="let jugador of jugadores()">
           <td>
-            <div class="player-avatar" *ngIf="!jugador.foto">
-              {{ getIniciales(jugador.nombre) }}
-            </div>
-            <img *ngIf="jugador.foto" [src]="jugador.foto" class="player-avatar-img" [alt]="jugador.nombre">
+            <img [src]="jugador.foto" class="player-avatar-img" [alt]="jugador.nombre">
           </td>
           <td class="player-name">{{ jugador.nombre }}</td>
           <td>

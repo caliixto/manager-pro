@@ -70,15 +70,17 @@
               </div>
               <ng-container *ngIf="proximoPartido() as partido; else sinPartido">
                   <div class="rival-content">
-                  <div class="rival-shield">
-                      <i class="pi pi-shield"></i>
-                  </div>
+                    <div class="rival-shield">
+                        <!-- CORREGIDO: Apunta a partido.escudo y usamos el nombre en el alt -->
+                        <img [src]="partido.escudo" [alt]="partido.rival">
+                    </div>
 
-                  <div class="rival-info">
-                      <span class="rival-coach-label">Rival</span>
-                      <span class="rival-formation">{{ partido.rival }}</span>
-                  </div>
-                  </div>
+                    <div class="rival-info">
+                        <span class="rival-coach-label">Rival</span>
+                        <!-- CORREGIDO: Aquí va el nombre del equipo rival -->
+                        <span class="rival-formation">{{ partido.rival }}</span>
+                    </div>
+                </div>
 
                   <div class="rival-form">
                       <i class="pi pi-calendar"></i>

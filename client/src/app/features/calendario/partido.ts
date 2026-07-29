@@ -7,6 +7,7 @@ import { environment } from '../../../environments/environment';
 export interface Partido {
   _id?: string;
   rival: string;
+  escudo:string;
   fecha: string;
   lugar: 'casa' | 'fuera';
   formacionRival: string;

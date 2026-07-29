@@ -7,6 +7,10 @@ const partidoSchema = new Schema({
     required: [true, 'El nombre del rival es obligatorio'],
     trim: true
   },
+  escudo: {
+    type: String,
+    default: ''
+  },
   fecha: {
     type: Date,
     required: [true, 'La fecha es obligatoria']

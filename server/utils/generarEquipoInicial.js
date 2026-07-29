@@ -180,27 +180,45 @@ const generarEquipoInicial = async (equipoId) => {
     estadoFisico: info.estadoFisico,
     stats: info.stats,
     equipo: equipoId,
+    foto:`https://api.dicebear.com/7.x/avataaars/png?seed=${encodeURIComponent(info.nombre)}&gender=male`
   }));
 
   //Jugadores aleatorios para completar la plantilla
   const posicionesRestantes = posicionesBase.slice(jugadoresFijos.length);
   
-  const jugadoresAleatoriosGenerados = posicionesRestantes.map((posicion, index) => ({
-    nombre: generarNombreAleatorio(),
+ const jugadoresAleatoriosGenerados = posicionesRestantes.map((posicion, index) => {
+  const nombreGenerado = generarNombreAleatorio();
+  
+  return {
+    nombre: nombreGenerado,
     posicion,
     edad: randomEntre(18, 34),
-    dorsal: jugadoresFijos.length + index + 1, // continúa la numeración de dorsales
+    dorsal: jugadoresFijos.length + index + 1,
     estadoFisico: randomEntre(70, 100),
     stats: generarStatsPorPosicion(posicion),
     equipo: equipoId,
-  }));
+    foto: `https://api.dicebear.com/7.x/avataaars/png?seed=${encodeURIComponent(nombreGenerado)}&gender=male`
+  };
+});
 
   const todosLosJugadores = [...jugadoresFijosGenerados, ...jugadoresAleatoriosGenerados];
   const jugadoresCreados = await Jugador.insertMany(todosLosJugadores);
 
   // Partidos
+
+  const escudosDisponibles = [
+    '/img/realMadrid.png',
+    '/img/barcelona.png',
+    '/img/boca.avif',
+    '/img/united.webp',
+    '/img/inter.avif',
+    '/img/liverpool.webp'
+  ];
+
+
   const partidosGenerados = rivalesFuturos.map((info, index) => ({
     rival: info.rival,
+    escudo:escudosDisponibles[Math.floor(Math.random() * escudosDisponibles.length)],
     fecha: fechaEnDias((index + 1) * 7),
     lugar: lugares[randomEntre(0, 1)],
     formacionRival: info.formacion,
