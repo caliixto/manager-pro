@@ -62,17 +62,12 @@ const posicionesBase = [
 ];
 
 const rivalesFuturos = [
-  { rival: "Los Leones FC", formacion: "4-3-3 FD" },
-  { rival: "Deportivo Águilas", formacion: "4-4-2" },
-  { rival: "CD Tornado", formacion: "3-5-2" },
-];
-
-const rivalesJugados = [
-  { rival: "Atlético Barrio", formacion: "4-3-3" },
-  { rival: "FC Barcelona Amateur", formacion: "4-3-3 FD" },
-  { rival: "Real Betis Juvenil", formacion: "4-2-2 FD" },
-  { rival: "Unión Deportiva Sur", formacion: "5-3-2" },
-  { rival: "Racing Norte", formacion: "4-4-2" },
+  { rival: "Real Madrid CF", formacion: "4-3-3 FD", escudo: "/img/realMadrid.png" },
+  { rival: "Manchester United FC", formacion: "4-4-2", escudo: "/img/united.png" },
+  { rival: "Boca Juniors", formacion: "3-5-2", escudo: "/img/boca.avif" },
+  { rival: "FC Barcelona", formacion: "4-3-3", escudo: "/img/barcelona.png" },
+  { rival: "Inter de Milan", formacion: "4-2-3-1", escudo: "/img/inter.avif" },
+  { rival: "Liverpool FC", formacion: "5-3-2", escudo: "/img/liverpool.png" }
 ];
 
 const lugares = ["casa", "fuera"];
@@ -218,7 +213,7 @@ const generarEquipoInicial = async (equipoId) => {
 
   const partidosGenerados = rivalesFuturos.map((info, index) => ({
     rival: info.rival,
-    escudo:escudosDisponibles[Math.floor(Math.random() * escudosDisponibles.length)],
+    escudo:info.escudo,
     fecha: fechaEnDias((index + 1) * 7),
     lugar: lugares[randomEntre(0, 1)],
     formacionRival: info.formacion,
