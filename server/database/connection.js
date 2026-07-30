@@ -9,7 +9,6 @@ const connection = async()=>{
         
     } catch (error) {
         console.log(error);
-
         throw new Error("No se ha podido establecer la coneccion a la bbdd")
     }
 }

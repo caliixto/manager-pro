@@ -66,3 +66,45 @@
   font-size: 0.65rem;
   color: var(--text-color-secondary);
 }
+
+/*BOTON CERRAR SESSION*/
+.user-profile-wrapper {
+  position: relative; /* necesario para que el dropdown se posicione respecto a esto */
+}
+
+.user-dropdown {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  background-color: var(--color-header);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 0.4rem;
+  min-width: 160px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  z-index: 100;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  background: none;
+  border: none;
+  color: #fff;
+  padding: 0.6rem 0.8rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  text-align: left;
+}
+
+.dropdown-item:hover {
+  background-color: var(--color-principal);
+}
+
+.dropdown-item i {
+  font-size: 0.9rem;
+  color: var(--text-color-secondary);
+}

@@ -67,7 +67,24 @@ const rivalesFuturos = [
   { rival: "Boca Juniors", formacion: "3-5-2", escudo: "/img/boca.avif" },
   { rival: "FC Barcelona", formacion: "4-3-3", escudo: "/img/barcelona.png" },
   { rival: "Inter de Milan", formacion: "4-2-3-1", escudo: "/img/inter.avif" },
-  { rival: "Liverpool FC", formacion: "5-3-2", escudo: "/img/liverpool.png" }
+  { rival: "Liverpool FC", formacion: "5-3-2", escudo: "/img/liverpool.png" },
+  
+  // Los siguientes 15 equipos para completar la Liga (sin escudo o con uno por defecto de momento)
+  { rival: "Valencia City", formacion: "4-4-2", escudo: "", competicion: "liga" },
+  { rival: "Sevilla Athletic", formacion: "4-3-3", escudo: "", competicion: "liga" },
+  { rival: "Athletic Club B", formacion: "4-2-3-1", escudo: "", competicion: "liga" },
+  { rival: "Real Sociedad B", formacion: "4-3-3", escudo: "", competicion: "liga" },
+  { rival: "Villarreal C.F. B", formacion: "4-4-2", escudo: "", competicion: "liga" },
+  { rival: "Celta Fortuna", formacion: "3-5-2", escudo: "", competicion: "liga" },
+  { rival: "Real Zaragoza", formacion: "4-2-3-1", escudo: "", competicion: "liga" },
+  { rival: "RCD Espanyol B", formacion: "4-3-3", escudo: "", competicion: "liga" },
+  { rival: "Real Valladolid Promesas", formacion: "4-4-2", escudo: "", competicion: "liga" },
+  { rival: "CD Tenerife", formacion: "5-3-2", escudo: "", competicion: "liga" },
+  { rival: "UD Las Palmas Atlético", formacion: "4-3-3", escudo: "", competicion: "liga" },
+  { rival: "SD Eibar B", formacion: "4-4-2", escudo: "", competicion: "liga" },
+  { rival: "Málaga CF B", formacion: "4-3-3", escudo: "", competicion: "liga" },
+  { rival: "Deportivo de La Coruña B", formacion: "4-2-3-1", escudo: "", competicion: "liga" },
+  { rival: "Granada CF B", formacion: "5-3-2", escudo: "", competicion: "liga" }
 ];
 
 const lugares = ["casa", "fuera"];

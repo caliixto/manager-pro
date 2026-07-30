@@ -41,6 +41,10 @@ const partidoSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Jugador'
   }],
+  competicion: {
+    type:String,
+    default: ""
+  },
   createdAt: {
     type: Date,
     default: Date.now

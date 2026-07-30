@@ -6,9 +6,20 @@
 
   <div class="info">
     <i class="pi pi-bell"></i>
-    <div class="user-profile" (click)="logout()">
-      <img src="/img/perfil.jpg" alt="Perfil">
-      <i class="pi pi-chevron-down"></i>
+    
+    <div class="user-profile-wrapper">
+      <div class="user-profile" (click)="toggleMenu()">
+        <img src="/img/perfil.jpg" alt="Perfil">
+        <i class="pi pi-chevron-down"></i>
+      </div>
+
+      <!-- El menú desplegable, solo visible si menuAbierto es true -->
+      <div class="user-dropdown" *ngIf="menuAbierto">
+        <button class="dropdown-item" (click)="logout()">
+          <i class="pi pi-sign-out"></i>
+          Cerrar sesión
+        </button>
+      </div>
     </div>
   </div>
 </header>
