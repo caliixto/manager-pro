@@ -26,7 +26,7 @@
 
         <div class="calendar-day__match" *ngIf="dia.partido as partido">
           <div class="match-shield">
-            <i class="pi pi-shield"></i>
+            <img [src]="partido.escudo" loading="lazy" [alt]="partido.rival">
           </div>
           <span class="match-rival">{{ partido.rival }}</span>
           <span 

@@ -210,9 +210,9 @@ const generarEquipoInicial = async (equipoId) => {
     '/img/realMadrid.png',
     '/img/barcelona.png',
     '/img/boca.avif',
-    '/img/united.webp',
+    '/img/united.png',
     '/img/inter.avif',
-    '/img/liverpool.webp'
+    '/img/liverpool.png'
   ];
 
 
