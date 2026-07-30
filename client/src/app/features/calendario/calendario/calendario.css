@@ -96,8 +96,8 @@
 .match-shield img {
   width: 100%;
   height: 100%;
-  object-fit: contain; /* 👈 escala la imagen manteniendo proporción, sin recortar el escudo */
-  padding: 4px; /* un pequeño margen interno para que no toque los bordes */
+  object-fit: contain;
+  padding: 4px;
   box-sizing: border-box;
 }
 
@@ -186,8 +186,8 @@
   }
 
   .match-shield {
-    width: 18px;
-    height: 18px;
+    width: 30px;
+    height: 30px;
     font-size: 0.6rem;
   }
 
