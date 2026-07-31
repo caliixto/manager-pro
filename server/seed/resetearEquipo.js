@@ -9,7 +9,7 @@ const { generarEquipoInicial } = require("../utils/generarEquipoInicial");
 const EQUIPO_ID = "6a6aa10d476a773c66717b76";
 
 const resetear = async () => {
-  await mongoose.connect(process.env.MONGO_URI);
+  await mongoose.connect(process.env.MONGO_URL);
 
   console.log("Buscando jugadores existentes...");
   const jugadoresAntiguos = await Jugador.find({ equipo: EQUIPO_ID });
