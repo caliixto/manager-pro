@@ -143,3 +143,24 @@
   padding: 1rem;
 }
 
+/*ESTADISTICAS*/
+
+.tarjeta {
+  display: inline-block;
+  width: 12px;
+  height: 16px;
+  border-radius: 2px;
+  vertical-align: middle;
+}
+
+.amarilla i {
+  background-color: #fbbf24; /* Color amarillo/ámbar */
+}
+
+.rojo i {
+  background-color: #ef4444; /* Color rojo */
+}
+
+.sin-tarjetas {
+  color: #64748b;
+}

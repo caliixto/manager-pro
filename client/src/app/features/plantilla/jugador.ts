@@ -18,6 +18,11 @@ export interface Jugador {
     tiro: number;
     resistencia: number;
   };
+  partidosJugados?: number;
+  goles?: number;
+  asistencias?: number;
+  tarjetasAmarillas?: number;
+  tarjetasRojas?: number;
 }
 
 interface JugadoresResponse {
@@ -37,6 +42,7 @@ interface JugadorResponse {
 })
 export class JugadorService {
   private apiUrl = `${environment.apiUrl}/players`;
+  private url ="http://localhost:5000/api/participaciones"
 
   constructor(private http: HttpClient, private auth: AuthService) {
     console.log('Instancia de Plantilla creada');
@@ -74,4 +80,9 @@ export class JugadorService {
   eliminarJugador(id: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/jugadores/${id}`, { headers: this.getHeaders() });
   }
+
+  obtenerEstadisticasJugador(id: string): Observable<any> {
+    return this.http.get(`${this.url}/jugador/${id}`, {headers: this.getHeaders()
+  });
+}
 }

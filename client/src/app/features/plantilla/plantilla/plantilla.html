@@ -17,6 +17,20 @@
           <th>Posición</th>
           <th>Edad</th>
           <th>Estado Físico</th>
+          <!-- Goles (G) - Icono de balón -->
+          <th class="text-center" title="Goles">
+            <i class="fas fa-futbol text-emerald-400"></i>
+          </th>
+
+          <!-- Tarjeta Amarilla (TA) -->
+          <th class="text-center amarilla" title="Tarjetas Amarillas">
+            <i class="fas fa-square text-amber-400"></i>
+          </th>
+
+          <!-- Tarjeta Roja (TR) -->
+          <th class="text-center rojo" title="Tarjetas Rojas">
+            <i class="fas fa-square text-red-500"></i>
+          </th>
           <th>Acciones</th>
         </tr>
       </thead>
@@ -39,6 +53,9 @@
               </div>
             </div>
           </td>
+          <td>{{ jugador.partidosJugados ?? 0 }}</td>
+          <td>{{ jugador.goles ?? 0 }}</td>
+          <td>{{ jugador.tarjetasAmarillas ?? 0 }}</td>
           <td class="actions">
             <i class="pi pi-pencil"></i>
             <i class="pi pi-trash" (click)="eliminarJugador(jugador._id)"></i>

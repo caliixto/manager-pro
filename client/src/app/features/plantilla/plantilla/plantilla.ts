@@ -25,6 +25,9 @@ export class Plantilla implements OnInit {
       next: (response) => {
         this.jugadores.set(response.jugadores);
         this.loading.set(false);
+        response.jugadores.forEach((jugador: any) => {
+        this.cargarEstadisticas(jugador._id);
+        });
       },
       error: (err) => {
         console.error(err);
@@ -33,6 +36,24 @@ export class Plantilla implements OnInit {
       }
     });
   }
+
+cargarEstadisticas(id: string) {
+  this.jugadorService.obtenerEstadisticasJugador(id).subscribe({
+    next: (response) => {
+      // Actualiza SOLO el jugador correspondiente dentro del array existente
+      this.jugadores.update(actuales => 
+        actuales.map(j => 
+          j._id === id 
+            ? { ...j, ...response.estadisticas } // fusiona sus datos con las stats nuevas
+            : j
+        )
+      );
+    },
+    error: (err) => {
+      console.error(err);
+    }
+  });
+}
 
   getIniciales(nombre: string): string {
     return nombre
