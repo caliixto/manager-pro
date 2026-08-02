@@ -11,6 +11,9 @@
 
 .app-content {
   flex: 1;
+  margin-left: 80px;
+  margin-top: 70px;
+  padding: 2rem 2.5rem;
   overflow-y: auto;
 }
 
@@ -20,6 +23,7 @@
   }
 
   .app-content {
+    margin-left: 0;
     padding-bottom: 4.5rem;
   }
 }

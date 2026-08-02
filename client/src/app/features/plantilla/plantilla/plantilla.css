@@ -153,11 +153,15 @@
   vertical-align: middle;
 }
 
-.amarilla i {
+.amarilla {
+  width: 10px;
+  height: 14px;
   background-color: #fbbf24; /* Color amarillo/ámbar */
 }
 
-.rojo i {
+.rojo {
+   width: 10px;
+  height: 14px;
   background-color: #ef4444; /* Color rojo */
 }
 
