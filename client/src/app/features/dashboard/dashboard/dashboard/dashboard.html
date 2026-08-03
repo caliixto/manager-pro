@@ -2,6 +2,24 @@
 
   <!-- Contenido principal -->
   <section class="content">
+
+    <div class="simular-partido-wrapper">
+      <button 
+          class="btn-simular" 
+          (click)="simularPartido()" 
+          [disabled]="simulando()">
+          <i class="pi pi-play"></i>
+          {{ simulando() ? 'Simulando...' : 'Simular siguiente partido' }}
+      </button>
+
+      <p *ngIf="ultimoResultadoSimulado()" class="resultado-simulado">
+          ⚽ {{ ultimoResultadoSimulado() }}
+      </p>
+      <p *ngIf="errorSimulacion()" class="error-simulacion">
+          {{ errorSimulacion() }}
+      </p>
+    </div>
+
     <div *ngIf="proximoPartido() as partido">
         <h1 class="content__title" >Dashboard: Próximo Partido - vs. {{ partido.rival }}</h1>
     </div>

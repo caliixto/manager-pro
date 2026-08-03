@@ -743,3 +743,43 @@
   }
 }
 
+
+/*SIMULADOR */
+
+.simular-partido-wrapper {
+  margin-bottom: 1rem;
+}
+
+.btn-simular {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--color-accent);
+  color: #0a0a0a;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.btn-simular:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-simular:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.resultado-simulado {
+  margin-top: 0.5rem;
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+.error-simulacion {
+  margin-top: 0.5rem;
+  color: #ef4444;
+}

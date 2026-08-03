@@ -21,18 +21,18 @@ export class FichaJugadorComponent implements OnInit {
   historial = signal<any[]>([]);
   cargando = signal(true);
 
-  statsRadar = computed(() => {
-    const j = this.jugador();
-    if (!j) return [];
-    const porPosicion: Record<string, string[]> = {
-      POR: ['porteria', 'posicionamiento', 'reflejos', 'determinacion'],
-      DEF: ['defensa', 'fisico', 'posicionamiento', 'resistencia'],
-      CEN: ['pase', 'vision', 'regate', 'resistencia'],
-      DEL: ['tiro', 'velocidad', 'regate', 'determinacion']
-    };
-    const claves = porPosicion[j.posicion] ?? porPosicion['CEN'];
-    return claves.map(clave => ({ nombre: clave, valor: j[clave] ?? 0 }));
-  });
+ statsRadar = computed(() => {
+  const j = this.jugador();
+  if (!j) return [];
+  const porPosicion: Record<string, string[]> = {
+    POR: ['porteria', 'posicionamiento', 'determinacion', 'fisico'],
+    DEF: ['defensa', 'fisico', 'posicionamiento', 'resistencia'],
+    CEN: ['pase', 'vision', 'regate', 'resistencia'],
+    DEL: ['tiro', 'velocidad', 'regate', 'determinacion']
+  };
+  const claves = porPosicion[j.posicion] ?? porPosicion['CEN'];
+  return claves.map(clave => ({ nombre: clave, valor: j.stats?.[clave] ?? 0 }));
+});
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id')!;
@@ -53,6 +53,19 @@ export class FichaJugadorComponent implements OnInit {
         this.cargando.set(false);
       }
     });
+  }
+
+  formatearResultado(partido: any): string {
+    const r = partido?.resultado;
+    if (!r || r.golesPropios === null || r.golesRival === null) return '-';
+    return `${r.golesPropios} - ${r.golesRival}`;
+  }
+
+  getColorStat(valor: number): string {
+    if (valor >= 85) return '#22c55e'; // verde: excelente
+    if (valor >= 70) return '#84cc16'; // verde-lima: bueno
+    if (valor >= 50) return '#eab308'; // amarillo: medio
+    return '#ef4444'; // rojo: flojo
   }
 
   volver() {

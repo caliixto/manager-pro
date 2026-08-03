@@ -16,7 +16,7 @@ interface PlayerPosicionado {
 
 @Component({
   selector: 'app-dashboard',
-  imports: [PlayerRadar, CommonModule, RouterLink],
+  imports: [PlayerRadar, CommonModule],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
@@ -27,6 +27,9 @@ export class Dashboard {
   jugadorDestacado = signal<Jugador | null>(null);
   balanceTactico = signal<{ ataque: number; defensa: number; control: number }>({ ataque: 0, defensa: 0, control: 0 });
   playersEnCampo = signal<PlayerPosicionado[]>([]);
+  simulando = signal(false);
+  ultimoResultadoSimulado = signal<string | null>(null);
+  errorSimulacion = signal<string | null>(null);
 
   constructor(private authService: AuthService, private router: Router, private partido:PartidoService, private jugador:JugadorService) {}
 
@@ -167,5 +170,22 @@ irAConvocatoria() {
   }
 }
 
+  simularPartido() {
+    this.simulando.set(true);
+    this.errorSimulacion.set(null);
 
+    this.partido.simularSiguientePartido().subscribe({
+      next: (res) => {
+        const r = res.resultado;
+        this.ultimoResultadoSimulado.set(`${r.resultado} vs ${r.rival}`);
+        this.simulando.set(false);
+        this.ngOnInit();
+      },
+      error: (err) => {
+        this.errorSimulacion.set(err.error?.message ?? 'Error al simular el partido');
+        this.simulando.set(false);
+      }
+    });
+  }
 }
+

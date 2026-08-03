@@ -1,6 +1,7 @@
 const Partido = require("../models/partido");
 const Jugador = require("../models/player");
 const {seleccionarTitulares,puedeJugarPartido} = require("../utils/generarEquipoInicial");
+const { simularSiguientePartido } = require('../utils/simularPartido');
 
 const crearPartido = async (req, res) => {
   try {
@@ -261,6 +262,23 @@ const obtenerTitulares = async (req, res) => {
   }
 };
 
+const simularPartido = async (req, res) => {
+  try {
+    const equipoId = req.user.id; // asumiendo que verificarToken te deja el id aquí, como ya haces en otros controllers
+
+    const resultado = await simularSiguientePartido(equipoId);
+
+    return res.json({ status: 'success', resultado });
+  } catch (error) {
+    console.error(error);
+    // Si no hay partidos pendientes, es un caso normal, no un error 500
+    if (error.message === 'No hay partidos pendientes en el calendario') {
+      return res.status(400).json({ status: 'error', message: error.message });
+    }
+    return res.status(500).json({ status: 'error', message: 'Error en el servidor al simular el partido' });
+  }
+};
+
 
 module.exports = {
   crearPartido,
@@ -272,5 +290,6 @@ module.exports = {
   generarConvocatoria,
   obtenerBalanceTactico,
   obtenerTitulares,
-  obtenerConvocatoriaDetallada
+  obtenerConvocatoriaDetallada,
+  simularPartido 
 };

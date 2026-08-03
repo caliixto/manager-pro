@@ -24,8 +24,12 @@
     <div class="radar-stat" *ngFor="let s of statsRadar()">
       <span class="radar-stat__label">{{ s.nombre }}</span>
       <div class="estado-bar">
-        <div class="estado-bar__fill" [style.width.%]="s.valor"></div>
-      </div>
+        <div 
+            class="estado-bar__fill" 
+            [style.width.%]="s.valor"
+            [style.background-color]="getColorStat(s.valor)">
+        </div>
+        </div>
       <span class="radar-stat__valor">{{ s.valor }}</span>
     </div>
   </div>
@@ -66,7 +70,7 @@
       <tbody>
         <tr *ngFor="let p of historial()">
           <td>{{ p.partido?.rival }}</td>
-          <td>{{ p.partido?.resultado ?? '-' }}</td>
+          <td>{{ formatearResultado(p.partido) }}</td>
           <td>{{ p.minutosJugados }}</td>
           <td>{{ p.goles }}</td>
           <td>{{ p.asistencias }}</td>

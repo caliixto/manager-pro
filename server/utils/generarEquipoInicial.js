@@ -292,4 +292,38 @@ const listar = async (req, res) => {
   }
 };
 
-module.exports = { generarEquipoInicial, listar, seleccionarTitulares, puedeJugarPartido};
+// constants/nivelesRivales.js
+const NIVEL_RIVALES = {
+  // Amistosos contra grandes clubes — nivel muy alto, partidos "trampa"
+  "Real Madrid CF": 92,
+  "Manchester United FC": 88,
+  "Boca Juniors": 85,
+  "FC Barcelona": 93,
+  "Inter de Milan": 87,
+  "Liverpool FC": 89,
+
+  // Liga — nivel más variado, más realista para tu progresión
+  "Valencia": 68,
+  "Sevilla": 70,
+  "Athletic Club": 72,
+  "Real Sociedad": 71,
+  "Villarreal C.F.": 69,
+  "Celta De vigo": 62,
+  "Real Zaragoza": 58,
+  "RCD Espanyol": 60,
+  "Real Valladolid": 55,
+  "CD Tenerife": 50,
+  "UD Las Palmas": 57,
+  "SD Eibar": 52,
+  "Málaga CF": 54,
+  "Deportivo de La Coruña": 56,
+  "Granada CF": 59,
+};
+
+const NIVEL_DEFAULT = 60;
+
+function obtenerNivelRival(nombreRival) {
+  return NIVEL_RIVALES[nombreRival] ?? NIVEL_DEFAULT;
+}
+
+module.exports = { generarEquipoInicial, listar, seleccionarTitulares, puedeJugarPartido, NIVEL_RIVALES, obtenerNivelRival};

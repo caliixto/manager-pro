@@ -137,12 +137,12 @@
   background: rgba(255, 255, 255, 0.08);
   border-radius: 3px;
   overflow: hidden;
+}
 
-  &__fill {
-    height: 100%;
-    background: var(--color-accent);
-    border-radius: 3px;
-  }
+.estado-bar__fill {
+  height: 100%;
+  background: var(--color-accent);
+  border-radius: 3px;
 }
 
 /*Stats de temporad*/

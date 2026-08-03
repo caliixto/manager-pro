@@ -83,4 +83,12 @@ export class PartidoService {
   obtenerConvocatoriaDetallada(partidoId: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/${partidoId}/convocatoria-detalle`, { headers: this.getHeaders() });
   }
+
+    simularSiguientePartido() {
+    return this.http.post<{ status: string; resultado: any }>(
+      `${this.apiUrl}/partidos/simular`,
+      {},
+      { headers: this.getHeaders() }
+    );
+  }
 }

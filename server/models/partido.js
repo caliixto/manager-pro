@@ -51,4 +51,4 @@ const partidoSchema = new Schema({
   }
 });
 
-module.exports = mongoose.model("Partido", partidoSchema);
+module.exports = mongoose.models.Partido || mongoose.model("Partido", partidoSchema);
