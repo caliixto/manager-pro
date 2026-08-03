@@ -1,6 +1,6 @@
 // utils/simularPartido.js
 const Jugador = require('../models/player');
-const Partido = require('../models/Partido');
+const Partido = require('../models/partido');
 const Participacion = require('../models/participacion');
 const { obtenerNivelRival } = require('../utils/generarEquipoInicial');
 
