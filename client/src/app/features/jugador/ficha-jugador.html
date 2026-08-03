@@ -1,0 +1,81 @@
+<!-- ficha-jugador.component.html -->
+<div class="ficha-container" *ngIf="!cargando(); else loading">
+
+  <button class="btn-volver" routerLink="/plantilla">
+    <i class="pi pi-arrow-left"></i>
+    <span (click)="volver()">Volver</span>
+  </button>
+
+  <div class="ficha-header">
+    <img [src]="jugador()?.foto" class="ficha-avatar" [alt]="jugador()?.nombre">
+    <div class="ficha-info">
+      <h2>{{ jugador()?.nombre }}</h2>
+      <div class="ficha-badges">
+        <span class="position-badge">{{ jugador()?.posicion }}</span>
+        <span class="edad">{{ jugador()?.edad }} años</span>
+        <span class="badge-lesionado" *ngIf="jugador()?.lesionado">Lesionado</span>
+        <span class="badge-sancionado" *ngIf="jugador()?.sancionado">Sancionado</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="ficha-radar">
+    <h3>Rendimiento</h3>
+    <div class="radar-stat" *ngFor="let s of statsRadar()">
+      <span class="radar-stat__label">{{ s.nombre }}</span>
+      <div class="estado-bar">
+        <div class="estado-bar__fill" [style.width.%]="s.valor"></div>
+      </div>
+      <span class="radar-stat__valor">{{ s.valor }}</span>
+    </div>
+  </div>
+
+  <div class="ficha-stats-temporada">
+    <div class="stat-card">
+      <strong>{{ estadisticas()?.partidosJugados }}</strong>
+      <span>Partidos</span>
+    </div>
+    <div class="stat-card">
+      <strong>{{ estadisticas()?.goles }}</strong>
+      <span>Goles</span>
+    </div>
+    <div class="stat-card">
+      <strong>{{ estadisticas()?.asistencias }}</strong>
+      <span>Asistencias</span>
+    </div>
+    <div class="stat-card">
+      <strong>{{ estadisticas()?.tarjetasAmarillas }}</strong>
+      <span>Amarillas</span>
+    </div>
+    <div class="stat-card">
+      <strong>{{ estadisticas()?.tarjetasRojas }}</strong>
+      <span>Rojas</span>
+    </div>
+    <div class="stat-card">
+      <strong>{{ estadisticas()?.minutosTotales }}</strong>
+      <span>Minutos</span>
+    </div>
+  </div>
+
+  <div class="ficha-historial-wrapper">
+    <h3>Historial de partidos</h3>
+    <table class="ficha-historial">
+      <thead>
+        <tr><th>Rival</th><th>Resultado</th><th>Min</th><th>G</th><th>A</th></tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of historial()">
+          <td>{{ p.partido?.rival }}</td>
+          <td>{{ p.partido?.resultado ?? '-' }}</td>
+          <td>{{ p.minutosJugados }}</td>
+          <td>{{ p.goles }}</td>
+          <td>{{ p.asistencias }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<ng-template #loading>
+  <p class="ficha-loading">Cargando ficha...</p>
+</ng-template>

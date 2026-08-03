@@ -1,7 +1,9 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { Location } from '@angular/common'; 
 import { PartidoService } from '../partido';
+import { JugadorService } from '../../plantilla/jugador';
 
 interface JugadorConvocatoria {
   _id: string;
@@ -28,7 +30,9 @@ export class ConvocatoriaDetalle implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private partidoService: PartidoService
+    private partidoService: PartidoService, 
+    private jugadorServie: JugadorService,
+    private locacion:Location
   ) {}
 
   ngOnInit() {
@@ -76,5 +80,27 @@ export class ConvocatoriaDetalle implements OnInit {
     if (j.sancionado) return 'sancionado';
     if (j.convocado) return 'convocado';
     return 'no-convocado';
+  }
+
+    cargarEstadisticas(id: string) {
+    this.jugadorServie.obtenerEstadisticasJugador(id).subscribe({
+      next: (response) => {
+        // Actualiza SOLO el jugador correspondiente dentro del array existente
+        this.jugadores.update(actuales => 
+          actuales.map(j => 
+            j._id === id 
+              ? { ...j, ...response.estadisticas } // fusiona sus datos con las stats nuevas
+              : j
+          )
+        );
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    });
+  }
+
+  volver(){
+    this.locacion.back();
   }
 }

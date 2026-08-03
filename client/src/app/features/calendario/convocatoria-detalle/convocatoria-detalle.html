@@ -1,13 +1,13 @@
 <div class="convocatoria-page">
 
   <div class="convocatoria-header">
-    <a routerLink="/dashboard" class="back-link">← Volver</a>
+    <a class="back-link" (click)="volver()">← Volver</a>
     <h1>Convocatoria vs. {{ rival() }}</h1>
     <p class="convocatoria-subtitle">{{ jugadores().length }} jugadores en plantilla</p>
   </div>
 
   <div class="convocatoria-list" *ngIf="!loading()">
-    <div class="jugador-row" *ngFor="let jugador of jugadores()">
+    <div class="jugador-row" *ngFor="let jugador of jugadores()" [routerLink]="['/jugador', jugador._id]">
       <div class="jugador-avatar" *ngIf="!jugador.foto">{{ getIniciales(jugador.nombre) }}</div>
       <img *ngIf="jugador.foto" [src]="jugador.foto" class="jugador-avatar-img">
       

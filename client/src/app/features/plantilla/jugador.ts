@@ -84,5 +84,5 @@ export class JugadorService {
   obtenerEstadisticasJugador(id: string): Observable<any> {
     return this.http.get(`${this.url}/jugador/${id}`, {headers: this.getHeaders()
   });
-}
+  }
 }

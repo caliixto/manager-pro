@@ -1,10 +1,11 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { JugadorService, Jugador } from '../jugador';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-plantilla',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './plantilla.html',
   styleUrl: './plantilla.css',
 })

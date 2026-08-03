@@ -4,6 +4,7 @@ const verificarToken = require("../middlewares/auth");
 const participacion = require("../controllers/participacion");
 
 router.get("/jugador/:jugadorId", verificarToken, participacion.obtenerEstadisticasJugador);
+router.get('/jugadores/:jugadorId/estadisticas', verificarToken, participacion.obtenerEstadisticasJugador);
 router.post("/", verificarToken, participacion.registrarParticipacion);
 
 module.exports = router;

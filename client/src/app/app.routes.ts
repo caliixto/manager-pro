@@ -19,9 +19,11 @@ export const routes: Routes = [
     { path: 'dashboard', component: Dashboard },
     { path: 'plantilla', component: Plantilla },
     { path: 'convocatoria/:id', component: ConvocatoriaDetalle },
-//  { path: 'tacticas', component: Tacticas },       // 
+    {
+        path: 'jugador/:id',
+        loadComponent: () => import('./features/jugador/ficha-jugador').then(m => m.FichaJugadorComponent)
+    },    
     { path: 'calendario', component: Calendario },
-//  { path: 'estadisticas', component: Estadisticas }, // 
     ]
   }
 ];

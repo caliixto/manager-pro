@@ -35,7 +35,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let jugador of jugadores()">
+        <tr *ngFor="let jugador of jugadores()" [routerLink]="['/jugador', jugador._id]" class="fila-clicable">
           <td>
             <img [src]="jugador.foto" class="player-avatar-img" [alt]="jugador.nombre">
           </td>
@@ -57,8 +57,11 @@
           <td>{{ jugador.goles ?? 0 }}</td>
           <td>{{ jugador.tarjetasAmarillas ?? 0 }}</td>
           <td class="actions">
-            <i class="pi pi-pencil"></i>
-            <i class="pi pi-trash" (click)="eliminarJugador(jugador._id)"></i>
+            <div class="actions-inner">
+              <i class="pi pi-eye" (click)="$event.stopPropagation()"></i>
+              <i class="pi pi-pencil"></i>
+              <i class="pi pi-trash" (click)="eliminarJugador(jugador._id); $event.stopPropagation()"></i>
+            </div>
           </td>
         </tr>
       </tbody>
