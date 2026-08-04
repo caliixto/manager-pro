@@ -20,8 +20,10 @@
       <div 
         class="calendar-day" 
         *ngFor="let dia of semana"
-        [class.calendar-day--empty]="!dia.numero">
-        
+        [class.calendar-day--empty]="!dia.numero"
+        [class.calendar-day--scanning]="esCeldaEscaneando(dia)"
+        [class.calendar-day--next]="esProximoPartido(dia)">
+
         <span class="calendar-day__number" *ngIf="dia.numero">{{ dia.numero }}</span>
 
         <div class="calendar-day__match" *ngIf="dia.partido as partido">

@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
+import { Component, OnInit, signal, computed, afterNextRender  } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PartidoService, Partido } from '../partido';
 
@@ -18,13 +18,32 @@ export class Calendario implements OnInit {
   partidos = signal<Partido[]>([]);
   loading = signal(true);
   errorMsg = signal('');
-
   mesActual = signal<number>(new Date().getMonth()); // 0-11
   anioActual = signal<number>(new Date().getFullYear());
+  diaResaltadoAnimacion = signal<number | null>(null);
+  animacionTerminada = signal(false);
 
   diasSemana = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
 
-  constructor(private partidoService: PartidoService) {}
+   proximoPartido = computed<Partido | null>(() => {
+    const pendientes = this.partidos()
+      .filter(p => !p.jugado)
+      .sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
+    return pendientes[0] ?? null;
+  });
+
+  constructor(private partidoService: PartidoService) {
+    afterNextRender(() => {
+      this.scrollAlProximoPartido();
+    });
+  }
+
+  private scrollAlProximoPartido() {
+    const el = document.getElementById('proximo-partido');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
 
   ngOnInit() {
     this.cargarPartidos();
@@ -35,7 +54,9 @@ export class Calendario implements OnInit {
     this.partidoService.listarPartidos().subscribe({
       next: (response) => {
         this.partidos.set(response.partidos);
+         this.irAMesRelevante();
         this.loading.set(false);
+        this.iniciarAnimacionRecorrido();
       },
       error: (err) => {
         console.error(err);
@@ -43,6 +64,25 @@ export class Calendario implements OnInit {
         this.loading.set(false);
       }
     });
+  }
+
+   private irAMesRelevante() {
+    const partido = this.proximoPartido();
+    let fechaReferencia: Date;
+
+    if (partido) {
+      // Hay partido pendiente: vamos a su mes
+      fechaReferencia = new Date(partido.fecha);
+    } else {
+      // Temporada completa: nos quedamos en el mes del último partido jugado
+      const jugados = this.partidos()
+        .filter(p => p.jugado)
+        .sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
+      fechaReferencia = jugados[0] ? new Date(jugados[0].fecha) : new Date();
+    }
+
+    this.mesActual.set(fechaReferencia.getMonth());
+    this.anioActual.set(fechaReferencia.getFullYear());
   }
 
   // Genera la cuadrícula completa del mes, incluyendo celdas vacías de relleno
@@ -132,5 +172,62 @@ export class Calendario implements OnInit {
     if (golesPropios! > golesRival!) return 'win';
     if (golesPropios === golesRival) return 'draw';
     return 'loss';
+  }
+
+  private iniciarAnimacionRecorrido() {
+  const partido = this.proximoPartido();
+  if (!partido) return; // temporada completa, no hay a dónde "viajar"
+
+  const fechaPartido = new Date(partido.fecha);
+
+  if (fechaPartido.getMonth() !== this.mesActual() || fechaPartido.getFullYear() !== this.anioActual()) {
+    this.animacionTerminada.set(true);
+    return;
+  }
+
+  const diaObjetivo = fechaPartido.getDate();
+
+  // 👇 NUEVO: buscamos el último partido YA JUGADO dentro de este mismo mes
+  const jugadosEnEsteMes = this.partidos()
+    .filter(p => {
+      if (!p.jugado) return false;
+      const f = new Date(p.fecha);
+      return f.getMonth() === this.mesActual() && f.getFullYear() === this.anioActual();
+    })
+    .sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime()); // más reciente primero
+
+  // Si hay un partido jugado este mes, arrancamos desde su día. Si no, desde el día 1.
+  let diaActual = jugadosEnEsteMes[0]
+    ? new Date(jugadosEnEsteMes[0].fecha).getDate()
+    : 1;
+
+  // Si por lo que sea ya estamos en el día objetivo o más allá, no animamos nada
+  if (diaActual >= diaObjetivo) {
+    this.animacionTerminada.set(true);
+    return;
+  }
+
+  this.diaResaltadoAnimacion.set(diaActual);
+
+  const intervalo = setInterval(() => {
+    diaActual++;
+    this.diaResaltadoAnimacion.set(diaActual);
+
+    if (diaActual >= diaObjetivo) {
+      clearInterval(intervalo);
+      this.animacionTerminada.set(true);
+      this.diaResaltadoAnimacion.set(null);
+    }
+  }, 300); // Velocidad
+}
+
+  esCeldaEscaneando(dia: DiaCalendario): boolean {
+    return dia.numero !== null && dia.numero === this.diaResaltadoAnimacion();
+  }
+
+  esProximoPartido(dia: DiaCalendario): boolean {
+    const proximo = this.proximoPartido();
+    if (!proximo || !dia.partido) return false;
+    return dia.partido._id === proximo._id && this.animacionTerminada();
   }
 }

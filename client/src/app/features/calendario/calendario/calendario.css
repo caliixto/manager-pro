@@ -215,3 +215,29 @@
     display: none; /* en pantallas muy pequeñas, oculta el nombre del rival para no saturar */
   }
 }
+
+/*Celda*/
+
+.calendar-day--next {
+  position: relative;
+  border: 2px solid var(--color-accent);
+  border-radius: 8px;
+  box-shadow: 0 0 12px rgba(34, 197, 94, 0.4);
+  animation: pulso-proximo 2s ease-in-out infinite;
+}
+
+.calendar-day--scanning {
+  border: 2px solid var(--color-accent);
+  border-radius: 8px;
+  background: rgba(34, 197, 94, 0.12);
+  transition: background 0.1s ease;
+}
+
+@keyframes pulso-proximo {
+  0%, 100% {
+    box-shadow: 0 0 8px rgba(34, 197, 94, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 16px rgba(34, 197, 94, 0.6);
+  }
+}
