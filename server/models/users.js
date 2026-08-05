@@ -22,6 +22,16 @@ const usersSchema = new Schema({
     required: [true, 'La contraseña es obligatorio'],
     trim: true
   },
+  nombreEquipo: {
+    type: String,
+    default: 'Equipo Default',
+    trim: true
+  },
+  escudo: {
+    type: String,
+    default: '/img/miteam.webp',
+    trim: true
+  },
   resetPasswordToken: {
     type: String
   },

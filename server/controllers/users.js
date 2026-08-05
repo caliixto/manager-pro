@@ -46,7 +46,7 @@ const registrarUsers = async(req, res)=>{
 
 const loginUsers = async (req,res) =>{
     try{
-        const {nombrecompleto,email, password} = req.body;
+        const {nombrecompleto,email, password, nombreEquipo, escudo} = req.body;
 
         const emailEncontrado = await Users.findOne({email:email});
 
@@ -65,7 +65,8 @@ const loginUsers = async (req,res) =>{
         if (!passwordCorrecta) {
             return res.status(401).json({ status: "error", mensaje: "Contraseña incorrecta" });
         }
-        return res.json({ status: "success", mensaje: "¡Bienvenido,!"+ nombrecompleto, token, user: { name: emailEncontrado.nombrecompleto, role: "coach" }  });
+        return res.json({ status: "success", mensaje: "¡Bienvenido,!"+ nombrecompleto, token, user: { name: emailEncontrado.nombrecompleto,nombreEquipo: emailEncontrado.nombreEquipo, 
+                escudo: emailEncontrado.escudo, role: "coach" }  });
 
     }catch(error){
         console.log(error);

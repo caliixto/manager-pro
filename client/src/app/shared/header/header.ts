@@ -31,6 +31,10 @@ export class Header {
     this.router.navigate(['/']);
   }
 
+  get currentUser() {
+    return this.auth.getUser();
+  }
+
   
   
 

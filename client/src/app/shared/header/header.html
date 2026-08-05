@@ -1,7 +1,7 @@
 <header class="layout__header">
   <div class="manager">
-    <img src="/img/miteam.webp" alt="" class="img__logo">
-    <span class="font-bold">{{this.name}}</span>
+    <img [src]="currentUser?.escudo || '/img/miteam.webp'" alt="Escudo del equipo" class="img__logo" />
+    <span class="font-bold">{{currentUser?.nombreEquipo}}</span>
   </div>
 
   <div class="info">

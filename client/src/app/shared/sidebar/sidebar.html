@@ -1,6 +1,6 @@
 <aside class="sidebar">
     <div class="sidebar__logo">
-      <img src="/img/miteam.webp" alt="" class="img__logo">
+      <img [src]="currentUser?.escudo || '/img/miteam.webp'" alt="Escudo del equipo" class="img__logo" />
     </div>
     <nav class="sidebar__nav">
       <a routerLink="/dashboard" routerLinkActive="active" class="nav__item">

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { AuthService } from '../../features/auth/auth';
 
 @Component({
   selector: 'app-sidebar',
@@ -7,4 +8,13 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.css',
 })
-export class Sidebar {}
+export class Sidebar {
+
+  constructor(private auth:AuthService){}
+
+ get currentUser() {
+    return this.auth.getUser();
+  }
+
+
+}

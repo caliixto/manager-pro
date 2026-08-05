@@ -4,10 +4,18 @@ import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
 import { environment } from '../../../environments/environment';
 
+interface UserData {
+  name: string;
+  nombreEquipo?: string;
+  escudo?: string;
+  role: string;
+}
+
 interface LoginResponse {
   status: string;
   mensaje: string;
   token?: string;
+  user?: UserData;
 }
 
 interface ForgotPasswordResponse {
@@ -56,11 +64,11 @@ export class AuthService {
     return !!this.getToken();
   }
 
-  saveUser(user: { name: string; role: string }): void {
+  saveUser(user: UserData): void {
     localStorage.setItem('auth_user', JSON.stringify(user));
   }
 
-  getUser(): { name: string; role: string } | null {
+  getUser(): UserData | null {
     const data = localStorage.getItem('auth_user');
     return data ? JSON.parse(data) : null;
   }
