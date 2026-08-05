@@ -18,7 +18,7 @@ const resetear = async () => {
   console.log("Borrando datos antiguos...");
   await Participacion.deleteMany({ jugador: { $in: idsJugadoresAntiguos } });
   await Jugador.deleteMany({ equipo: EQUIPO_ID });
-  await Partido.deleteMany({ equipo: EQUIPO_ID });
+  await Partido.deleteMany({ equipo: EQUIPO_ID});
 
   console.log("Generando datos nuevos con el código actual...");
   await generarEquipoInicial(EQUIPO_ID);

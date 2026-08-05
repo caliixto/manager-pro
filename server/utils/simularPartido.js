@@ -29,7 +29,7 @@ function golesAleatorios(expectativa) {
 
 async function simularSiguientePartido(equipoId) {
   // 1. Buscamos el próximo partido sin jugar, el más cercano en fecha
-  const partido = await Partido.findOne({ equipo: equipoId, jugado: false })
+  const partido = await Partido.findOne({ equipo: equipoId, competicion:"liga oro", jugado: false })
     .sort({ fecha: 1 });
 
   if (!partido) {

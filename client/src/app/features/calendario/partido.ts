@@ -85,10 +85,6 @@ export class PartidoService {
   }
 
     simularSiguientePartido() {
-    return this.http.post<{ status: string; resultado: any }>(
-      `${this.apiUrl}/partidos/simular`,
-      {},
-      { headers: this.getHeaders() }
-    );
+    return this.http.post<{ status: string; resultado: any }>(`${this.apiUrl}/partidos/simular`,{},{ headers: this.getHeaders() });
   }
 }
