@@ -9,63 +9,65 @@
   </div>
 
   <div class="plantilla-table-wrapper" *ngIf="!loading()">
-    <table class="plantilla-table">
-      <thead>
-        <tr>
-          <th>Foto</th>
-          <th>Nombre</th>
-          <th>Posición</th>
-          <th>Edad</th>
-          <th>Estado Físico</th>
-          <!-- Goles (G) - Icono de balón -->
-          <th class="text-center" title="Goles">
-            <i class="fas fa-futbol text-emerald-400"></i>
-          </th>
+    <div style="overflow-x: auto; width: 100%;">
+      <table class="plantilla-table">
+        <thead>
+          <tr>
+            <th>Foto</th>
+            <th>Nombre</th>
+            <th>Posición</th>
+            <th>Edad</th>
+            <th>Estado Físico</th>
+            <!-- Goles (G) - Icono de balón -->
+            <th class="text-center" title="Goles">
+              <i class="fas fa-futbol text-emerald-400"></i>
+            </th>
 
-          <!-- Tarjeta Amarilla (TA) -->
-          <th class="text-center" title="Tarjetas Amarillas">
-            <div class="amarilla"></div>
-          </th>
+            <!-- Tarjeta Amarilla (TA) -->
+            <th class="text-center" title="Tarjetas Amarillas">
+              <div class="amarilla"></div>
+            </th>
 
-          <!-- Tarjeta Roja (TR) -->
-          <th class="text-center" title="Tarjetas Rojas">
-            <div class="rojo"></div>
-          </th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let jugador of jugadores()" [routerLink]="['/jugador', jugador._id]" class="fila-clicable">
-          <td>
-            <img [src]="jugador.foto" class="player-avatar-img" [alt]="jugador.nombre">
-          </td>
-          <td class="player-name">{{ jugador.nombre }}</td>
-          <td>
-            <span class="position-badge">{{ jugador.posicion }}</span>
-          </td>
-          <td>{{ jugador.edad }}</td>
-          <td>
-            <div class="estado-bar">
-              <div 
-                class="estado-bar__fill" 
-                [style.width.%]="jugador.estadoFisico"
-                [style.background-color]="getColorEstado(jugador.estadoFisico)">
+            <!-- Tarjeta Roja (TR) -->
+            <th class="text-center" title="Tarjetas Rojas">
+              <div class="rojo"></div>
+            </th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let jugador of jugadores()" [routerLink]="['/jugador', jugador._id]" class="fila-clicable">
+            <td>
+              <img [src]="jugador.foto" class="player-avatar-img" [alt]="jugador.nombre">
+            </td>
+            <td class="player-name">{{ jugador.nombre }}</td>
+            <td>
+              <span class="position-badge">{{ jugador.posicion }}</span>
+            </td>
+            <td>{{ jugador.edad }}</td>
+            <td>
+              <div class="estado-bar">
+                <div 
+                  class="estado-bar__fill" 
+                  [style.width.%]="jugador.estadoFisico"
+                  [style.background-color]="getColorEstado(jugador.estadoFisico)">
+                </div>
               </div>
-            </div>
-          </td>
-          <td>{{ jugador.goles ?? 0 }}</td>
-          <td>{{ jugador.tarjetasAmarillas ?? 0 }}</td>
-          <td>{{ jugador.tarjetasRojas ?? 0 }}</td>
-          <td class="actions">
-            <div class="actions-inner">
-              <i class="pi pi-eye" (click)="$event.stopPropagation()"></i>
-              <i class="pi pi-pencil"></i>
-              <i class="pi pi-trash" (click)="eliminarJugador(jugador._id); $event.stopPropagation()"></i>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+            </td>
+            <td>{{ jugador.goles ?? 0 }}</td>
+            <td>{{ jugador.tarjetasAmarillas ?? 0 }}</td>
+            <td>{{ jugador.tarjetasRojas ?? 0 }}</td>
+            <td class="actions">
+              <div class="actions-inner">
+                <i class="pi pi-eye" (click)="$event.stopPropagation()"></i>
+                <i class="pi pi-pencil"></i>
+                <i class="pi pi-trash" (click)="eliminarJugador(jugador._id); $event.stopPropagation()"></i>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
     <p *ngIf="jugadores().length === 0" class="empty-state">
       Aún no tienes jugadores en tu plantilla. ¡Añade el primero!
