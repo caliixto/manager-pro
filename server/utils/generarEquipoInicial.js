@@ -326,4 +326,4 @@ function obtenerNivelRival(nombreRival) {
   return NIVEL_RIVALES[nombreRival] ?? NIVEL_DEFAULT;
 }
 
-module.exports = { generarEquipoInicial, listar, seleccionarTitulares, puedeJugarPartido, NIVEL_RIVALES, obtenerNivelRival};
+module.exports = { generarEquipoInicial, listar, seleccionarTitulares, puedeJugarPartido, NIVEL_RIVALES, obtenerNivelRival, rivalesFuturos};

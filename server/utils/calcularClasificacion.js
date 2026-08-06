@@ -1,5 +1,6 @@
 const Partido = require('../models/partido');
 const Users = require('../models/users');
+const { rivalesFuturos } = require('./generarEquipoInicial');
 
 async function calcularClasificacionLiga(equipoId) {
   const usuario = await Users.findById(equipoId);
@@ -23,7 +24,11 @@ async function calcularClasificacionLiga(equipoId) {
     }
   }
 
-  asegurarEquipo(nombreEquipoUsuario, escudoUsuario, true);
+   asegurarEquipo(nombreEquipoUsuario, escudoUsuario, true);
+  rivalesFuturos
+    .filter(r => r.competicion === 'liga')
+    .forEach(r => asegurarEquipo(r.rival, r.escudo));
+
   for (const partido of partidosLiga) {
     asegurarEquipo(partido.rival, partido.escudo);
 
