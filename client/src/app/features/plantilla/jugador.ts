@@ -42,7 +42,7 @@ interface JugadorResponse {
 })
 export class JugadorService {
   private apiUrl = `${environment.apiUrl}/players`;
-  private url ="http://localhost:5000/api/participaciones"
+  private url =`${environment.apiUrl}/participaciones`;
 
   constructor(private http: HttpClient, private auth: AuthService) {
     console.log('Instancia de Plantilla creada');
