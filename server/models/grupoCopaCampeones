@@ -8,4 +8,4 @@ const grupoSchema = new Schema({
   rivalesGrupo: [{ nombre: String, escudo: String, nivel: Number }]
 });
 
-module.exports = model('grupos', grupoSchema);
+module.exports = mongoose.model('grupos', grupoSchema);

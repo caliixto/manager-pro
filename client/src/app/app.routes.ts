@@ -14,16 +14,14 @@ export const routes: Routes = [
     { path: 'reset-password/:token', component: ResetPassword },
     {path: '',component: AppLayout,
       children: [
-	  { path: 'login', component: Login },
-	  { path: 'register', component: Register },
-    { path: 'dashboard', component: Dashboard },
-    { path: 'plantilla', component: Plantilla },
-    { path: 'convocatoria/:id', component: ConvocatoriaDetalle },
-    {
-        path: 'jugador/:id',
-        loadComponent: () => import('./features/jugador/ficha-jugador').then(m => m.FichaJugadorComponent)
-    },    
-    { path: 'calendario', component: Calendario },
+      { path: 'login', component: Login },
+      { path: 'register', component: Register },
+      { path: 'dashboard', component: Dashboard },
+      { path: 'plantilla', component: Plantilla },
+      { path: 'convocatoria/:id', component: ConvocatoriaDetalle },
+      { path: 'jugador/:id',loadComponent: () => import('./features/jugador/ficha-jugador').then(m => m.FichaJugadorComponent)},    
+      { path: 'calendario', component: Calendario },
+      {path: 'clasificacion',loadComponent: () => import('./features/clasificacion/clasificacion/clasificacion').then(m => m.Clasificacion)},
     ]
-  }
+  },
 ];

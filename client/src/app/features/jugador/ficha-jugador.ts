@@ -36,7 +36,6 @@ export class FichaJugadorComponent implements OnInit {
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id')!;
-    this.debugInfo.set(`Cargando ID: ${id}`);
 
     this.jugadorService.obtenerJugador(id).subscribe({
       next: (res) => this.jugador.set(res.jugador),

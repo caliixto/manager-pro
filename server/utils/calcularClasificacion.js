@@ -1,9 +1,13 @@
 const Partido = require('../models/partido');
+const Users = require('../models/users');
 
-async function calcularClasificacionLiga(equipoId, temporada) {
+async function calcularClasificacionLiga(equipoId) {
+  const usuario = await Users.findById(equipoId);
+  const nombreEquipoUsuario = usuario?.NOMBRE_CAMPO_AQUI || 'Equipo Default';
+  const escudoUsuario = usuario?.NOMBRE_CAMPO_ESCUDO_AQUI || '/img/miteam.webp';
   const partidosLiga = await Partido.find({
     equipo: equipoId,
-    competicion: 'liga oro',
+    competicion: 'liga',
     jugado: true,
   });
 
@@ -19,14 +23,13 @@ async function calcularClasificacionLiga(equipoId, temporada) {
     }
   }
 
-  asegurarEquipo('Calixto Fc', '/img/miteam.webp'); // 
-
+  asegurarEquipo(nombreEquipoUsuario, escudoUsuario, true);
   for (const partido of partidosLiga) {
     asegurarEquipo(partido.rival, partido.escudo);
 
     const { golesPropios, golesRival } = partido.resultado;
 
-    const tu = tabla['Tu Equipo'];
+    const tu = tabla[nombreEquipoUsuario];
     const riv = tabla[partido.rival];
 
     tu.pj++; riv.pj++;

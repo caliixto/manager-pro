@@ -87,4 +87,8 @@ export class PartidoService {
     simularSiguientePartido() {
     return this.http.post<{ status: string; resultado: any }>(`${this.apiUrl}/partidos/simular`,{},{ headers: this.getHeaders() });
   }
+
+  obtenerClasificacionLiga() {
+    return this.http.get<{ status: string; clasificacion: any[] }>(`${this.apiUrl}/liga/clasificacion`,{ headers: this.getHeaders() });
+  }
 }

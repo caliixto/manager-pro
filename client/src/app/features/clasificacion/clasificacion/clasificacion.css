@@ -1,0 +1,127 @@
+/* clasificacion.css */
+
+.clasificacion-page {
+  padding: 1.5rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.clasificacion-header {
+  margin-bottom: 1.5rem;
+}
+
+.clasificacion-header h1 {
+  font-size: 1.4rem;
+  margin: 0 0 0.25rem 0;
+}
+
+.clasificacion-subtitle {
+  color: var(--text-color-secondary);
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.clasificacion-table-wrapper {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 1rem;
+  overflow-x: auto;
+}
+
+.clasificacion-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.clasificacion-table th {
+  text-align: center;
+  color: var(--text-color-secondary);
+  font-weight: 500;
+  padding: 0.6rem 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  white-space: nowrap;
+}
+
+.clasificacion-table th.col-equipo {
+  text-align: left;
+}
+
+.clasificacion-table td {
+  text-align: center;
+  padding: 0.65rem 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.clasificacion-table tr:last-child td {
+  border-bottom: none;
+}
+
+.col-posicion {
+  font-weight: 600;
+  color: var(--text-color-secondary);
+}
+
+.col-equipo {
+  text-align: left !important;
+}
+
+.equipo-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.equipo-escudo {
+  width: 45px;
+  height: 45px;
+  object-fit: contain;
+}
+
+.col-pts {
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+.dg-positivo {
+  color: var(--color-accent);
+}
+
+.dg-negativo {
+  color: #ef4444;
+}
+
+/* Resalta la fila de tu propio equipo */
+.fila-propia {
+  background: rgba(34, 197, 94, 0.08);
+}
+
+.fila-propia .col-posicion,
+.fila-propia .equipo-cell span {
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+.empty-state,
+.loading-state,
+.error-msg {
+  text-align: center;
+  color: var(--text-color-secondary);
+  padding: 2rem;
+}
+
+.error-msg {
+  color: #ef4444;
+}
+
+/* Responsive: móvil */
+@media (max-width: 600px) {
+  .clasificacion-table {
+    font-size: 0.75rem;
+  }
+  .equipo-escudo {
+    width: 18px;
+    height: 18px;
+  }
+}

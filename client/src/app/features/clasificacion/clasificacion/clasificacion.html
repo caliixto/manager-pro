@@ -1,0 +1,60 @@
+<!-- clasificacion.html -->
+<div class="clasificacion-page">
+
+  <div class="clasificacion-header">
+    <h1>Clasificación de Liga</h1>
+    <p class="clasificacion-subtitle" *ngIf="clasificacion().length > 0">
+      {{ clasificacion().length }} equipos
+    </p>
+  </div>
+
+  <div class="clasificacion-table-wrapper" *ngIf="!loading()">
+    <table class="clasificacion-table" *ngIf="clasificacion().length > 0">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th class="col-equipo">Equipo</th>
+          <th title="Partidos Jugados">PJ</th>
+          <th title="Partidos Ganados">PG</th>
+          <th title="Partidos Empatados">PE</th>
+          <th title="Partidos Perdidos">PP</th>
+          <th title="Goles a Favor">GF</th>
+          <th title="Goles en Contra">GC</th>
+          <th title="Diferencia de Goles">DG</th>
+          <th class="col-pts">Pts</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr 
+          *ngFor="let equipo of clasificacion()" 
+          [class.fila-propia]="esTuEquipo(equipo)">
+          <td class="col-posicion">{{ equipo.posicion }}</td>
+          <td class="col-equipo">
+            <div class="equipo-cell">
+              <img [src]="equipo.escudo" class="equipo-escudo" [alt]="equipo.nombre" *ngIf="equipo.escudo">
+              <span>{{ equipo.nombre }}</span>
+            </div>
+          </td>
+          <td>{{ equipo.pj }}</td>
+          <td>{{ equipo.pg }}</td>
+          <td>{{ equipo.pe }}</td>
+          <td>{{ equipo.pp }}</td>
+          <td>{{ equipo.gf }}</td>
+          <td>{{ equipo.gc }}</td>
+          <td [class.dg-positivo]="equipo.dg > 0" [class.dg-negativo]="equipo.dg < 0">
+            {{ equipo.dg > 0 ? '+' : '' }}{{ equipo.dg }}
+          </td>
+          <td class="col-pts"><strong>{{ equipo.pts }}</strong></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p *ngIf="clasificacion().length === 0" class="empty-state">
+      Aún no hay partidos de Liga disputados. Simula tu primer partido desde el Dashboard para empezar a ver la clasificación.
+    </p>
+  </div>
+
+  <p *ngIf="loading()" class="loading-state">Cargando clasificación...</p>
+  <p *ngIf="errorMsg()" class="error-msg">{{ errorMsg() }}</p>
+
+</div>

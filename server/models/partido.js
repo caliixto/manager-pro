@@ -42,10 +42,10 @@ const partidoSchema = new Schema({
     ref: 'Jugador'
   }],
   competicion: {
-    type: String,
-    enum: ['liga oro', 'copa de campeones', 'copa de triunfo'],
-    required: true,
-    default: 'liga oro'
+  type: String,
+  enum: ['liga', 'amistoso', 'copa campeones', 'copa triunfo', 'segunda division'],
+  required: true,
+  default: 'liga'
   },
   createdAt: {
     type: Date,

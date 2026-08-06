@@ -62,28 +62,28 @@ const posicionesBase = [
 ];
 
 const rivalesFuturos = [
-  { rival: "Real Madrid CF", formacion: "4-3-3 FD", escudo: "/img/realMadrid.png",competicion: "liga oro"},
-  { rival: "Manchester United FC", formacion: "4-4-2", escudo: "/img/united.png", competicion: "liga oro"},
-  { rival: "Boca Juniors", formacion: "3-5-2", escudo: "/img/boca.avif", competicion: "liga oro" },
-  { rival: "FC Barcelona", formacion: "4-3-3", escudo: "/img/barcelona.png", competicion: "liga oro" },
-  { rival: "Inter de Milan", formacion: "4-2-3-1", escudo: "/img/inter.avif", competicion: "liga oro" },
-  { rival: "Liverpool FC", formacion: "5-3-2", escudo: "/img/liverpool.png", competicion: "liga oro" },
+  { rival: "Real Madrid CF", formacion: "4-3-3 FD", escudo: "/img/realMadrid.png",competicion: "amistoso"},
+  { rival: "Manchester United FC", formacion: "4-4-2", escudo: "/img/united.png", competicion: "amistoso"},
+  { rival: "Boca Juniors", formacion: "3-5-2", escudo: "/img/boca.avif", competicion: "amistoso" },
+  { rival: "FC Barcelona", formacion: "4-3-3", escudo: "/img/barcelona.png", competicion: "amistoso" },
+  { rival: "Inter de Milan", formacion: "4-2-3-1", escudo: "/img/inter.avif", competicion: "amistoso" },
+  { rival: "Liverpool FC", formacion: "5-3-2", escudo: "/img/liverpool.png", competicion: "amistoso" },
 
-  { rival: "Valencia", formacion: "4-4-2", escudo: "/img/valencia.png", competicion: "liga oro" },
-  { rival: "Sevilla", formacion: "4-3-3", escudo: "/img/sevilla.png", competicion: "liga oro" },
-  { rival: "Athletic Club", formacion: "4-2-3-1", escudo: "/img/AthleticBilbao.png", competicion: "liga oro" },
-  { rival: "Real Sociedad", formacion: "4-3-3", escudo: "/img/sociedad.png", competicion: "liga oro" },
-  { rival: "Villarreal C.F.", formacion: "4-4-2", escudo: "/img/villarreal.png", competicion: "liga oro" },
-  { rival: "Celta De vigo", formacion: "3-5-2", escudo: "/img/celta.png", competicion: "liga oro" },
-  { rival: "Real Zaragoza", formacion: "4-2-3-1", escudo: "/img/zaragoza.png", competicion: "liga oro" },
-  { rival: "RCD Espanyol", formacion: "4-3-3", escudo: "/img/rcdespanyol.png", competicion: "liga oro" },
-  { rival: "Real Valladolid", formacion: "4-4-2", escudo: "/img/valladolid.png", competicion: "liga oro" },
-  { rival: "CD Tenerife", formacion: "5-3-2", escudo: "/img/tenerife.png", competicion: "liga oro" },
-  { rival: "UD Las Palmas", formacion: "4-3-3", escudo: "/img/LasPalmas.png", competicion: "liga oro" },
-  { rival: "SD Eibar", formacion: "4-4-2", escudo: "/img/eibar.png", competicion: "liga oro" },
-  { rival: "Málaga CF", formacion: "4-3-3", escudo: "/img/Malaga.png", competicion: "liga oro" },
-  { rival: "Deportivo de La Coruña", formacion: "4-2-3-1", escudo: "/img/LaCoruña.png", competicion: "liga oro" },
-  { rival: "Granada CF", formacion: "5-3-2", escudo: "/img/granada.png", competicion: "liga oro" }
+  { rival: "Valencia", formacion: "4-4-2", escudo: "/img/valencia.png", competicion: "liga" },
+  { rival: "Sevilla", formacion: "4-3-3", escudo: "/img/sevilla.png", competicion: "liga" },
+  { rival: "Athletic Club", formacion: "4-2-3-1", escudo: "/img/AthleticBilbao.png", competicion: "liga" },
+  { rival: "Real Sociedad", formacion: "4-3-3", escudo: "/img/sociedad.png", competicion: "liga" },
+  { rival: "Villarreal C.F.", formacion: "4-4-2", escudo: "/img/villarreal.png", competicion: "liga" },
+  { rival: "Celta De vigo", formacion: "3-5-2", escudo: "/img/celta.png", competicion: "liga" },
+  { rival: "Real Zaragoza", formacion: "4-2-3-1", escudo: "/img/zaragoza.png", competicion: "liga" },
+  { rival: "RCD Espanyol", formacion: "4-3-3", escudo: "/img/rcdespanyol.png", competicion: "liga" },
+  { rival: "Real Valladolid", formacion: "4-4-2", escudo: "/img/valladolid.png", competicion: "liga" },
+  { rival: "CD Tenerife", formacion: "5-3-2", escudo: "/img/tenerife.png", competicion: "liga" },
+  { rival: "UD Las Palmas", formacion: "4-3-3", escudo: "/img/LasPalmas.png", competicion: "liga" },
+  { rival: "SD Eibar", formacion: "4-4-2", escudo: "/img/eibar.png", competicion: "liga" },
+  { rival: "Málaga CF", formacion: "4-3-3", escudo: "/img/Malaga.png", competicion: "liga" },
+  { rival: "Deportivo de La Coruña", formacion: "4-2-3-1", escudo: "/img/LaCoruña.png", competicion: "liga" },
+  { rival: "Granada CF", formacion: "5-3-2", escudo: "/img/granada.png", competicion: "liga" }
 ];
 
 const lugares = ["casa", "fuera"];
