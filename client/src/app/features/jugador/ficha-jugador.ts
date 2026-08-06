@@ -20,7 +20,6 @@ export class FichaJugadorComponent implements OnInit {
   estadisticas = signal<any | null>(null);
   historial = signal<any[]>([]);
   cargando = signal(true);
-    debugInfo = signal<string>('');
 
  statsRadar = computed(() => {
   const j = this.jugador();
@@ -43,7 +42,6 @@ export class FichaJugadorComponent implements OnInit {
       next: (res) => this.jugador.set(res.jugador),
       error: (err) => {
         console.error('Error cargando jugador', err);
-        this.debugInfo.update(t => t + `\nERROR jugador: ${err.status} - ${JSON.stringify(err.error)}`);
       }
     });
 
@@ -52,12 +50,10 @@ export class FichaJugadorComponent implements OnInit {
         this.estadisticas.set(res.estadisticas);
         this.historial.set(res.historial);
         this.cargando.set(false);
-        this.debugInfo.update(t => t + `\nOK estadisticas: ${JSON.stringify(res.estadisticas)}`);
       },
       error: (err) => {
         console.error('Error cargando estadísticas', err);
         this.cargando.set(false);
-        this.debugInfo.update(t => t + `\nERROR estadisticas: ${err.status} - ${JSON.stringify(err.error)} - URL: ${err.url}`);
       }
     });
   }
