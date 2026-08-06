@@ -1,4 +1,5 @@
 const Jugador = require("../models/player");
+const mongoose = require("mongoose");
 
 // Crear un jugador nuevo
 const crearJugador = async (req, res) => {
@@ -100,10 +101,69 @@ const eliminarJugador = async (req, res) => {
   }
 };
 
+const listarConEstadisticas = async (req, res) => {
+  try {
+    const equipo = req.user.id;
+
+    const jugadores = await Jugador.aggregate([
+      // 1. Filtramos solo los jugadores de tu equipo
+      { $match: { equipo: new mongoose.Types.ObjectId(equipo) } },
+
+      // 2. "Unimos" cada jugador con sus participaciones (como un JOIN de SQL)
+      {
+        $lookup: {
+          from: 'participacions', // ⚠️ nombre real de la colección en Mongo, ver nota abajo
+          localField: '_id',
+          foreignField: 'jugador',
+          as: 'participaciones'
+        }
+      },
+
+      // 3. Calculamos los totales sumando el array de participaciones
+      {
+        $addFields: {
+          partidosJugados: { $size: '$participaciones' },
+          goles: { $sum: '$participaciones.goles' },
+          asistencias: { $sum: '$participaciones.asistencias' },
+          tarjetasAmarillas: {
+            $size: {
+              $filter: {
+                input: '$participaciones',
+                cond: { $eq: ['$$this.tarjetaAmarilla', true] }
+              }
+            }
+          },
+          tarjetasRojas: {
+            $size: {
+              $filter: {
+                input: '$participaciones',
+                cond: { $eq: ['$$this.tarjetaRoja', true] }
+              }
+            }
+          }
+        }
+      },
+
+      // 4. Quitamos el array completo de participaciones (ya no lo necesitamos, solo los totales)
+      { $project: { participaciones: 0 } }
+    ]);
+
+    return res.json({
+      status: "success",
+      total: jugadores.length,
+      jugadores
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ status: "error", message: "Error en el servidor" });
+  }
+};
+
 module.exports = {
   crearJugador,
   listarJugadores,
   obtenerJugador,
   editarJugador,
-  eliminarJugador
+  eliminarJugador,
+  listarConEstadisticas
 };

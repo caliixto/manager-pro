@@ -6,6 +6,7 @@ const verificarToken  = require ("../middlewares/auth");
 
 router.post("/", verificarToken, player.crearJugador);
 router.get("/listar", verificarToken, equipoInicial.listar);
+router.get("/jugadores/listarConEstadisticas", verificarToken, player.listarConEstadisticas);
 router.get("/jugadores", verificarToken, player.listarJugadores);
 router.get("/jugadores/:id", verificarToken, player.obtenerJugador);
 router.put("/jugadores/:id", verificarToken, player.editarJugador);

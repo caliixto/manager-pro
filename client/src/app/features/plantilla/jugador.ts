@@ -85,4 +85,8 @@ export class JugadorService {
     return this.http.get(`${this.url}/jugador/${id}`, {headers: this.getHeaders()
   });
   }
+
+  listarConEstadisticas() {
+    return this.http.get<{ status: string; total: number; jugadores: Jugador[] }>(`${this.apiUrl}/jugadores/listarConEstadisticas`,{ headers: this.getHeaders() });
+  }
 }
