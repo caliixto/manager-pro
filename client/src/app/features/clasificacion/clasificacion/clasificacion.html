@@ -2,13 +2,30 @@
 <div class="clasificacion-page">
 
   <div class="clasificacion-header">
-    <h1>Clasificación de Liga</h1>
+    <h1>Liga</h1>
     <p class="clasificacion-subtitle" *ngIf="clasificacion().length > 0">
       {{ clasificacion().length }} equipos
     </p>
   </div>
 
-  <div class="clasificacion-table-wrapper" *ngIf="!loading()">
+  <!-- Toggle de pestañas -->
+  <div class="tabs-toggle">
+    <button 
+      class="tab-btn" 
+      [class.tab-btn--active]="vistaActiva() === 'clasificacion'"
+      (click)="cambiarVista('clasificacion')">
+      Clasificación
+    </button>
+    <button 
+      class="tab-btn" 
+      [class.tab-btn--active]="vistaActiva() === 'resultados'"
+      (click)="cambiarVista('resultados')">
+      Resultados
+    </button>
+  </div>
+
+  <!-- Vista: Clasificación -->
+  <div class="clasificacion-table-wrapper" *ngIf="vistaActiva() === 'clasificacion' && !loading()">
     <table class="clasificacion-table" *ngIf="clasificacion().length > 0">
       <thead>
         <tr>
@@ -48,13 +65,40 @@
         </tr>
       </tbody>
     </table>
-
     <p *ngIf="clasificacion().length === 0" class="empty-state">
-      Aún no hay partidos de Liga disputados. Simula tu primer partido desde el Dashboard para empezar a ver la clasificación.
+      Aún no hay partidos de Liga disputados.
     </p>
   </div>
 
-  <p *ngIf="loading()" class="loading-state">Cargando clasificación...</p>
+  <!-- Vista: Resultados por jornada -->
+  <div class="jornadas-wrapper" *ngIf="vistaActiva() === 'resultados'">
+    <div class="jornada-block" *ngFor="let bloque of jornadas()">
+      <h3 class="jornada-titulo">Jornada {{ bloque.jornada }}</h3>
+      <div class="partidos-grid">
+        <div class="partido-card" *ngFor="let p of bloque.partidos">
+          <div class="equipo-lado">
+            <img [src]="p.escudoA" class="partido-escudo" [alt]="p.equipoA" *ngIf="p.escudoA">
+            <span class="equipo-nombre">{{ p.equipoA }}</span>
+          </div>
+          <div class="marcador">
+            <span [class.ganador]="p.golesA > p.golesB">{{ p.golesA }}</span>
+            <span class="marcador-separador">-</span>
+            <span [class.ganador]="p.golesB > p.golesA">{{ p.golesB }}</span>
+          </div>
+          <div class="equipo-lado equipo-lado--derecha">
+            <span class="equipo-nombre">{{ p.equipoB }}</span>
+            <img [src]="p.escudoB" class="partido-escudo" [alt]="p.equipoB" *ngIf="p.escudoB">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p *ngIf="jornadas().length === 0" class="empty-state">
+      Aún no se han jugado jornadas entre el resto de equipos.
+    </p>
+  </div>
+
+  <p *ngIf="loading()" class="loading-state">Cargando...</p>
   <p *ngIf="errorMsg()" class="error-msg">{{ errorMsg() }}</p>
 
 </div>

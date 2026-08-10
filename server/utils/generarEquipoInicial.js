@@ -64,13 +64,13 @@ const posicionesBase = [
 const rivalesFuturos = [
   { rival: "Real Madrid CF", formacion: "4-3-3 FD", escudo: "/img/realMadrid.png",competicion: "amistoso"},
   { rival: "Manchester United FC", formacion: "4-4-2", escudo: "/img/united.png", competicion: "amistoso"},
-  { rival: "Boca Juniors", formacion: "3-5-2", escudo: "/img/boca.avif", competicion: "amistoso" },
   { rival: "FC Barcelona", formacion: "4-3-3", escudo: "/img/barcelona.png", competicion: "amistoso" },
   { rival: "Inter de Milan", formacion: "4-2-3-1", escudo: "/img/inter.avif", competicion: "amistoso" },
   { rival: "Liverpool FC", formacion: "5-3-2", escudo: "/img/liverpool.png", competicion: "amistoso" },
 
   { rival: "Valencia", formacion: "4-4-2", escudo: "/img/valencia.png", competicion: "liga" },
   { rival: "Sevilla", formacion: "4-3-3", escudo: "/img/sevilla.png", competicion: "liga" },
+  { rival: "Boca Juniors", formacion: "3-5-2", escudo: "/img/boca.avif", competicion: "liga" },
   { rival: "Athletic Club", formacion: "4-2-3-1", escudo: "/img/AthleticBilbao.png", competicion: "liga" },
   { rival: "Real Sociedad", formacion: "4-3-3", escudo: "/img/sociedad.png", competicion: "liga" },
   { rival: "Villarreal C.F.", formacion: "4-4-2", escudo: "/img/villarreal.png", competicion: "liga" },
@@ -235,6 +235,7 @@ const generarEquipoInicial = async (equipoId) => {
     formacionRival: info.formacion,
     jugado: false,
     equipo: equipoId,
+    competicion: info.competicion,
   }));
   const partidosCreados = await Partido.insertMany(partidosGenerados);
 
@@ -297,7 +298,6 @@ const NIVEL_RIVALES = {
   // Amistosos contra grandes clubes — nivel muy alto, partidos "trampa"
   "Real Madrid CF": 92,
   "Manchester United FC": 88,
-  "Boca Juniors": 85,
   "FC Barcelona": 93,
   "Inter de Milan": 87,
   "Liverpool FC": 89,
@@ -305,6 +305,7 @@ const NIVEL_RIVALES = {
   // Liga — nivel más variado, más realista para tu progresión
   "Valencia": 68,
   "Sevilla": 70,
+  "Boca Juniors": 75,
   "Athletic Club": 72,
   "Real Sociedad": 71,
   "Villarreal C.F.": 69,

@@ -17,6 +17,8 @@ router.get("/liga/clasificacion", verificarToken, async (req, res) => {  // 👈
     return res.status(500).json({ status: 'error', message: 'Error al calcular la clasificación' });
   }
 });
+
+router.get("/liga/jornadas", verificarToken, partido.obtenerJornadasRivales);
 router.put("/:id", verificarToken, partido.editarPartido);
 router.delete("/:id", verificarToken, partido.eliminarPartido);
 router.post("/:id/convocatoria", verificarToken, partido.generarConvocatoria);

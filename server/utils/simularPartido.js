@@ -2,7 +2,10 @@
 const Jugador = require('../models/player');
 const Partido = require('../models/partido');
 const Participacion = require('../models/participacion');
-const { obtenerNivelRival } = require('../utils/generarEquipoInicial');
+const { obtenerNivelRival, rivalesFuturos } = require('./generarEquipoInicial');
+const { simularJornadaEntreRivales } = require('./simularJornadaRivales');
+const { golesAleatorios } = require('./golesPoisson');
+
 
 // Nivel de un jugador: media de sus 12 stats
 function calcularNivelJugador(jugador) {
@@ -11,25 +14,9 @@ function calcularNivelJugador(jugador) {
   return valores.reduce((a, b) => a + b, 0) / valores.length;
 }
 
-// Genera un número de goles a partir de una "expectativa" (más realista que un rango fijo)
-function golesAleatorios(expectativa) {
-  // Aproximación simple de Poisson: sumamos varias tiradas random pequeñas
-  let goles = 0;
-  let lambda = Math.max(expectativa, 0.1);
-  let p = Math.exp(-lambda);
-  let acumulado = p;
-  let r = Math.random();
-  while (acumulado < r && goles < 8) {
-    goles++;
-    p *= lambda / goles;
-    acumulado += p;
-  }
-  return goles;
-}
-
 async function simularSiguientePartido(equipoId) {
   // 1. Buscamos el próximo partido sin jugar, el más cercano en fecha
-  const partido = await Partido.findOne({ equipo: equipoId, competicion:"liga", jugado: false })
+  const partido = await Partido.findOne({ equipo: equipoId, jugado: false })
     .sort({ fecha: 1 });
 
   if (!partido) {
@@ -119,6 +106,16 @@ async function simularSiguientePartido(equipoId) {
   partido.resultado = { golesPropios, golesRival };
   partido.convocados = titulares.map(j => j._id);
   await partido.save();
+
+  if (partido.competicion === 'liga') {
+  const rivalesLiga = rivalesFuturos.filter(r => r.competicion === 'liga');
+  const jornadaActual = await Partido.countDocuments({ 
+    equipo: equipoId, 
+    competicion: 'liga', 
+    jugado: true 
+  });
+  await simularJornadaEntreRivales(equipoId, rivalesLiga, jornadaActual);
+}
 
   return {
     rival: partido.rival,

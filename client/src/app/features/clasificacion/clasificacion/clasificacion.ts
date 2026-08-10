@@ -10,7 +10,10 @@ import { PartidoService } from '../../calendario/partido';
   styleUrl: './clasificacion.css',
 })
 export class Clasificacion implements OnInit {
+  vistaActiva = signal<'clasificacion' | 'resultados'>('clasificacion');
+
   clasificacion = signal<any[]>([]);
+  jornadas = signal<any[]>([]);
   loading = signal(true);
   errorMsg = signal('');
 
@@ -18,6 +21,11 @@ export class Clasificacion implements OnInit {
 
   ngOnInit() {
     this.cargarClasificacion();
+    this.cargarJornadas();
+  }
+
+  cambiarVista(vista: 'clasificacion' | 'resultados') {
+    this.vistaActiva.set(vista);
   }
 
   cargarClasificacion() {
@@ -32,6 +40,13 @@ export class Clasificacion implements OnInit {
         this.errorMsg.set('No se pudo cargar la clasificación');
         this.loading.set(false);
       }
+    });
+  }
+
+  cargarJornadas() {
+    this.partidoService.obtenerJornadasRivales().subscribe({
+      next: (response) => this.jornadas.set(response.jornadas),
+      error: (err) => console.error(err)
     });
   }
 

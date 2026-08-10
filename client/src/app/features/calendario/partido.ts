@@ -91,4 +91,8 @@ export class PartidoService {
   obtenerClasificacionLiga() {
     return this.http.get<{ status: string; clasificacion: any[] }>(`${this.apiUrl}/liga/clasificacion`,{ headers: this.getHeaders() });
   }
+
+  obtenerJornadasRivales() {
+    return this.http.get<{ status: string; jornadas: any[] }>(`${this.apiUrl}/liga/jornadas`,{ headers: this.getHeaders() });
+  }
 }

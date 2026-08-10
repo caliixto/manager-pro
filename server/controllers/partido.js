@@ -2,6 +2,7 @@ const Partido = require("../models/partido");
 const Jugador = require("../models/player");
 const {seleccionarTitulares,puedeJugarPartido} = require("../utils/generarEquipoInicial");
 const { simularSiguientePartido } = require('../utils/simularPartido');
+const PartidoRival = require('../models/partidoRival');
 
 const crearPartido = async (req, res) => {
   try {
@@ -264,7 +265,7 @@ const obtenerTitulares = async (req, res) => {
 
 const simularPartido = async (req, res) => {
   try {
-    const equipoId = req.user.id; // asumiendo que verificarToken te deja el id aquí, como ya haces en otros controllers
+    const equipoId = req.user.id;
 
     const resultado = await simularSiguientePartido(equipoId);
 
@@ -276,6 +277,31 @@ const simularPartido = async (req, res) => {
       return res.status(400).json({ status: 'error', message: error.message });
     }
     return res.status(500).json({ status: 'error', message: 'Error en el servidor al simular el partido' });
+  }
+};
+
+const obtenerJornadasRivales = async (req, res) => {
+  try {
+    const equipoId = req.user.id;
+
+    const partidosRivales = await PartidoRival.find({ equipo: equipoId }).sort({ jornada: 1, fecha: 1 });
+
+    // Agrupamos por jornada
+    const jornadas = {};
+    for (const p of partidosRivales) {
+      if (!jornadas[p.jornada]) jornadas[p.jornada] = [];
+      jornadas[p.jornada].push(p);
+    }
+
+    // Convertimos a array ordenado, jornada más reciente primero
+    const resultado = Object.entries(jornadas)
+      .map(([jornada, partidos]) => ({ jornada: Number(jornada), partidos }))
+      .sort((a, b) => b.jornada - a.jornada);
+
+    return res.json({ status: 'success', jornadas: resultado });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ status: 'error', message: 'Error al obtener las jornadas' });
   }
 };
 
@@ -291,5 +317,6 @@ module.exports = {
   obtenerBalanceTactico,
   obtenerTitulares,
   obtenerConvocatoriaDetallada,
-  simularPartido 
+  simularPartido,
+  obtenerJornadasRivales
 };
