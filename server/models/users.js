@@ -42,6 +42,11 @@ const usersSchema = new Schema({
     type: Number,
     default: 5000000
   },
+  alineacion: {
+    type: [Schema.Types.ObjectId],
+    ref: 'Jugador',
+    default: []
+  },
   createdAt: {
     type: Date,
     default: Date.now

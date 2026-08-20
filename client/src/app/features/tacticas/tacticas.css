@@ -1,0 +1,160 @@
+.tacticas-container {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  padding: 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.tacticas-campo-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  flex: 2; /* Hace que esta columna ocupe el doble de espacio */
+}
+
+.formacion-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  label {
+    font-weight: 600;
+    color: white;
+  }
+
+  select {
+    background: #272C30;
+    color: white;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+}
+
+.campo-futbol {
+  position: relative;
+  width: 100%;
+  max-width: 400px;       /* Reducimos un poco el ancho máximo para que no ocupe tanto horizontalmente */
+  max-height: 126vh;       /* Bajamos la altura máxima para que quepa perfectamente sin scroll */
+  aspect-ratio: 4 / 5;    /* Hacemos la proporción un poco más cuadrada/compacta en lugar de tan alargada (2/3) */
+  background: linear-gradient(
+    to bottom,
+    #2d8a3e 0%, #2d8a3e 10%,
+    #268034 10%, #268034 20%,
+    #2d8a3e 20%, #2d8a3e 30%,
+    #268034 30%, #268034 40%,
+    #2d8a3e 40%, #2d8a3e 50%,
+    #268034 50%, #268034 60%,
+    #2d8a3e 60%, #2d8a3e 70%,
+    #268034 70%, #268034 80%,
+    #2d8a3e 80%, #2d8a3e 90%,
+    #268034 90%, #268034 100%
+  );
+  border-radius: 8px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.campo-lineas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.jugador-en-campo {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+}
+
+.jugador-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid white;
+}
+
+.jugador-nombre-campo {
+  font-size: 12px;
+  font-weight: 500;
+  color: white;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+  white-space: nowrap;
+  margin-top: 2px;
+}
+
+/* Banquillo */
+
+.banquillo-panel {
+  flex: 1; /* Ocupa la mitad de espacio que el campo */
+  max-width: 220px; /* Reducido para que la lista sea más estrecha */
+  background: #1a1e21;
+  border-radius: 12px;
+  padding: 12px;
+  max-height: 75vh; /* Opcional: darle un poco más de altura si lo necesitas */
+  overflow-y: auto;
+
+  h3 {
+    color: white;
+    margin-bottom: 10px;
+    font-size: 14px;
+  }
+}
+
+.banquillo-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.jugador-banquillo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 6px;
+  padding: 6px 8px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+
+  &:hover {
+    background: rgba(255,255,255,0.1);
+  }
+}
+
+.jugador-avatar-pequeno {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.jugador-banquillo-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.jugador-banquillo-nombre {
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.jugador-banquillo-posicion {
+  color: rgba(255,255,255,0.5);
+  font-size: 10px;
+}

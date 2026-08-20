@@ -88,9 +88,52 @@ const forgotPassword = async (req, res) => {
   }
 };
 
+const obtenerAlineacion = async (req, res) => {
+  try {
+    const equipoId = req.user.id;
+
+    const user = await Users.findById(equipoId).populate('alineacion');
+
+    if (!user) {
+      return res.status(404).json({ status: "error", message: "Usuario no encontrado" });
+    }
+
+    return res.json({ status: "success", alineacion: user.alineacion });
+
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ status: "error", message: "Error en el servidor" });
+  }
+};
+
+const guardarAlineacion = async (req, res) => {
+  try {
+    const equipoId = req.user.id;
+    const { alineacion } = req.body; // array de 11 IDs de jugadores
+
+    if (!Array.isArray(alineacion) || alineacion.length !== 11) {
+      return res.status(400).json({ status: "error", message: "La alineación debe tener exactamente 11 jugadores" });
+    }
+
+    const user = await Users.findByIdAndUpdate(
+      equipoId,
+      { alineacion },
+      { new: true }
+    ).populate('alineacion');
+
+    return res.json({ status: "success", mensaje: "Alineación guardada correctamente", alineacion: user.alineacion });
+
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ status: "error", message: "Error en el servidor" });
+  }
+};
+
 
 module.exports={
     registrarUsers,
     loginUsers,
-    forgotPassword
+    forgotPassword,
+    obtenerAlineacion,
+    guardarAlineacion
 };

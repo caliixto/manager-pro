@@ -8,6 +8,7 @@ import { Plantilla } from './features/plantilla/plantilla/plantilla';
 import { AppLayout } from './shared/app-layout/app-layout';
 import { Calendario } from './features/calendario/calendario/calendario';
 import { ConvocatoriaDetalle } from './features/calendario/convocatoria-detalle/convocatoria-detalle';
+import { Tacticas } from './features/tacticas/tacticas';
 
 export const routes: Routes = [
     { path: '', component: Landing },
@@ -18,6 +19,7 @@ export const routes: Routes = [
       { path: 'register', component: Register },
       { path: 'dashboard', component: Dashboard },
       { path: 'plantilla', component: Plantilla },
+      { path: 'tacticas', component: Tacticas },
       { path: 'convocatoria/:id', component: ConvocatoriaDetalle },
       { path: 'jugador/:id',loadComponent: () => import('./features/jugador/ficha-jugador').then(m => m.FichaJugadorComponent)},    
       { path: 'calendario', component: Calendario },

@@ -1,0 +1,59 @@
+<div class="tacticas-container">
+
+  <!-- Columna izquierda: selector de formación + campo -->
+  <div class="tacticas-campo-wrapper">
+    <div class="formacion-selector">
+      <label>Formación</label>
+      <select [value]="formacionSeleccionada()" (change)="cambiarFormacion($any($event.target).value)">
+        <option *ngFor="let f of formacionesDisponibles" [value]="f">{{ f }}</option>
+      </select>
+    </div>
+
+    <div class="campo-futbol">
+      <svg class="campo-lineas" viewBox="0 0 100 150" preserveAspectRatio="none">
+        <!-- todo el SVG que ya tenías, sin cambios -->
+        <rect x="2" y="2" width="96" height="146" fill="none" stroke="white" stroke-width="0.5" />
+        <line x1="2" y1="75" x2="98" y2="75" stroke="white" stroke-width="0.5" />
+        <circle cx="50" cy="75" r="12" fill="none" stroke="white" stroke-width="0.5" />
+        <circle cx="50" cy="75" r="0.8" fill="white" />
+        <rect x="20" y="2" width="60" height="20" fill="none" stroke="white" stroke-width="0.5" />
+        <rect x="35" y="2" width="30" height="8" fill="none" stroke="white" stroke-width="0.5" />
+        <path d="M 35 22 A 15 15 0 0 0 65 22" fill="none" stroke="white" stroke-width="0.5" />
+        <circle cx="50" cy="16" r="0.8" fill="white" />
+        <rect x="20" y="128" width="60" height="20" fill="none" stroke="white" stroke-width="0.5" />
+        <rect x="35" y="140" width="30" height="8" fill="none" stroke="white" stroke-width="0.5" />
+        <path d="M 35 128 A 15 15 0 0 1 65 128" fill="none" stroke="white" stroke-width="0.5" />
+        <circle cx="50" cy="134" r="0.8" fill="white" />
+        <path d="M 2 2 A 3 3 0 0 1 5 5" fill="none" stroke="white" stroke-width="0.5" />
+        <path d="M 98 2 A 3 3 0 0 0 95 5" fill="none" stroke="white" stroke-width="0.5" />
+        <path d="M 2 148 A 3 3 0 0 0 5 145" fill="none" stroke="white" stroke-width="0.5" />
+        <path d="M 98 148 A 3 3 0 0 1 95 145" fill="none" stroke="white" stroke-width="0.5" />
+      </svg>
+
+      <div
+        *ngFor="let item of titularesConSlot"
+        class="jugador-en-campo"
+        [style.top.%]="item.slot.top"
+        [style.left.%]="item.slot.left"
+      >
+        <img [src]="item.jugador.foto" [alt]="item.jugador.nombre" class="jugador-avatar">
+        <span class="jugador-nombre-campo">{{ item.jugador.nombre }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Columna derecha: banquillo / convocados -->
+  <div class="banquillo-panel">
+    <h3>Banquillo</h3>
+    <div class="banquillo-lista">
+      <div *ngFor="let jugador of suplentes()" class="jugador-banquillo">
+        <img [src]="jugador.foto" [alt]="jugador.nombre" class="jugador-avatar-pequeno">
+        <div class="jugador-banquillo-info">
+          <span class="jugador-banquillo-nombre">{{ jugador.nombre }}</span>
+          <span class="jugador-banquillo-posicion">{{ jugador.posicion }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
