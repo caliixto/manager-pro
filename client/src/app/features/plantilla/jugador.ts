@@ -23,6 +23,7 @@ export interface Jugador {
   asistencias?: number;
   tarjetasAmarillas?: number;
   tarjetasRojas?: number;
+  resistencia:number;
 }
 
 interface JugadoresResponse {

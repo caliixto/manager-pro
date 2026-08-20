@@ -15,20 +15,16 @@
           <tr>
             <th>Foto</th>
             <th>Nombre</th>
+            <th>Resistencia</th>
             <th>Posición</th>
             <th>Edad</th>
             <th>Estado Físico</th>
-            <!-- Goles (G) - Icono de balón -->
             <th class="text-center" title="Goles">
               <i class="fas fa-futbol text-emerald-400"></i>
             </th>
-
-            <!-- Tarjeta Amarilla (TA) -->
             <th class="text-center" title="Tarjetas Amarillas">
               <div class="amarilla"></div>
             </th>
-
-            <!-- Tarjeta Roja (TR) -->
             <th class="text-center" title="Tarjetas Rojas">
               <div class="rojo"></div>
             </th>
@@ -41,6 +37,11 @@
               <img [src]="jugador.foto" class="player-avatar-img" [alt]="jugador.nombre">
             </td>
             <td class="player-name">{{ jugador.nombre }}</td>
+            <td>
+              <span [class]="jugador.resistencia | colorResistencia">
+                🔋 {{ jugador.resistencia }}%
+              </span>
+            </td>
             <td>
               <span class="position-badge">{{ jugador.posicion }}</span>
             </td>

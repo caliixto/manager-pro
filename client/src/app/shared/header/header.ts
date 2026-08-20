@@ -35,6 +35,11 @@ export class Header {
     return this.auth.getUser();
   }
 
+
+  get monedasFormateadas(): string {
+    const monedas = this.auth.usuario()?.monedas ?? 0;
+    return (monedas / 1000000).toFixed(1) + 'M';
+  }
   
   
 

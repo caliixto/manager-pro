@@ -2,10 +2,12 @@ import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { JugadorService, Jugador } from '../jugador';
 import { RouterLink } from '@angular/router';
+import { ColorResistenciaPipe } from '../../../shared/color-resistencia-pipe';
 
 @Component({
   selector: 'app-plantilla',
-  imports: [CommonModule, RouterLink],
+  standalone: true,
+  imports: [CommonModule, RouterLink, ColorResistenciaPipe],
   templateUrl: './plantilla.html',
   styleUrl: './plantilla.css',
 })

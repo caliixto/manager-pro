@@ -38,6 +38,10 @@ const usersSchema = new Schema({
   resetPasswordExpires: {
     type: Date
   },
+  monedas: {
+    type: Number,
+    default: 5000000
+  },
   createdAt: {
     type: Date,
     default: Date.now

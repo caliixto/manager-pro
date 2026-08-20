@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
@@ -8,6 +8,7 @@ interface UserData {
   name: string;
   nombreEquipo?: string;
   escudo?: string;
+  monedas:number;
   role: string;
 }
 
@@ -37,6 +38,8 @@ export class AuthService {
    private apiUrl = `${environment.apiUrl}`;
    private tokenKey = 'auth_token';
 
+   usuario = signal<UserData | null>(this.getUser());
+
   constructor (private http:HttpClient){}
 
   loginAdmin(email: string, password: string): Observable<LoginResponse> {
@@ -65,8 +68,9 @@ export class AuthService {
   }
 
   saveUser(user: UserData): void {
-    localStorage.setItem('auth_user', JSON.stringify(user));
-  }
+  localStorage.setItem('auth_user', JSON.stringify(user));
+  this.usuario.set(user)
+}
 
   getUser(): UserData | null {
     const data = localStorage.getItem('auth_user');
@@ -77,6 +81,7 @@ export class AuthService {
     localStorage.removeItem(this.tokenKey);
     localStorage.removeItem('auth_user');
     sessionStorage.removeItem(this.welcomeShownKey);
+    this.usuario.set(null);
   }
 
   forgotPassword(email: string): Observable<ForgotPasswordResponse> {

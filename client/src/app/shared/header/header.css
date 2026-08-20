@@ -105,6 +105,21 @@
   color: var(--text-color-secondary);
 }
 
+/*Monedas*/
+
+.monedas-badge {
+  gap: 6px;
+  padding: 4px 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  font-weight: 600;
+  margin-right: 12px;
+
+  .icono-moneda {
+    font-size: 16px;
+  }
+}
+
 @media (max-width: 768px) {
   .layout__header {
     height: 60px;

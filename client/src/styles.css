@@ -54,3 +54,15 @@ footer {
   color: #ffffff !important;
   border-color: var(--color-border) !important;
 }
+
+/*Colores resistencia*/
+
+.resistencia-verde {
+  color: #22c55e; // o background si prefieres una barra/punto
+}
+.resistencia-naranja {
+  color: #f97316;
+}
+.resistencia-roja {
+  color: #ef4444;
+}

@@ -5,8 +5,8 @@ const Jugador = require("../models/player");
 const Partido = require("../models/partido");
 const Participacion = require("../models/participacion");
 const { generarEquipoInicial } = require("../utils/generarEquipoInicial");
-const {PartidoRival} = require ("../models/partidoRival");
 const partidoRival = require("../models/partidoRival");
+const Users = require("../models/users")
 
 const EQUIPO_ID = "6a6aa10d476a773c66717b76";
 
@@ -25,6 +25,7 @@ const resetear = async () => {
 
   console.log("Generando datos nuevos con el código actual...");
   await generarEquipoInicial(EQUIPO_ID);
+  await Users.findByIdAndUpdate(EQUIPO_ID, { $set: { monedas: 5000000 } });
 
   console.log("✅ Equipo reseteado correctamente. Ya puedes hacer login con tu usuario de siempre.");
   process.exit(0);

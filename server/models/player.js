@@ -63,6 +63,12 @@ const jugadorSchema = new Schema({
     type: Boolean,
     default: false
   },
+  resistencia: {
+    type: Number,
+    default: 100,
+    min: 0,
+    max: 100
+  },
   createdAt: {
     type: Date,
     default: Date.now

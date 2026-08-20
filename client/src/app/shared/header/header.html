@@ -5,6 +5,11 @@
   </div>
 
   <div class="info">
+    <div class="monedas-badge">
+      <span class="icono-moneda">💰</span>
+      <span class="cantidad">{{ monedasFormateadas }}</span>
+    </div>
+
     <i class="pi pi-bell"></i>
     
     <div class="user-profile-wrapper">
@@ -13,7 +18,6 @@
         <i class="pi pi-chevron-down"></i>
       </div>
 
-      <!-- El menú desplegable, solo visible si menuAbierto es true -->
       <div class="user-dropdown" *ngIf="menuAbierto">
         <button class="dropdown-item" (click)="logout()">
           <i class="pi pi-sign-out"></i>

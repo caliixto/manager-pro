@@ -15,6 +15,7 @@ function calcularNivelJugador(jugador) {
 }
 
 async function simularSiguientePartido(equipoId) {
+  console.log('🟢 INICIO simularSiguientePartido, equipoId:', equipoId);
   // 1. Buscamos el próximo partido sin jugar, el más cercano en fecha
   const partido = await Partido.findOne({ equipo: equipoId, jugado: false })
     .sort({ fecha: 1 });
@@ -106,6 +107,49 @@ async function simularSiguientePartido(equipoId) {
   partido.resultado = { golesPropios, golesRival };
   partido.convocados = titulares.map(j => j._id);
   await partido.save();
+
+  console.log('🟡 A PUNTO de actualizar resistencia');
+
+    // 6.5. Actualizamos resistencia de TODA la plantilla (jugaron vs. descansaron)
+  const idsTitulares = titulares.map(j => j._id.toString());
+  const todosLosJugadores = await Jugador.find({ equipo: equipoId }); // incluye lesionados/sancionados
+
+  const partidoAnterior = await Partido.findOne({
+    equipo: equipoId,
+    jugado: true,
+    fecha: { $lt: partido.fecha },
+    _id: { $ne: partido._id }
+  }).sort({ fecha: -1 });
+
+  let diasDescanso = 4; // valor por defecto si es el primer partido jugado
+  if (partidoAnterior) {
+    const msPorDia = 1000 * 60 * 60 * 24;
+    diasDescanso = Math.round((partido.fecha - partidoAnterior.fecha) / msPorDia);
+  }
+
+  const actualizacionesResistencia = todosLosJugadores.map(jugador => {
+    const jugo = idsTitulares.includes(jugador._id.toString());
+    let nuevaResistencia;
+
+    if (jugo) {
+      const desgaste = Math.floor(Math.random() * 11) + 15; // entre 15 y 25
+      nuevaResistencia = Math.max(0, jugador.resistencia - desgaste);
+    } else {
+      const recuperacion = diasDescanso * 10;
+      nuevaResistencia = Math.min(100, jugador.resistencia + recuperacion);
+    }
+
+    return Jugador.findByIdAndUpdate(jugador._id, { resistencia: nuevaResistencia });
+  });
+
+  await Promise.all(actualizacionesResistencia);
+
+  console.log('--- Resistencia actualizada ---');
+  todosLosJugadores.forEach(j => {
+    const jugo = idsTitulares.includes(j._id.toString());
+    console.log(`${j.nombre} (${j.posicion}) — ${jugo ? 'JUGÓ' : 'descansó'} — resistencia previa: ${j.resistencia}`);
+  });
+  console.log(`Días de descanso calculados: ${diasDescanso}`);
 
   if (partido.competicion === 'liga') {
   const rivalesLiga = rivalesFuturos.filter(r => r.competicion === 'liga');
