@@ -40,7 +40,7 @@
   position: relative;
   width: 100%;
   max-width: 400px;       /* Reducimos un poco el ancho máximo para que no ocupe tanto horizontalmente */
-  max-height: 126vh;       /* Bajamos la altura máxima para que quepa perfectamente sin scroll */
+  max-height: 130vh;       /* Bajamos la altura máxima para que quepa perfectamente sin scroll */
   aspect-ratio: 4 / 5;    /* Hacemos la proporción un poco más cuadrada/compacta en lugar de tan alargada (2/3) */
   background: linear-gradient(
     to bottom,

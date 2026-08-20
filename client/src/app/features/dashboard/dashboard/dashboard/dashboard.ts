@@ -170,6 +170,10 @@ irAConvocatoria() {
   }
 }
 
+irATactica() {
+    this.router.navigate(['/tacticas']);
+}
+
   simularPartido() {
     this.simulando.set(true);
     this.errorSimulacion.set(null);
