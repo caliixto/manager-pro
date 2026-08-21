@@ -1,6 +1,5 @@
 <div class="tacticas-container">
 
-  <!-- Columna izquierda: selector de formación + campo -->
   <div class="tacticas-campo-wrapper">
     <div class="formacion-selector">
       <label>Formación</label>
@@ -11,7 +10,6 @@
 
     <div class="campo-futbol">
       <svg class="campo-lineas" viewBox="0 0 100 150" preserveAspectRatio="none">
-        <!-- todo el SVG que ya tenías, sin cambios -->
         <rect x="2" y="2" width="96" height="146" fill="none" stroke="white" stroke-width="0.5" />
         <line x1="2" y1="75" x2="98" y2="75" stroke="white" stroke-width="0.5" />
         <circle cx="50" cy="75" r="12" fill="none" stroke="white" stroke-width="0.5" />
@@ -33,20 +31,29 @@
       <div
         *ngFor="let item of titularesConSlot"
         class="jugador-en-campo"
+        [class.seleccionado]="esSeleccionado(item.jugador)"
+        [class.compatible]="esCompatible(item.jugador)"
         [style.top.%]="item.slot.top"
         [style.left.%]="item.slot.left"
+        (click)="seleccionarJugador(item.jugador)"
       >
         <img [src]="item.jugador.foto" [alt]="item.jugador.nombre" class="jugador-avatar">
         <span class="jugador-nombre-campo">{{ item.jugador.nombre }}</span>
       </div>
-    </div>
-  </div>
+    </div>  <!-- cierra campo-futbol -->
+  </div>  <!-- ← ESTE es el que faltaba: cierra tacticas-campo-wrapper -->
 
   <!-- Columna derecha: banquillo / convocados -->
   <div class="banquillo-panel">
     <h3>Banquillo</h3>
     <div class="banquillo-lista">
-      <div *ngFor="let jugador of suplentes()" class="jugador-banquillo">
+      <div
+        *ngFor="let jugador of suplentes()"
+        class="jugador-banquillo"
+        [class.seleccionado]="esSeleccionado(jugador)"
+        [class.compatible]="esCompatible(jugador)"
+        (click)="seleccionarJugador(jugador)"
+      >
         <img [src]="jugador.foto" [alt]="jugador.nombre" class="jugador-avatar-pequeno">
         <div class="jugador-banquillo-info">
           <span class="jugador-banquillo-nombre">{{ jugador.nombre }}</span>

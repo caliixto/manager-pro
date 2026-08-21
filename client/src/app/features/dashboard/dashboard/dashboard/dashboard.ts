@@ -171,7 +171,7 @@ irAConvocatoria() {
 }
 
 irATactica() {
-    this.router.navigate(['/tacticas']);
+    this.router.navigate(['/tacticas']); //Hacer que los jugadores al estar cansados, no te deje jugar
 }
 
   simularPartido() {
