@@ -125,33 +125,50 @@ export class Tacticas implements OnInit {
     this.jugadorSeleccionado.set(jugador);
   }
 
-  intercambiarJugadores(jugadorA: Jugador, jugadorB: Jugador): void {
-  const estaEnTitulares = (j: Jugador) => this.titulares().some(t => t._id === j._id);
+    intercambiarJugadores(jugadorA: Jugador, jugadorB: Jugador): void {
+    const estaEnTitulares = (j: Jugador) => this.titulares().some(t => t._id === j._id);
 
-  const aEnTitulares = estaEnTitulares(jugadorA);
-  const bEnTitulares = estaEnTitulares(jugadorB);
+    const aEnTitulares = estaEnTitulares(jugadorA);
+    const bEnTitulares = estaEnTitulares(jugadorB);
 
-  // CASO 1: Uno en campo y otro en banquillo (Sustitución clásica)
-  if (aEnTitulares !== bEnTitulares) {
-    const [titular, suplente] = aEnTitulares ? [jugadorA, jugadorB] : [jugadorB, jugadorA];
-    const nuevosTitulares = this.titulares().map(j =>
-      j._id === titular._id ? suplente : j
-    );
+    let nuevosTitulares: Jugador[] = [];
+
+    // CASO 1: Uno en campo y otro en banquillo (Sustitución clásica)
+    if (aEnTitulares !== bEnTitulares) {
+      const [titular, suplente] = aEnTitulares ? [jugadorA, jugadorB] : [jugadorB, jugadorA];
+      nuevosTitulares = this.titulares().map(j =>
+        j._id === titular._id ? suplente : j
+      );
+    }
+    // CASO 2: Ambos están en el CAMPO (Intercambio de posiciones)
+    else if (aEnTitulares && bEnTitulares) {
+      nuevosTitulares = this.titulares().map(j => {
+        if (j._id === jugadorA._id) return jugadorB;
+        if (j._id === jugadorB._id) return jugadorA;
+        return j;
+      });
+    } else {
+      return;
+    }
+
+    // 1. Actualizamos el estado local de forma inmediata
     this.titulares.set(nuevosTitulares);
-    return;
-  }
 
-  // CASO 2: Ambos están en el CAMPO (Intercambio de posiciones entre titulares)
-  if (aEnTitulares && bEnTitulares) {
-    const nuevosTitulares = this.titulares().map(j => {
-      if (j._id === jugadorA._id) return jugadorB;
-      if (j._id === jugadorB._id) return jugadorA;
-      return j;
+    // 2. Extraemos los IDs asegurando que no haya undefineds
+    const idsAlineacion = nuevosTitulares
+      .map(j => j._id)
+      .filter((id): id is string => !!id);
+
+    // 3. Guardamos en el backend usando tu TacticaService
+    this.tacticaService.guardarAlineacion(idsAlineacion).subscribe({
+      next: () => {
+        console.log('Alineación guardada correctamente en el servidor');
+      },
+      error: (err) => {
+        console.error('Error al guardar la alineación:', err);
+      }
     });
-    this.titulares.set(nuevosTitulares);
-    return;
   }
-}
 
   // Para saber si un jugador concreto debe resaltarse como "compatible" con el seleccionado
   esCompatible(jugador: Jugador): boolean {

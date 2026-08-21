@@ -6,6 +6,7 @@ import { PlayerRadar } from '../../player-radar/player-radar';
 import { CommonModule } from '@angular/common';
 import { PartidoService, Partido } from '../../../calendario/partido';
 import { JugadorService, Jugador } from '../../../plantilla/jugador';
+import { TacticaService } from '../../../../shared/tactica';
 
 interface PlayerPosicionado {
   x: number;
@@ -31,7 +32,7 @@ export class Dashboard {
   ultimoResultadoSimulado = signal<string | null>(null);
   errorSimulacion = signal<string | null>(null);
 
-  constructor(private authService: AuthService, private router: Router, private partido:PartidoService, private jugador:JugadorService) {}
+  constructor(private authService: AuthService, private router: Router, private partido:PartidoService, private jugador:JugadorService, private tactica:TacticaService) {}
 
   ngOnInit() {
     const user = this.authService.getUser();
@@ -67,7 +68,7 @@ export class Dashboard {
 
         if (response.partido?._id) {
           this.cargarBalanceTactico(response.partido._id);
-          this.cargarTitulares(response.partido._id);
+          this.cargarTitulares();
         }
       },
       error: (err) => console.error(err)
@@ -133,16 +134,15 @@ export class Dashboard {
   }
 
   //Titular Esquema Tactico
-  cargarTitulares(partidoId: string) {
-    this.partido.obtenerTitulares(partidoId).subscribe({
+    cargarTitulares() {
+    // En lugar de obtener los titulares del partido, consultamos la alineación general del usuario
+    this.tactica.obtenerAlineacion().subscribe({
       next: (response) => {
-        console.log("jugadores", response)
-        const titulares = response.titulares;
+        const titulares = response.alineacion || [];
 
-        // Si no hay titulares, puedes decidir qué mostrar
-      if (titulares.length === 0) {
-        console.warn("Este partido no tiene titulares asignados todavía.");
-      }
+        if (titulares.length === 0) {
+          console.warn("No hay titulares asignados en la alineación.");
+        }
         
         const combinados = this.posicionesCampo.map((pos, index) => ({
           ...pos,
@@ -151,7 +151,7 @@ export class Dashboard {
         
         this.playersEnCampo.set(combinados);
       },
-      error: (err) => console.error(err)
+      error: (err) => console.error("Error al cargar la alineación en el dashboard", err)
     });
   }
  
