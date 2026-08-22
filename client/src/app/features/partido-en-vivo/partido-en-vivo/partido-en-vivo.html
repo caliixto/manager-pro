@@ -1,0 +1,70 @@
+<div class="partido-live-container">
+
+  <div class="marcador-header">
+    <div class="equipo">
+      <span class="equipo-nombre">{{ nombreEquipoPropio }}</span>
+    </div>
+    <div class="marcador-central">
+      <div class="marcador-numeros">
+        <span>{{ live.golesPropios() }}</span>
+        <span class="separador">-</span>
+        <span>{{ live.golesRival() }}</span>
+      </div>
+      <div class="crono" [class.parpadeo]="live.reproduciendo()">{{ live.minutoActual() }}'</div>
+    </div>
+    <div class="equipo">
+      <span class="equipo-nombre">{{ live.rival() }}</span>
+    </div>
+  </div>
+
+  <div class="mini-campo">
+    <div class="balon" [class]="'zona-' + zonaBalon">⚽</div>
+  </div>
+
+  <div class="feed-comentarios">
+    <div *ngFor="let evento of live.eventosMostrados().slice().reverse()" class="evento-item">
+      <span class="evento-minuto">{{ evento.minuto }}'</span>
+      <span class="evento-icono">
+        <ng-container [ngSwitch]="evento.tipo">
+          <span *ngSwitchCase="'gol'">⚽</span>
+          <span *ngSwitchCase="'amarilla'">🟨</span>
+          <span *ngSwitchCase="'roja'">🟥</span>
+          <span *ngSwitchCase="'parada'">🧤</span>
+          <span *ngSwitchCase="'remate_fuera'">🎯</span>
+        </ng-container>
+      </span>
+      <span class="evento-texto">{{ evento.descripcion }}</span>
+    </div>
+  </div>
+
+  <!--Descanso-->
+
+   <div class="descanso-overlay" *ngIf="live.enDescanso()">
+        <div class="descanso-card">
+            <h2>Descanso</h2>
+            <p class="descanso-marcador">{{ nombreEquipoPropio }} {{ live.golesPropios() }} - {{ live.golesRival() }} {{ live.rival() }}</p>
+            <p *ngIf="live.descuentoPrimeraParte() > 0" class="descanso-descuento">
+            Se añadieron {{ live.descuentoPrimeraParte() }} minutos de descuento en la primera parte.
+            </p>
+            <p *ngIf="live.descuentoPrimeraParte() === 0" class="descanso-descuento">
+            Sin tiempo añadido en la primera parte.
+            </p>
+            <button (click)="live.continuarSegundaParte()">Comenzar segunda parte</button>
+        </div>
+    </div>
+
+<div class="resumen-final" *ngIf="live.finalizado()">
+  <h2>Final del partido</h2>
+    <p>{{ nombreEquipoPropio }} {{ live.golesPropios() }} - {{ live.golesRival() }} {{ live.rival() }}</p>
+    
+    <p *ngIf="live.descuentoSegundaParte() > 0" class="descanso-descuento">
+        Se añadieron {{ live.descuentoSegundaParte() }} minutos de descuento en la segunda parte.
+    </p>
+    <p *ngIf="live.descuentoSegundaParte() === 0" class="descanso-descuento">
+        Sin tiempo añadido en la segunda parte.
+    </p>
+
+    <button (click)="volverAlDashboard()">Volver al Dashboard</button>
+</div>
+
+</div>

@@ -47,6 +47,17 @@ const partidoSchema = new Schema({
   required: true,
   default: 'liga'
   },
+  eventos: {
+    type: [{
+      minuto: Number,
+      tipo: { type: String, enum: ['gol', 'amarilla', 'roja', 'remate_fuera', 'parada'] },
+      jugador: String,
+      asistencia: String,  // ← nuevo, opcional: nombre de quien dio la asistencia (solo en goles)
+      equipo: { type: String, enum: ['propio', 'rival'] },
+      descripcion: String
+    }],
+    default: []
+  },
   createdAt: {
     type: Date,
     default: Date.now

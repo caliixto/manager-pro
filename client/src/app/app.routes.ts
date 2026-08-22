@@ -9,6 +9,7 @@ import { AppLayout } from './shared/app-layout/app-layout';
 import { Calendario } from './features/calendario/calendario/calendario';
 import { ConvocatoriaDetalle } from './features/calendario/convocatoria-detalle/convocatoria-detalle';
 import { Tacticas } from './features/tacticas/tacticas';
+import { PartidoEnVivo } from './features/partido-en-vivo/partido-en-vivo/partido-en-vivo';
 
 export const routes: Routes = [
     { path: '', component: Landing },
@@ -24,6 +25,7 @@ export const routes: Routes = [
       { path: 'jugador/:id',loadComponent: () => import('./features/jugador/ficha-jugador').then(m => m.FichaJugadorComponent)},    
       { path: 'calendario', component: Calendario },
       {path: 'clasificacion',loadComponent: () => import('./features/clasificacion/clasificacion/clasificacion').then(m => m.Clasificacion)},
+      { path: 'partido-en-vivo', component: PartidoEnVivo },
     ]
   },
 ];

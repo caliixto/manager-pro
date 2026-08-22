@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { PartidoService, Partido } from '../../../calendario/partido';
 import { JugadorService, Jugador } from '../../../plantilla/jugador';
 import { TacticaService } from '../../../../shared/tactica';
+import { PartidoLive } from '../../../../shared/partido-live';
 
 interface PlayerPosicionado {
   x: number;
@@ -32,7 +33,9 @@ export class Dashboard {
   ultimoResultadoSimulado = signal<string | null>(null);
   errorSimulacion = signal<string | null>(null);
 
-  constructor(private authService: AuthService, private router: Router, private partido:PartidoService, private jugador:JugadorService, private tactica:TacticaService) {}
+  constructor(private authService: AuthService, private router: Router, 
+    private partido:PartidoService, private jugador:JugadorService, 
+    private tactica:TacticaService, private partidoLive: PartidoLive) {}
 
   ngOnInit() {
     const user = this.authService.getUser();
@@ -174,22 +177,21 @@ irATactica() {
     this.router.navigate(['/tacticas']); //Hacer que los jugadores al estar cansados, no te deje jugar
 }
 
-  simularPartido() {
+simularPartido() {
     this.simulando.set(true);
     this.errorSimulacion.set(null);
 
     this.partido.simularSiguientePartido().subscribe({
       next: (res) => {
-        const r = res.resultado;
-        this.ultimoResultadoSimulado.set(`${r.resultado} vs ${r.rival}`);
         this.simulando.set(false);
-        this.ngOnInit();
+        this.partidoLive.iniciarPartido(res.resultado);
+        this.router.navigate(['/partido-en-vivo']);
       },
       error: (err) => {
         this.errorSimulacion.set(err.error?.message ?? 'Error al simular el partido');
         this.simulando.set(false);
       }
     });
-  }
+}
 }
 

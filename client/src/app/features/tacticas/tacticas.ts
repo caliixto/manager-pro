@@ -3,12 +3,13 @@ import { JugadorService, Jugador } from '../plantilla/jugador';
 import { TacticaService } from '../../shared/tactica';
 import { FORMACIONES, SlotFormacion } from '../../shared/formaciones';
 import { CommonModule } from '@angular/common';
+import { ColorResistenciaPipe } from '../../shared/color-resistencia-pipe';
 import { computed } from '@angular/core';
 
 @Component({
   selector: 'app-tacticas',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ColorResistenciaPipe],
   templateUrl: './tacticas.html',
   styleUrl: './tacticas.css',
 })

@@ -12,7 +12,8 @@
   flex-direction: column;
   align-items: center;
   gap: 12px;
-  flex: 2; /* Hace que esta columna ocupe el doble de espacio */
+  flex: 1 1 auto; /* Permite adaptarse mejor al espacio horizontal */
+  min-width: 0;
 }
 
 .formacion-selector {
@@ -39,9 +40,9 @@
 .campo-futbol {
   position: relative;
   width: 100%;
-  max-width: 400px;       /* Reducimos un poco el ancho máximo para que no ocupe tanto horizontalmente */
-  max-height: 130vh;       /* Bajamos la altura máxima para que quepa perfectamente sin scroll */
-  aspect-ratio: 4 / 5;    /* Hacemos la proporción un poco más cuadrada/compacta en lugar de tan alargada (2/3) */
+  max-width: 360px;       /* Ancho contenido y bien alineado */
+  max-height: 60vh;       /* Ajustado para no forzar scroll ni empujar */
+  aspect-ratio: 4 / 5;
   background: linear-gradient(
     to bottom,
     #2d8a3e 0%, #2d8a3e 10%,
@@ -96,12 +97,12 @@
 /* Banquillo */
 
 .banquillo-panel {
-  flex: 1; /* Ocupa la mitad de espacio que el campo */
-  max-width: 220px; /* Reducido para que la lista sea más estrecha */
+  width: 240px;           /* Ancho fijo para mantener la lista estilizada */
+  flex-shrink: 0;         /* Evita que el banquillo se aplaste */
   background: #1a1e21;
   border-radius: 12px;
   padding: 12px;
-  max-height: 75vh; /* Opcional: darle un poco más de altura si lo necesitas */
+  max-height: 65vh;
   overflow-y: auto;
 
   h3 {
@@ -218,4 +219,45 @@
 @keyframes pulso-campo {
   0%, 100% { transform: scale(1); }
   50% { transform: scale(1.15); }
+}
+
+/*Resistencia*/
+
+.avatar-wrapper {
+  position: relative;
+}
+
+.badge-resistencia {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 4px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: white;
+  border: 2px solid #1a1e21; /* separa el badge del avatar visualmente */
+}
+
+/* En el banquillo, el badge no va sobre el avatar sino al final de la fila */
+.jugador-banquillo .badge-resistencia {
+  position: static;
+  margin-left: auto;
+  border: none;
+}
+
+/* Colores según el pipe que ya definiste */
+.resistencia-verde {
+  background-color: #22c55e;
+}
+.resistencia-naranja {
+  background-color: #f97316;
+}
+.resistencia-roja {
+  background-color: #ef4444;
 }

@@ -1,5 +1,6 @@
 <div class="tacticas-container">
 
+  <!-- Columna izquierda: selector de formación + campo -->
   <div class="tacticas-campo-wrapper">
     <div class="formacion-selector">
       <label>Formación</label>
@@ -37,11 +38,16 @@
         [style.left.%]="item.slot.left"
         (click)="seleccionarJugador(item.jugador)"
       >
-        <img [src]="item.jugador.foto" [alt]="item.jugador.nombre" class="jugador-avatar">
+        <div class="avatar-wrapper">
+          <img [src]="item.jugador.foto" [alt]="item.jugador.nombre" class="jugador-avatar">
+          <span class="badge-resistencia" [class]="item.jugador.resistencia | colorResistencia">
+            {{ item.jugador.resistencia }}
+          </span>
+        </div>
         <span class="jugador-nombre-campo">{{ item.jugador.nombre }}</span>
       </div>
-    </div>  <!-- cierra campo-futbol -->
-  </div>  <!-- ← ESTE es el que faltaba: cierra tacticas-campo-wrapper -->
+    </div> <!-- Cierre correcto de .campo-futbol -->
+  </div> <!-- Cierre correcto de .tacticas-campo-wrapper -->
 
   <!-- Columna derecha: banquillo / convocados -->
   <div class="banquillo-panel">
@@ -59,6 +65,9 @@
           <span class="jugador-banquillo-nombre">{{ jugador.nombre }}</span>
           <span class="jugador-banquillo-posicion">{{ jugador.posicion }}</span>
         </div>
+        <span class="badge-resistencia" [class]="jugador.resistencia | colorResistencia">
+          {{ jugador.resistencia }}
+        </span>
       </div>
     </div>
   </div>
