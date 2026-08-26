@@ -3,7 +3,7 @@ const Jugador = require('../models/player');
 const Partido = require('../models/partido');
 const Users = require('../models/users');
 const Participacion = require('../models/participacion');
-const { obtenerNivelRival, rivalesFuturos } = require('./generarEquipoInicial');
+const { obtenerNivelRival} = require('./generarEquipoInicial');
 const { simularJornadaEntreRivales } = require('./simularJornadaRivales');
 const { golesAleatorios } = require('./golesPoisson');
 
@@ -298,14 +298,9 @@ async function simularSiguientePartido(equipoId) {
   });
   console.log(`Días de descanso calculados: ${diasDescanso}`);
 
-  if (partido.competicion === 'liga') {
-  const rivalesLiga = rivalesFuturos.filter(r => r.competicion === 'liga');
-  const jornadaActual = await Partido.countDocuments({ 
-    equipo: equipoId, 
-    competicion: 'liga', 
-    jugado: true 
-  });
-  await simularJornadaEntreRivales(equipoId, rivalesLiga, jornadaActual);
+ if (partido.competicion === 'liga') {
+  console.log('🟣 Jornada del partido que se acaba de jugar:', partido.jornada);
+  await simularJornadaEntreRivales(equipoId, partido.jornada);
 }
 
   return {

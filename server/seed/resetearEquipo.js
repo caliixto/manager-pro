@@ -6,7 +6,8 @@ const Partido = require("../models/partido");
 const Participacion = require("../models/participacion");
 const { generarEquipoInicial } = require("../utils/generarEquipoInicial");
 const partidoRival = require("../models/partidoRival");
-const Users = require("../models/users")
+const Users = require("../models/users");
+const CalendarioRivales = require("../models/calendarioRivales");
 
 const EQUIPO_ID = "6a6aa10d476a773c66717b76";
 
@@ -22,6 +23,7 @@ const resetear = async () => {
   await Jugador.deleteMany({ equipo: EQUIPO_ID });
   await Partido.deleteMany({ equipo: EQUIPO_ID});
   await partidoRival.deleteMany({equipo: EQUIPO_ID});
+  await CalendarioRivales.deleteMany({equipo: EQUIPO_ID});
 
   console.log("Generando datos nuevos con el código actual...");
   await generarEquipoInicial(EQUIPO_ID);

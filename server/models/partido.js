@@ -41,6 +41,9 @@ const partidoSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Jugador'
   }],
+  jornada: {
+    type: Number
+  },
   competicion: {
   type: String,
   enum: ['liga', 'amistoso', 'copa campeones', 'copa triunfo', 'segunda division'],

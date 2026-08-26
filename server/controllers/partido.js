@@ -3,6 +3,7 @@ const Jugador = require("../models/player");
 const {seleccionarTitulares,puedeJugarPartido} = require("../utils/generarEquipoInicial");
 const { simularSiguientePartido } = require('../utils/simularPartido');
 const PartidoRival = require('../models/partidoRival');
+const Users = require("../models/users");
 
 const crearPartido = async (req, res) => {
   try {
@@ -286,11 +287,39 @@ const obtenerJornadasRivales = async (req, res) => {
 
     const partidosRivales = await PartidoRival.find({ equipo: equipoId }).sort({ jornada: 1, fecha: 1 });
 
-    // Agrupamos por jornada
+    // Traemos también tus propios partidos de liga ya jugados
+    const equipo = await Users.findById(equipoId); // necesitas el nombre/escudo de tu equipo para pintar la fila
+    const misPartidos = await Partido.find({
+      equipo: equipoId,
+      competicion: 'liga',
+      jugado: true
+    });
+
+    // Agrupamos por jornada, empezando por los de PartidoRival
     const jornadas = {};
     for (const p of partidosRivales) {
       if (!jornadas[p.jornada]) jornadas[p.jornada] = [];
       jornadas[p.jornada].push(p);
+    }
+
+    // Añadimos tu propio partido a la jornada correspondiente, con el mismo formato
+    for (const p of misPartidos) {
+      if (!jornadas[p.jornada]) jornadas[p.jornada] = [];
+
+      const esLocal = p.lugar === 'casa';
+
+      jornadas[p.jornada].push({
+        _id: p._id,
+        jornada: p.jornada,
+        fecha: p.fecha,
+        equipoA: esLocal ? equipo.nombreEquipo : p.rival,
+        escudoA: esLocal ? equipo.escudo : p.escudo,
+        equipoB: esLocal ? p.rival : equipo.nombreEquipo,
+        escudoB: esLocal ? p.escudo : equipo.escudo,
+        golesA: esLocal ? p.resultado.golesPropios : p.resultado.golesRival,
+        golesB: esLocal ? p.resultado.golesRival : p.resultado.golesPropios,
+        esUsuario: true, // ← flag útil para que el frontend lo resalte visualmente si quiere
+      });
     }
 
     // Convertimos a array ordenado, jornada más reciente primero

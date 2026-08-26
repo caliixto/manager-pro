@@ -1,5 +1,7 @@
 const Jugador = require("../models/player");
 const Partido = require("../models/partido");
+const { generarCalendarioCompleto} = require('./generarCalendarioLiga');
+const CalendarioRivales = require('../models/calendarioRivales');
 
 const nombres = [
   "Ruben", "Iker", "Adrián", "Diego", "Álvaro", "Hugo", "Mario", "Pablo",
@@ -14,33 +16,33 @@ const jugadoresFijos = [
       velocidad: 68, aceleracion: 62, fisico: 90, resistencia: 88,
       tiro: 25, pase: 78, regate: 35, defensa: 45,
       posicionamiento: 92, vision: 70, determinacion: 90,
-      porteria: 96
+      porteria: 98
     }
   },
   { 
     nombre: "Daniel Bonilla", posicion: "DEF", edad:25, estadoFisico: 95,
     stats: {
-      velocidad: 90, aceleracion: 85, fisico: 93, resistencia: 90,
+      velocidad: 90, aceleracion: 85, fisico: 96, resistencia: 90,
       tiro: 89, pase: 85, regate: 65, defensa: 95,
-      posicionamiento: 90, vision: 75, determinacion: 95,
+      posicionamiento: 95, vision: 85, determinacion: 95,
       porteria: 10
     }
   },
   { 
     nombre: "Calixto Bocamba", posicion: "CEN", edad: 26, estadoFisico: 95,
     stats: {
-      velocidad: 93, aceleracion: 96, fisico: 85, resistencia: 82,
-      tiro: 95, pase: 94, regate: 88, defensa: 68,
-      posicionamiento: 90, vision: 93, determinacion: 88,
+      velocidad: 96, aceleracion: 96, fisico: 85, resistencia: 92,
+      tiro: 95, pase: 97, regate: 90, defensa: 70,
+      posicionamiento: 92, vision: 97, determinacion: 92,
       porteria: 10
     }
   },
   { 
     nombre: "Andrés García", posicion: "DEL", edad: 24, estadoFisico: 95,
     stats: {
-      velocidad: 89, aceleracion: 85, fisico: 85, resistencia: 82,
-      tiro: 88, pase: 75, regate: 60, defensa: 30,
-      posicionamiento: 74, vision: 75, determinacion: 90,
+      velocidad: 89, aceleracion: 85, fisico: 85, resistencia: 92,
+      tiro: 94, pase: 75, regate: 80, defensa: 30,
+      posicionamiento: 84, vision: 75, determinacion: 90,
       porteria: 10
     }
   },
@@ -62,12 +64,6 @@ const posicionesBase = [
 ];
 
 const rivalesFuturos = [
-  { rival: "Real Madrid CF", formacion: "4-3-3 FD", escudo: "/img/realMadrid.png",competicion: "amistoso"},
-  { rival: "Manchester United FC", formacion: "4-4-2", escudo: "/img/united.png", competicion: "amistoso"},
-  { rival: "FC Barcelona", formacion: "4-3-3", escudo: "/img/barcelona.png", competicion: "amistoso" },
-  { rival: "Inter de Milan", formacion: "4-2-3-1", escudo: "/img/inter.avif", competicion: "amistoso" },
-  { rival: "Liverpool FC", formacion: "5-3-2", escudo: "/img/liverpool.png", competicion: "amistoso" },
-
   { rival: "Valencia", formacion: "4-4-2", escudo: "/img/valencia.png", competicion: "liga" },
   { rival: "Sevilla", formacion: "4-3-3", escudo: "/img/sevilla.png", competicion: "liga" },
   { rival: "Boca Juniors", formacion: "3-5-2", escudo: "/img/boca.avif", competicion: "liga" },
@@ -83,10 +79,12 @@ const rivalesFuturos = [
   { rival: "SD Eibar", formacion: "4-4-2", escudo: "/img/eibar.png", competicion: "liga" },
   { rival: "Málaga CF", formacion: "4-3-3", escudo: "/img/Malaga.png", competicion: "liga" },
   { rival: "Deportivo de La Coruña", formacion: "4-2-3-1", escudo: "/img/LaCoruña.png", competicion: "liga" },
-  { rival: "Granada CF", formacion: "5-3-2", escudo: "/img/granada.png", competicion: "liga" }
+  { rival: "Granada CF", formacion: "5-3-2", escudo: "/img/granada.png", competicion: "liga" },
+  { rival: "Real Betis", formacion: "4-2-3-1", escudo: "/img/betis.png", competicion: "liga" },
+  { rival: "Elche CF", formacion: "4-4-2", escudo: "/img/elche.png", competicion: "liga" },
+  { rival: "Cádiz CF", formacion: "4-3-3", escudo: "/img/cadiz.png", competicion: "liga" },
 ];
 
-const lugares = ["casa", "fuera"];
 const randomEntre = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
 const generarNombreAleatorio = () => {
@@ -166,15 +164,6 @@ const generarStatsPorPosicion = (posicion) => {
   }
 };
 
-const generarResultado = () => {
-  const tipo = randomEntre(1, 10);
-  if (tipo <= 5) return { golesPropios: randomEntre(1, 5), golesRival: randomEntre(0, 2) };
-  if (tipo <= 7) { const g = randomEntre(0, 3); return { golesPropios: g, golesRival: g }; }
-  return { golesPropios: randomEntre(0, 2), golesRival: randomEntre(1, 4) };
-};
-
-const fechaHaceDias = (dias) => { const f = new Date(); f.setDate(f.getDate() - dias); return f; };
-const fechaEnDias = (dias) => { const f = new Date(); f.setDate(f.getDate() + dias); return f; };
 
 /**
  * Generamos un la plantilla de 25 jugadores y el calendario inicial de partidos
@@ -215,29 +204,27 @@ const generarEquipoInicial = async (equipoId) => {
   const todosLosJugadores = [...jugadoresFijosGenerados, ...jugadoresAleatoriosGenerados];
   const jugadoresCreados = await Jugador.insertMany(todosLosJugadores);
 
-  // Partidos
-
-  const escudosDisponibles = [
-    '/img/realMadrid.png',
-    '/img/barcelona.png',
-    '/img/boca.avif',
-    '/img/united.png',
-    '/img/inter.avif',
-    '/img/liverpool.png'
-  ];
 
 
-  const partidosGenerados = rivalesFuturos.map((info, index) => ({
+  const { partidosUsuario, cruceRivales } = generarCalendarioCompleto(rivalesFuturos);
+
+  const partidosGenerados = partidosUsuario.map(info => ({
     rival: info.rival,
-    escudo:info.escudo,
-    fecha: fechaEnDias((index + 1) * 7),
-    lugar: lugares[randomEntre(0, 1)],
+    escudo: info.escudo,
+    fecha: info.fecha,
+    lugar: info.lugar,
     formacionRival: info.formacion,
     jugado: false,
     equipo: equipoId,
-    competicion: info.competicion,
+    competicion: 'liga',
+    jornada: info.jornada,
   }));
   const partidosCreados = await Partido.insertMany(partidosGenerados);
+
+  // Guardamos también el fixture fijo de los rivales entre sí
+  const fixtureRivales = cruceRivales.map(c => ({ ...c, equipo: equipoId }));
+  await CalendarioRivales.insertMany(fixtureRivales);
+  
 
   // Convocatoria automática con todos los disponibles
   const idsJugadores = jugadoresCreados.map(j => j._id);
@@ -295,13 +282,6 @@ const listar = async (req, res) => {
 
 // constants/nivelesRivales.js
 const NIVEL_RIVALES = {
-  // Amistosos contra grandes clubes — nivel muy alto, partidos "trampa"
-  "Real Madrid CF": 92,
-  "Manchester United FC": 88,
-  "FC Barcelona": 93,
-  "Inter de Milan": 87,
-  "Liverpool FC": 89,
-
   // Liga — nivel más variado, más realista para tu progresión
   "Valencia": 68,
   "Sevilla": 70,
@@ -319,6 +299,9 @@ const NIVEL_RIVALES = {
   "Málaga CF": 54,
   "Deportivo de La Coruña": 56,
   "Granada CF": 59,
+  "Real Betis":67,
+  "Elche CF":58,
+  "Cádiz CF":60
 };
 
 const NIVEL_DEFAULT = 60;

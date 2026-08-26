@@ -75,7 +75,7 @@
     <div class="jornada-block" *ngFor="let bloque of jornadas()">
       <h3 class="jornada-titulo">Jornada {{ bloque.jornada }}</h3>
       <div class="partidos-grid">
-        <div class="partido-card" *ngFor="let p of bloque.partidos">
+        <div class="partido-card" [class.es-mi-partido]="p.esUsuario" *ngFor="let p of bloque.partidos">
           <div class="equipo-lado">
             <img [src]="p.escudoA" class="partido-escudo" [alt]="p.equipoA" *ngIf="p.escudoA">
             <span class="equipo-nombre">{{ p.equipoA }}</span>

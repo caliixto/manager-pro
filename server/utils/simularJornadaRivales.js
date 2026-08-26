@@ -1,38 +1,35 @@
 const PartidoRival = require('../models/partidoRival');
 const { obtenerNivelRival } = require('./generarEquipoInicial');
 const { golesAleatorios } = require('./golesPoisson');
+const CalendarioRivales = require('../models/calendarioRivales');
 
-async function simularJornadaEntreRivales(equipoId, rivalesLiga, jornadaActual) {
-  // Para que no se repita la misma jornada dos veces por error
+async function simularJornadaEntreRivales(equipoId, jornadaActual) {
+  // Evitamos duplicar si esta jornada ya se simuló antes
   const yaExiste = await PartidoRival.findOne({ equipo: equipoId, jornada: jornadaActual });
   if (yaExiste) return;
 
-  // Mezclamos aleatoriamente y emparejamos de dos en dos
-  const mezclados = [...rivalesLiga].sort(() => Math.random() - 0.5);
-  const partidosGenerados = [];
+  const cruces = await CalendarioRivales.find({ equipo: equipoId, jornada: jornadaActual });
+  console.log('🔵 Jornada consultada:', jornadaActual, '— Cruces encontrados:', cruces.length);
 
-  for (let i = 0; i < mezclados.length - 1; i += 2) {
-    const equipoA = mezclados[i];
-    const equipoB = mezclados[i + 1];
-
-    const nivelA = obtenerNivelRival(equipoA.rival);
-    const nivelB = obtenerNivelRival(equipoB.rival);
+  const partidosGenerados = cruces.map(c => {
+    const nivelA = obtenerNivelRival(c.equipoA);
+    const nivelB = obtenerNivelRival(c.equipoB);
     const diferencia = nivelA - nivelB;
 
     const expectativaA = Math.max(0.3, 1.3 + diferencia / 25);
     const expectativaB = Math.max(0.3, 1.3 - diferencia / 25);
 
-    partidosGenerados.push({
+    return {
       equipo: equipoId,
-      equipoA: equipoA.rival,
-      escudoA: equipoA.escudo,
-      equipoB: equipoB.rival,
-      escudoB: equipoB.escudo,
+      equipoA: c.equipoA,
+      escudoA: c.escudoA,
+      equipoB: c.equipoB,
+      escudoB: c.escudoB,
       golesA: golesAleatorios(expectativaA),
       golesB: golesAleatorios(expectativaB),
       jornada: jornadaActual,
-    });
-  }
+    };
+  });
 
   if (partidosGenerados.length > 0) {
     await PartidoRival.insertMany(partidosGenerados);

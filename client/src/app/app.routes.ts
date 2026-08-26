@@ -10,6 +10,7 @@ import { Calendario } from './features/calendario/calendario/calendario';
 import { ConvocatoriaDetalle } from './features/calendario/convocatoria-detalle/convocatoria-detalle';
 import { Tacticas } from './features/tacticas/tacticas';
 import { PartidoEnVivo } from './features/partido-en-vivo/partido-en-vivo/partido-en-vivo';
+import { authGuard } from './features/auth/auth.guard';
 
 export const routes: Routes = [
     { path: '', component: Landing },
@@ -18,14 +19,14 @@ export const routes: Routes = [
       children: [
       { path: 'login', component: Login },
       { path: 'register', component: Register },
-      { path: 'dashboard', component: Dashboard },
-      { path: 'plantilla', component: Plantilla },
-      { path: 'tacticas', component: Tacticas },
-      { path: 'convocatoria/:id', component: ConvocatoriaDetalle },
-      { path: 'jugador/:id',loadComponent: () => import('./features/jugador/ficha-jugador').then(m => m.FichaJugadorComponent)},    
-      { path: 'calendario', component: Calendario },
-      {path: 'clasificacion',loadComponent: () => import('./features/clasificacion/clasificacion/clasificacion').then(m => m.Clasificacion)},
-      { path: 'partido-en-vivo', component: PartidoEnVivo },
+      { path: 'dashboard', component: Dashboard, canActivate: [authGuard]  },
+      { path: 'plantilla', component: Plantilla, canActivate: [authGuard]  },
+      { path: 'tacticas', component: Tacticas, canActivate: [authGuard]  },
+      { path: 'convocatoria/:id', component: ConvocatoriaDetalle, canActivate: [authGuard]  },
+      { path: 'jugador/:id',loadComponent: () => import('./features/jugador/ficha-jugador').then(m => m.FichaJugadorComponent), canActivate: [authGuard] },    
+      { path: 'calendario', component: Calendario, canActivate: [authGuard]  },
+      {path: 'clasificacion',loadComponent: () => import('./features/clasificacion/clasificacion/clasificacion').then(m => m.Clasificacion), canActivate: [authGuard] },
+      { path: 'partido-en-vivo', component: PartidoEnVivo, canActivate: [authGuard]  },
     ]
   },
 ];
