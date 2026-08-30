@@ -16,9 +16,11 @@
   overflow-y: auto;
 }
 
-.img__logo{
-    width: 72px;
-    height: 50px;
+.img__logo {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  flex-shrink: 0;
 }
 
 .sidebar__nav {

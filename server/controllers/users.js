@@ -129,11 +129,45 @@ const guardarAlineacion = async (req, res) => {
   }
 };
 
+const actualizarPerfilEquipo = async (req, res) => {
+  try {
+    const equipoId = req.user.id;
+    const { nombreEquipo } = req.body;
+
+    const camposActualizar = {};
+
+    if (nombreEquipo && nombreEquipo.trim().length > 0) {
+      camposActualizar.nombreEquipo = nombreEquipo.trim();
+    }
+
+    // Si se subió un archivo, multer-storage-cloudinary ya lo procesó y nos da la URL en req.file.path
+    if (req.file) {
+      camposActualizar.escudo = req.file.path;
+    }
+
+    const user = await Users.findByIdAndUpdate(equipoId, camposActualizar, { new: true });
+
+    return res.json({
+      status: 'success',
+      mensaje: 'Perfil actualizado correctamente',
+      user: {
+        nombreEquipo: user.nombreEquipo,
+        escudo: user.escudo,
+      }
+    });
+
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ status: 'error', message: 'Error al actualizar el perfil' });
+  }
+};
+
 
 module.exports={
     registrarUsers,
     loginUsers,
     forgotPassword,
     obtenerAlineacion,
-    guardarAlineacion
+    guardarAlineacion,
+    actualizarPerfilEquipo
 };

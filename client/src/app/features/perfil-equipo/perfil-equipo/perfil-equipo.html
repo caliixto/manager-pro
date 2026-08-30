@@ -1,0 +1,20 @@
+<div class="perfil-equipo-container">
+  <h2>Editar equipo</h2>
+
+  <div class="escudo-preview-wrapper">
+    <img [src]="previewUrl() || '/img/miteam.webp'" alt="Escudo del equipo" class="escudo-preview">
+    <label for="escudo-input" class="btn-cambiar-foto">Cambiar escudo</label>
+    <input id="escudo-input" type="file" accept="image/*" (change)="onArchivoSeleccionado($event)" hidden>
+  </div>
+
+  <div class="field">
+    <label for="nombre-equipo">Nombre del equipo</label>
+    <input id="nombre-equipo" type="text" [(ngModel)]="nombreEquipo" name="nombreEquipo" maxlength="30">
+  </div>
+
+  <p *ngIf="mensaje()" class="mensaje-guardado">{{ mensaje() }}</p>
+
+  <button class="btn-primary" (click)="guardar()" [disabled]="guardando()">
+    {{ guardando() ? 'Guardando...' : 'Guardar cambios' }}
+  </button>
+</div>

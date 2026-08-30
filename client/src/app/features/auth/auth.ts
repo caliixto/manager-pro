@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
 import { environment } from '../../../environments/environment';
@@ -101,6 +101,21 @@ export class AuthService {
   wasWelcomeShown(): boolean {
       return sessionStorage.getItem(this.welcomeShownKey) === 'true';
   }
+
+  actualizarPerfil(nombreEquipo: string, escudoFile: File | null): Observable<any> {
+  const formData = new FormData();
+  formData.append('nombreEquipo', nombreEquipo);
+  if (escudoFile) {
+    formData.append('escudo', escudoFile);
+  }
+
+  const token = this.getToken();
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${token}`,
+  });
+
+  return this.http.put<any>(`${this.apiUrl}/users/perfil`, formData, { headers });
+}
 
 
 
