@@ -3,15 +3,20 @@ const Partido = require('../models/partido');
 const Users = require('../models/users');
 const { rivalesFuturos } = require('./generarEquipoInicial');
 const PartidoRival = require('../models/partidoRival');
+const partido = require('../models/partido');
+const {obtenerLiga} = require("../data/ligas")
 
-async function calcularClasificacionLiga(equipoId) {
+async function calcularClasificacionLiga(equipoId, ligaId = 'laliga-1') {
   const usuario = await Users.findById(equipoId);
   const nombreEquipoUsuario = usuario?.nombreEquipo || 'Equipo Default';
   const escudoUsuario = usuario?.escudo || '/img/miteam.webp';
+  const ligaSeleccionada = obtenerLiga(ligaId);
+
+  const nombreCompeticion = ligaSeleccionada.ligaId; 
 
   const partidosLiga = await Partido.find({
     equipo: equipoId,
-    competicion: 'liga',
+    competicion: nombreCompeticion,
     jugado: true,
   });
   const partidosRivales = await PartidoRival.find({ equipo: equipoId });
@@ -30,7 +35,7 @@ async function calcularClasificacionLiga(equipoId) {
 
   asegurarEquipo(nombreEquipoUsuario, escudoUsuario, true);
   rivalesFuturos
-    .filter(r => r.competicion === 'liga')
+    .filter(r => r.competicion === nombreCompeticion)
     .forEach(r => asegurarEquipo(r.rival, r.escudo));
 
   for (const partido of partidosLiga) {

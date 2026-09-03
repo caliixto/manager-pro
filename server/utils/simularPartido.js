@@ -124,7 +124,7 @@ async function simularSiguientePartido(equipoId) {
 
   // 3. Calculamos nivel medio de tu equipo vs nivel del rival
   const nivelEquipo = titulares.reduce((acc, j) => acc + calcularNivelJugador(j), 0) / titulares.length;
-  const nivelRival = obtenerNivelRival(partido.rival);
+  const nivelRival = obtenerNivelRival(partido.rival, partido.liga);
   const diferencia = nivelEquipo - nivelRival;
 
   // Expectativa de goles: 1.3 de base +/- según diferencia de nivel (tope razonable)

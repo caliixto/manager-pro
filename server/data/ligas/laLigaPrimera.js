@@ -1,0 +1,45 @@
+const rivalesFuturos = [
+  { rival: "Valencia", formacion: "4-4-2", escudo: "/img/valencia.png", competicion: "liga" },
+  { rival: "Sevilla", formacion: "4-3-3", escudo: "/img/sevilla.png", competicion: "liga" },
+  { rival: "Boca Juniors", formacion: "3-5-2", escudo: "/img/boca.avif", competicion: "liga" },
+  { rival: "Athletic Club", formacion: "4-2-3-1", escudo: "/img/AthleticBilbao.png", competicion: "liga" },
+  { rival: "Real Sociedad", formacion: "4-3-3", escudo: "/img/sociedad.png", competicion: "liga" },
+  { rival: "Villarreal C.F.", formacion: "4-4-2", escudo: "/img/villarreal.png", competicion: "liga" },
+  { rival: "Celta De vigo", formacion: "3-5-2", escudo: "/img/celta.png", competicion: "liga" },
+  { rival: "Real Zaragoza", formacion: "4-2-3-1", escudo: "/img/zaragoza.png", competicion: "liga" },
+  { rival: "RCD Espanyol", formacion: "4-3-3", escudo: "/img/rcdespanyol.png", competicion: "liga" },
+  { rival: "Real Valladolid", formacion: "4-4-2", escudo: "/img/valladolid.png", competicion: "liga" },
+  { rival: "CD Tenerife", formacion: "5-3-2", escudo: "/img/tenerife.png", competicion: "liga" },
+  { rival: "UD Las Palmas", formacion: "4-3-3", escudo: "/img/LasPalmas.png", competicion: "liga" },
+  { rival: "SD Eibar", formacion: "4-4-2", escudo: "/img/eibar.png", competicion: "liga" },
+  { rival: "Málaga CF", formacion: "4-3-3", escudo: "/img/Malaga.png", competicion: "liga" },
+  { rival: "Deportivo de La Coruña", formacion: "4-2-3-1", escudo: "/img/LaCoruña.png", competicion: "liga" },
+  { rival: "Granada CF", formacion: "5-3-2", escudo: "/img/granada.png", competicion: "liga" },
+  { rival: "Real Betis", formacion: "4-2-3-1", escudo: "/img/betis.png", competicion: "liga" },
+  { rival: "Elche CF", formacion: "4-4-2", escudo: "/img/elche.png", competicion: "liga" },
+  { rival: "Cádiz CF", formacion: "4-3-3", escudo: "/img/cadiz.png", competicion: "liga" },
+];
+
+const NIVEL_RIVALES = {
+  "Valencia": 68,
+  "Sevilla": 70,
+  "Boca Juniors": 75,
+  "Athletic Club": 72,
+  "Real Sociedad": 71,
+  "Villarreal C.F.": 69,
+  "Celta De vigo": 62,
+  "Real Zaragoza": 58,
+  "RCD Espanyol": 60,
+  "Real Valladolid": 55,
+  "CD Tenerife": 50,
+  "UD Las Palmas": 57,
+  "SD Eibar": 52,
+  "Málaga CF": 54,
+  "Deportivo de La Coruña": 56,
+  "Granada CF": 59,
+  "Real Betis":67,
+  "Elche CF":58,
+  "Cádiz CF":60
+};
+
+module.exports = { rivalesFuturos, NIVEL_RIVALES, nombre: "LaLiga", pais: "España", division: 1 };

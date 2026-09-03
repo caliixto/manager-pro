@@ -15,6 +15,7 @@
   <p *ngIf="mensaje()" class="mensaje-guardado">{{ mensaje() }}</p>
 
   <button class="btn-primary" (click)="guardar()" [disabled]="guardando()">
+    <span *ngIf="guardando()" class="spinner"></span>
     {{ guardando() ? 'Guardando...' : 'Guardar cambios' }}
   </button>
 </div>

@@ -47,6 +47,11 @@ const usersSchema = new Schema({
     ref: 'Jugador',
     default: []
   },
+  liga: {
+    type: String,
+    enum: ['laliga-1', 'laliga-2'],
+    default: 'laliga-1'
+  },
   createdAt: {
     type: Date,
     default: Date.now

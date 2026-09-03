@@ -2,6 +2,8 @@ const Jugador = require("../models/player");
 const Partido = require("../models/partido");
 const { generarCalendarioCompleto} = require('./generarCalendarioLiga');
 const CalendarioRivales = require('../models/calendarioRivales');
+const { obtenerLiga } = require('../data/ligas');
+const Users = require("../models/users");
 
 const nombres = [
   "Ruben", "Iker", "Adrián", "Diego", "Álvaro", "Hugo", "Mario", "Pablo",
@@ -61,28 +63,6 @@ const posicionesBase = [
   "POR", "DEF", "DEF", "DEF", "DEF", "CEN", "CEN", "CEN", "DEL", "DEL", "DEL",
   // Extra (3): margen para rotación (RESERVAS)
   "DEF", "CEN", "DEL"
-];
-
-const rivalesFuturos = [
-  { rival: "Valencia", formacion: "4-4-2", escudo: "/img/valencia.png", competicion: "liga" },
-  { rival: "Sevilla", formacion: "4-3-3", escudo: "/img/sevilla.png", competicion: "liga" },
-  { rival: "Boca Juniors", formacion: "3-5-2", escudo: "/img/boca.avif", competicion: "liga" },
-  { rival: "Athletic Club", formacion: "4-2-3-1", escudo: "/img/AthleticBilbao.png", competicion: "liga" },
-  { rival: "Real Sociedad", formacion: "4-3-3", escudo: "/img/sociedad.png", competicion: "liga" },
-  { rival: "Villarreal C.F.", formacion: "4-4-2", escudo: "/img/villarreal.png", competicion: "liga" },
-  { rival: "Celta De vigo", formacion: "3-5-2", escudo: "/img/celta.png", competicion: "liga" },
-  { rival: "Real Zaragoza", formacion: "4-2-3-1", escudo: "/img/zaragoza.png", competicion: "liga" },
-  { rival: "RCD Espanyol", formacion: "4-3-3", escudo: "/img/rcdespanyol.png", competicion: "liga" },
-  { rival: "Real Valladolid", formacion: "4-4-2", escudo: "/img/valladolid.png", competicion: "liga" },
-  { rival: "CD Tenerife", formacion: "5-3-2", escudo: "/img/tenerife.png", competicion: "liga" },
-  { rival: "UD Las Palmas", formacion: "4-3-3", escudo: "/img/LasPalmas.png", competicion: "liga" },
-  { rival: "SD Eibar", formacion: "4-4-2", escudo: "/img/eibar.png", competicion: "liga" },
-  { rival: "Málaga CF", formacion: "4-3-3", escudo: "/img/Malaga.png", competicion: "liga" },
-  { rival: "Deportivo de La Coruña", formacion: "4-2-3-1", escudo: "/img/LaCoruña.png", competicion: "liga" },
-  { rival: "Granada CF", formacion: "5-3-2", escudo: "/img/granada.png", competicion: "liga" },
-  { rival: "Real Betis", formacion: "4-2-3-1", escudo: "/img/betis.png", competicion: "liga" },
-  { rival: "Elche CF", formacion: "4-4-2", escudo: "/img/elche.png", competicion: "liga" },
-  { rival: "Cádiz CF", formacion: "4-3-3", escudo: "/img/cadiz.png", competicion: "liga" },
 ];
 
 const randomEntre = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
@@ -170,43 +150,63 @@ const generarStatsPorPosicion = (posicion) => {
  * para un usuario recién registrado.
  * @param {string} equipoId - El _id del usuario/coach recién creado
  */
-const generarEquipoInicial = async (equipoId) => {
-  // Jugadores fijos (tú y tus amigos)
+
+const generarEquipoInicial = async (equipoId, ligaId = 'laliga-1') => {
+  const ligaSeleccionada = obtenerLiga(ligaId);
+  const esPrimeraDivision = ligaSeleccionada.division === 1;
+
+  let todosLosJugadores = [];
+
+  if (esPrimeraDivision) {
+    // Con los 4 fijos, igual que ahora
     const jugadoresFijosGenerados = jugadoresFijos.map((info, index) => ({
-    nombre: info.nombre,
-    posicion: info.posicion,
-    edad: info.edad,
-    dorsal: index + 1,
-    estadoFisico: info.estadoFisico,
-    stats: info.stats,
-    equipo: equipoId,
-    foto:`https://api.dicebear.com/7.x/avataaars/png?seed=${encodeURIComponent(info.nombre)}&gender=male`
-  }));
+      nombre: info.nombre,
+      posicion: info.posicion,
+      edad: info.edad,
+      dorsal: index + 1,
+      estadoFisico: info.estadoFisico,
+      stats: info.stats,
+      equipo: equipoId,
+      foto: `https://api.dicebear.com/7.x/avataaars/png?seed=${encodeURIComponent(info.nombre)}&gender=male`
+    }));
 
-  //Jugadores aleatorios para completar la plantilla
-  const posicionesRestantes = posicionesBase.slice(jugadoresFijos.length);
-  
- const jugadoresAleatoriosGenerados = posicionesRestantes.map((posicion, index) => {
-  const nombreGenerado = generarNombreAleatorio();
-  
-  return {
-    nombre: nombreGenerado,
-    posicion,
-    edad: randomEntre(18, 34),
-    dorsal: jugadoresFijos.length + index + 1,
-    estadoFisico: randomEntre(70, 100),
-    stats: generarStatsPorPosicion(posicion),
-    equipo: equipoId,
-    foto: `https://api.dicebear.com/7.x/avataaars/png?seed=${encodeURIComponent(nombreGenerado)}&gender=male`
-  };
-});
+    const posicionesRestantes = posicionesBase.slice(jugadoresFijos.length);
+    const jugadoresAleatoriosGenerados = posicionesRestantes.map((posicion, index) => {
+      const nombreGenerado = generarNombreAleatorio();
+      return {
+        nombre: nombreGenerado,
+        posicion,
+        edad: randomEntre(18, 34),
+        dorsal: jugadoresFijos.length + index + 1,
+        estadoFisico: randomEntre(70, 100),
+        stats: generarStatsPorPosicion(posicion),
+        equipo: equipoId,
+        foto: `https://api.dicebear.com/7.x/avataaars/png?seed=${encodeURIComponent(nombreGenerado)}&gender=male`
+      };
+    });
 
-  const todosLosJugadores = [...jugadoresFijosGenerados, ...jugadoresAleatoriosGenerados];
+    todosLosJugadores = [...jugadoresFijosGenerados, ...jugadoresAleatoriosGenerados];
+
+  } else {
+    // Segunda División: 25 jugadores TODOS random, sin los 4 "regalo"
+    todosLosJugadores = posicionesBase.map((posicion, index) => {
+      const nombreGenerado = generarNombreAleatorio();
+      return {
+        nombre: nombreGenerado,
+        posicion,
+        edad: randomEntre(18, 34),
+        dorsal: index + 1,
+        estadoFisico: randomEntre(70, 100),
+        stats: generarStatsPorPosicion(posicion),
+        equipo: equipoId,
+        foto: `https://api.dicebear.com/7.x/avataaars/png?seed=${encodeURIComponent(nombreGenerado)}&gender=male`
+      };
+    });
+  }
+
   const jugadoresCreados = await Jugador.insertMany(todosLosJugadores);
 
-
-
-  const { partidosUsuario, cruceRivales } = generarCalendarioCompleto(rivalesFuturos);
+  const { partidosUsuario, cruceRivales } = generarCalendarioCompleto(ligaSeleccionada.rivalesFuturos);
 
   const partidosGenerados = partidosUsuario.map(info => ({
     rival: info.rival,
@@ -221,18 +221,15 @@ const generarEquipoInicial = async (equipoId) => {
   }));
   const partidosCreados = await Partido.insertMany(partidosGenerados);
 
-  // Guardamos también el fixture fijo de los rivales entre sí
   const fixtureRivales = cruceRivales.map(c => ({ ...c, equipo: equipoId }));
   await CalendarioRivales.insertMany(fixtureRivales);
-  
 
-  // Convocatoria automática con todos los disponibles
   const idsJugadores = jugadoresCreados.map(j => j._id);
   const primerPartido = partidosCreados[0];
+  await Partido.findByIdAndUpdate(primerPartido._id, { convocados: idsJugadores });
 
-  await Partido.findByIdAndUpdate(primerPartido._id, {
-    convocados: idsJugadores
-  });
+  // Guardamos la liga elegida en el propio usuario, para usarla luego en obtenerNivelRival
+  await Users.findByIdAndUpdate(equipoId, { liga: ligaId });
 };
 
 const seleccionarTitulares = (jugadoresConvocados) => {
@@ -280,34 +277,10 @@ const listar = async (req, res) => {
   }
 };
 
-// constants/nivelesRivales.js
-const NIVEL_RIVALES = {
-  // Liga — nivel más variado, más realista para tu progresión
-  "Valencia": 68,
-  "Sevilla": 70,
-  "Boca Juniors": 75,
-  "Athletic Club": 72,
-  "Real Sociedad": 71,
-  "Villarreal C.F.": 69,
-  "Celta De vigo": 62,
-  "Real Zaragoza": 58,
-  "RCD Espanyol": 60,
-  "Real Valladolid": 55,
-  "CD Tenerife": 50,
-  "UD Las Palmas": 57,
-  "SD Eibar": 52,
-  "Málaga CF": 54,
-  "Deportivo de La Coruña": 56,
-  "Granada CF": 59,
-  "Real Betis":67,
-  "Elche CF":58,
-  "Cádiz CF":60
-};
 
-const NIVEL_DEFAULT = 60;
-
-function obtenerNivelRival(nombreRival) {
-  return NIVEL_RIVALES[nombreRival] ?? NIVEL_DEFAULT;
+function obtenerNivelRival(nombreRival, ligaId = 'laliga-1') {
+  const liga = obtenerLiga(ligaId);
+  return liga.NIVEL_RIVALES[nombreRival] ?? 60;
 }
 
-module.exports = { generarEquipoInicial, listar, seleccionarTitulares, puedeJugarPartido, NIVEL_RIVALES, obtenerNivelRival, rivalesFuturos};
+module.exports = { generarEquipoInicial, listar, seleccionarTitulares, puedeJugarPartido, obtenerNivelRival};
