@@ -1,22 +1,18 @@
 // utils/calcularClasificacion.js
 const Partido = require('../models/partido');
 const Users = require('../models/users');
-const { rivalesFuturos } = require('./generarEquipoInicial');
 const PartidoRival = require('../models/partidoRival');
-const partido = require('../models/partido');
-const {obtenerLiga} = require("../data/ligas")
+const { obtenerLiga } = require('../data/ligas');
 
-async function calcularClasificacionLiga(equipoId, ligaId = 'laliga-1') {
+async function calcularClasificacionLiga(equipoId) {
   const usuario = await Users.findById(equipoId);
   const nombreEquipoUsuario = usuario?.nombreEquipo || 'Equipo Default';
   const escudoUsuario = usuario?.escudo || '/img/miteam.webp';
-  const ligaSeleccionada = obtenerLiga(ligaId);
-
-  const nombreCompeticion = ligaSeleccionada.ligaId; 
+  const ligaSeleccionada = obtenerLiga(usuario?.liga || 'laliga-1');
 
   const partidosLiga = await Partido.find({
     equipo: equipoId,
-    competicion: nombreCompeticion,
+    competicion: 'liga',
     jugado: true,
   });
   const partidosRivales = await PartidoRival.find({ equipo: equipoId });
@@ -34,17 +30,15 @@ async function calcularClasificacionLiga(equipoId, ligaId = 'laliga-1') {
   }
 
   asegurarEquipo(nombreEquipoUsuario, escudoUsuario, true);
-  rivalesFuturos
-    .filter(r => r.competicion === nombreCompeticion)
-    .forEach(r => asegurarEquipo(r.rival, r.escudo));
+  ligaSeleccionada.rivalesFuturos.forEach(r => asegurarEquipo(r.rival, r.escudo)); // ← desde la liga real
 
-  for (const partido of partidosLiga) {
-    asegurarEquipo(partido.rival, partido.escudo);
+  for (const p of partidosLiga) {
+    asegurarEquipo(p.rival, p.escudo);
 
-    const { golesPropios, golesRival } = partido.resultado;
+    const { golesPropios, golesRival } = p.resultado;
 
     const tu = tabla[nombreEquipoUsuario];
-    const riv = tabla[partido.rival];
+    const riv = tabla[p.rival];
 
     tu.pj++; riv.pj++;
     tu.gf += golesPropios; tu.gc += golesRival;
@@ -77,7 +71,6 @@ async function calcularClasificacionLiga(equipoId, ligaId = 'laliga-1') {
   }
 
   const clasificacion = Object.values(tabla).map(e => ({ ...e, dg: e.gf - e.gc }));
-
   clasificacion.sort((a, b) => b.pts - a.pts || b.dg - a.dg || b.gf - a.gf);
 
   return clasificacion.map((e, i) => ({ ...e, posicion: i + 1 }));

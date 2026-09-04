@@ -50,8 +50,8 @@ export class AuthService {
     return this.http.post<LoginResponse>(`${this.apiUrl}/users/login`, {email, password});
   }
 
-  registerUsers(nombrecompleto:string,email: string, password: string): Observable<LoginResponse>{
-    return this.http.post<LoginResponse>(`${this.apiUrl}/users/register`, {nombrecompleto,email, password});
+  registerUsers(nombrecompleto: string, email: string, password: string, liga: string = 'laliga-1'): Observable<LoginResponse>{
+    return this.http.post<LoginResponse>(`${this.apiUrl}/users/register`, {nombrecompleto, email, password, liga});
   }
 
   

@@ -14,6 +14,7 @@ export class Register {
   email = '';
   password = '';
   confirmPassword = '';
+  liga = 'laliga-1';
   errorMsg = '';
 
   constructor(private authService: AuthService) {}
@@ -28,7 +29,7 @@ export class Register {
 
     this.errorMsg = '';
 
-    this.authService.registerUsers(this.name, this.email, this.password).subscribe({
+    this.authService.registerUsers(this.name, this.email, this.password, this.liga).subscribe({
       next: (response: any) => {
         this.authService.saveToken(response.token);
         this.authService.showSuccessAlert('¡Registro exitoso!', 'Ya puedes iniciar sesión con tus credenciales.');

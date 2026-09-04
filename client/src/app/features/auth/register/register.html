@@ -65,6 +65,17 @@
     </p>
   </div>
 
+  <div class="field">
+    <label for="register-liga">¿Dónde quieres empezar?</label>
+    <select id="register-liga" name="liga" [(ngModel)]="liga">
+      <option value="laliga-1">LaLiga — Primera División (con 4 jugadores estrella de regalo)</option>
+      <option value="laliga-2">LaLiga Hypermotion — Segunda División (reto: sin jugadores de regalo, empiezas desde cero)</option>
+    </select>
+    <p class="field-hint">
+      En Segunda tendrás más dificultad, pero al ascender a Primera recibirás como recompensa 4 jugadores muy fuertes.
+    </p>
+  </div>
+
   <p *ngIf="errorMsg" class="error-msg">{{ errorMsg }}</p>
   <button type="submit" class="btn-primary" [disabled]="registerForm.invalid || password !== confirmPassword">
     Regístrate Ahora

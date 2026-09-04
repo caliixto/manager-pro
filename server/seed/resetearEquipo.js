@@ -10,6 +10,7 @@ const Users = require("../models/users");
 const CalendarioRivales = require("../models/calendarioRivales");
 
 const EQUIPO_ID = "6a6aa10d476a773c66717b76";
+const LIGA_ID = process.argv[2] || "laliga-1"; // ← nuevo: permite elegir liga desde la terminal
 
 const resetear = async () => {
   await mongoose.connect(process.env.MONGO_URL);
@@ -25,8 +26,8 @@ const resetear = async () => {
   await partidoRival.deleteMany({equipo: EQUIPO_ID});
   await CalendarioRivales.deleteMany({equipo: EQUIPO_ID});
 
-  console.log("Generando datos nuevos con el código actual...");
-  await generarEquipoInicial(EQUIPO_ID);
+  console.log(`Generando datos nuevos con el código actual (liga: ${LIGA_ID})...`);
+  await generarEquipoInicial(EQUIPO_ID, LIGA_ID);
   await Users.findByIdAndUpdate(EQUIPO_ID, { $set: { monedas: 5000000 } });
 
   console.log("✅ Equipo reseteado correctamente. Ya puedes hacer login con tu usuario de siempre.");

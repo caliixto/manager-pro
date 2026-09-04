@@ -8,27 +8,26 @@ const {generarEquipoInicial} = require ("../utils/generarEquipoInicial");
 const registrarUsers = async(req, res)=>{
 
     try{
-        const {nombrecompleto,email,password} = req.body;
+        const { nombrecompleto, email, password, liga } = req.body;
 
-        const params = req.body;
-        console.log("Datos recibidos en el controlador:", params);
+        console.log("Datos recibidos en el controlador:", req.body);
 
-        if (!params.password) {
+        if (!password) {
             return res.status(400).send({ status: "error", message: "La contraseña es obligatoria" });
         }
 
         const salt = await bcrypt.genSalt(10);
-        const passwordHash = await bcrypt.hash(params.password, salt);
-
+        const passwordHash = await bcrypt.hash(password, salt);
 
         const user = new Users({
             nombrecompleto,
             email,
-            password:passwordHash
+            password: passwordHash,
+            liga: liga || 'laliga-1'
         });
 
         await user.save();
-        await generarEquipoInicial(user._id);
+        await generarEquipoInicial(user._id, liga || 'laliga-1');
 
         return res.status(201).send({
             status:"success",
@@ -41,12 +40,11 @@ const registrarUsers = async(req, res)=>{
                 message:"error registrar el usuario"
         });
     }
-
 }
 
 const loginUsers = async (req,res) =>{
     try{
-        const {nombrecompleto,email, password, nombreEquipo, escudo, monedas} = req.body;
+        const {nombrecompleto,email, password} = req.body;
 
         const emailEncontrado = await Users.findOne({email:email});
 
