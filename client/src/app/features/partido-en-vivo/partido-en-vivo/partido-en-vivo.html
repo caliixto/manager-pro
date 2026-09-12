@@ -53,18 +53,24 @@
         </div>
     </div>
 
-<div class="resumen-final" *ngIf="live.finalizado()">
-  <h2>Final del partido</h2>
+<div class="resumen-overlay" *ngIf="live.finalizado()">
+  <div class="resumen-card">
+    <h2>Final del partido</h2>
     <p>{{ nombreEquipoPropio }} {{ live.golesPropios() }} - {{ live.golesRival() }} {{ live.rival() }}</p>
     
+    <p class="premio-ganado" *ngIf="live.premio() > 0">
+      💰 Has ganado {{ live.premio() | number:'1.0-0' }} monedas
+    </p>
+
     <p *ngIf="live.descuentoSegundaParte() > 0" class="descanso-descuento">
-        Se añadieron {{ live.descuentoSegundaParte() }} minutos de descuento en la segunda parte.
+      Se añadieron {{ live.descuentoSegundaParte() }} minutos de descuento en la segunda parte.
     </p>
     <p *ngIf="live.descuentoSegundaParte() === 0" class="descanso-descuento">
-        Sin tiempo añadido en la segunda parte.
+      Sin tiempo añadido en la segunda parte.
     </p>
 
     <button (click)="volverAlDashboard()">Volver al Dashboard</button>
+  </div>
 </div>
 
 </div>

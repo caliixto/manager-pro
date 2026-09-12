@@ -178,20 +178,30 @@ irATactica() {
 }
 
 simularPartido() {
-    this.simulando.set(true);
-    this.errorSimulacion.set(null);
+  this.simulando.set(true);
+  this.errorSimulacion.set(null);
 
-    this.partido.simularSiguientePartido().subscribe({
-      next: (res) => {
-        this.simulando.set(false);
-        this.partidoLive.iniciarPartido(res.resultado);
-        this.router.navigate(['/partido-en-vivo']);
-      },
-      error: (err) => {
-        this.errorSimulacion.set(err.error?.message ?? 'Error al simular el partido');
-        this.simulando.set(false);
+  this.partido.simularSiguientePartido().subscribe({
+    next: (res) => {
+      this.simulando.set(false);
+
+      // Actualizamos el usuario local con el nuevo saldo de monedas
+      const userActual = this.authService.getUser();
+      if (userActual && res.resultado.monedasActuales !== undefined) {
+        this.authService.saveUser({
+          ...userActual,
+          monedas: res.resultado.monedasActuales,
+        });
       }
-    });
+
+      this.partidoLive.iniciarPartido(res.resultado);
+      this.router.navigate(['/partido-en-vivo']);
+    },
+    error: (err) => {
+      this.errorSimulacion.set(err.error?.message ?? 'Error al simular el partido');
+      this.simulando.set(false);
+    }
+  });
 }
 }
 

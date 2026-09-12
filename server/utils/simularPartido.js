@@ -6,6 +6,8 @@ const Participacion = require('../models/participacion');
 const { obtenerNivelRival} = require('./generarEquipoInicial');
 const { simularJornadaEntreRivales } = require('./simularJornadaRivales');
 const { golesAleatorios } = require('./golesPoisson');
+const { calcularPremioPartido } = require('./calcularPremio');
+const { progresionTrasPartido } = require('./progresionJugador');
 
 
 // Nivel de un jugador: media de sus 12 stats
@@ -54,12 +56,17 @@ async function simularSiguientePartido(equipoId) {
     throw new Error('No hay partidos pendientes en el calendario');
   }
 
+
   // 2. Determinamos titulares: partimos de la alineación guardada por el usuario,
   // sustituyendo automáticamente a quien esté lesionado, sancionado o con energía muy baja
   const UMBRAL_ENERGIA_MINIMA = 20; // por debajo de esto, no puede jugar si hay alternativa
 
   const equipo = await Users.findById(equipoId).populate('alineacion');
   const todaLaPlantilla = await Jugador.find({ equipo: equipoId });
+
+  const idsSancionadosAntes = todaLaPlantilla
+    .filter(j => j.sancionado)
+    .map(j => j._id.toString());
 
   const puedeJugar = (jugador) =>
     jugador && !jugador.lesionado && !jugador.sancionado && jugador.resistencia >= UMBRAL_ENERGIA_MINIMA;
@@ -249,6 +256,16 @@ async function simularSiguientePartido(equipoId) {
 
   await Participacion.insertMany(participaciones);
 
+  // 5.5. Calculamos y otorgamos el premio en monedas
+  const premio = calcularPremioPartido({
+    nivelRival,
+    competicion: partido.competicion,
+    golesPropios,
+    golesRival,
+  });
+
+  const usuarioActualizado = await Users.findByIdAndUpdate(equipoId, { $inc: { monedas: premio } },  { new: true });
+
   // 6. Actualizamos el Partido con el resultado real
   partido.jugado = true;
   partido.resultado = { golesPropios, golesRival };
@@ -291,6 +308,58 @@ async function simularSiguientePartido(equipoId) {
 
   await Promise.all(actualizacionesResistencia);
 
+  // 6.6. Progresión de stats para los titulares que jugaron
+    // 6.6. Progresión de stats para los titulares que jugaron
+  const progresiones = []; // ← nuevo: guardamos qué mejoró, para mostrarlo después
+
+  const actualizacionesProgresion = titulares.map(jugador => {
+    const hizoGol = (registrosGol[jugador._id] ?? 0) > 0;
+    const dioAsistencia = (registrosAsist[jugador._id] ?? 0) > 0;
+
+    const statsAntes = { ...jugador.stats };
+    const nuevasStats = progresionTrasPartido(jugador, { hizoGol, dioAsistencia });
+
+    // Detectamos qué stats concretas subieron, para el aviso
+    const statsQueSubieron = Object.keys(nuevasStats).filter(
+      stat => nuevasStats[stat] > statsAntes[stat]
+    );
+
+    if (statsQueSubieron.length > 0) {
+      progresiones.push({
+        jugador: jugador.nombre,
+        stats: statsQueSubieron.map(stat => ({
+          nombre: stat,
+          antes: statsAntes[stat],
+          despues: nuevasStats[stat],
+        })),
+      });
+    }
+
+    return Jugador.findByIdAndUpdate(jugador._id, { stats: nuevasStats });
+  });
+
+  await Promise.all(actualizacionesProgresion);
+
+    // 6.7. Gestión de sanciones: quita la sanción a quien ya la cumplió (se perdió este partido),
+  // y sanciona a quien haya visto roja en este partido para el próximo
+  const idsConRojaEsteFartido = participaciones
+    .filter(p => p.tarjetaRoja)
+    .map(p => p.jugador.toString());
+
+  const actualizacionesSancion = [];
+
+  for (const id of idsSancionadosAntes) {
+    actualizacionesSancion.push(Jugador.findByIdAndUpdate(id, { sancionado: false }));
+  }
+
+  for (const id of idsConRojaEsteFartido) {
+    actualizacionesSancion.push(Jugador.findByIdAndUpdate(id, { sancionado: true }));
+  }
+
+  if (actualizacionesSancion.length > 0) {
+    await Promise.all(actualizacionesSancion);
+  }
+
   console.log('--- Resistencia actualizada ---');
   todaLaPlantilla.forEach(j => {
     const jugo = idsTitulares.includes(j._id.toString());
@@ -311,6 +380,9 @@ async function simularSiguientePartido(equipoId) {
     eventos,
     descuentoPrimeraParte,
     descuentoSegundaParte,
+    premio,
+    monedasActuales: usuarioActualizado.monedas,
+     progresiones,
     goleadores: Object.entries(registrosGol).map(([id, goles]) => {
       const j = titulares.find(t => t._id.toString() === id);
       return `${j.nombre}: ${goles}`;

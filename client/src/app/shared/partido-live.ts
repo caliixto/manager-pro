@@ -18,6 +18,13 @@ export interface ResultadoSimulado {
   descuentoSegundaParte?: number;
   eventos: EventoPartido[];
   goleadores: string[];
+  premio?: number;
+  progresiones?: ProgresionJugador[];
+}
+
+export interface ProgresionJugador {
+  jugador: string;
+  stats: { nombre: string; antes: number; despues: number }[];
 }
 
 @Injectable({ providedIn: 'root' })
@@ -35,6 +42,8 @@ export class PartidoLive {
   enDescanso = signal<boolean>(false);
   descuentoPrimeraParte = signal<number>(0);
   descuentoSegundaParte = signal<number>(0);
+  premio = signal<number>(0);
+  progresiones = signal<ProgresionJugador[]>([]);
 
   private eventosPendientes: EventoPartido[] = [];
   private intervalId: any = null;
@@ -47,10 +56,12 @@ export class PartidoLive {
     this.eventosMostrados.set([]);
     this.finalizado.set(false);
     this.enDescanso.set(false);
+    this.premio.set(resultado.premio ?? 0);
     this.descuentoPrimeraParte.set(resultado.descuentoPrimeraParte ?? 0);
     this.descuentoSegundaParte.set(resultado.descuentoSegundaParte ?? 0);
     this.eventosPendientes = [...resultado.eventos].sort((a, b) => a.minuto - b.minuto);
     this.reproduciendo.set(true);
+    this.progresiones.set(resultado.progresiones ?? []);
  if (this.intervalId) clearInterval(this.intervalId);
     this.arrancarIntervalo();
   }
