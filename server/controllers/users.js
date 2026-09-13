@@ -57,7 +57,7 @@ const loginUsers = async (req,res) =>{
         const token = jwt.sign(
             { id: emailEncontrado._id, email: emailEncontrado.email },
             process.env.JWT_SECRET,
-            { expiresIn: "2h" }
+            { expiresIn: "30d" }
         );
 
         if (!passwordCorrecta) {
