@@ -4,6 +4,7 @@ const {seleccionarTitulares,puedeJugarPartido} = require("../utils/generarEquipo
 const { simularSiguientePartido } = require('../utils/simularPartido');
 const PartidoRival = require('../models/partidoRival');
 const Users = require("../models/users");
+const MINIMO_CONVOCADOS = 17;
 
 const crearPartido = async (req, res) => {
   try {
@@ -334,6 +335,40 @@ const obtenerJornadasRivales = async (req, res) => {
   }
 };
 
+const actualizarConvocatoria = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { convocados } = req.body; // array de IDs de jugadores
+
+    if (!Array.isArray(convocados) || convocados.length < MINIMO_CONVOCADOS) {
+      return res.status(400).json({ 
+        status: "error", 
+        message: `Debes convocar al menos ${MINIMO_CONVOCADOS} jugadores` 
+      });
+    }
+
+    const partidoActualizado = await Partido.findByIdAndUpdate(
+      id,
+      { convocados },
+      { new: true }
+    );
+
+    if (!partidoActualizado) {
+      return res.status(404).json({ status: "error", message: "Partido no encontrado" });
+    }
+
+    return res.json({
+      status: "success",
+      mensaje: "Convocatoria actualizada correctamente",
+      totalConvocados: convocados.length,
+      partido: partidoActualizado
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ status: "error", message: "Error en el servidor" });
+  }
+};
+
 
 module.exports = {
   crearPartido,
@@ -347,5 +382,6 @@ module.exports = {
   obtenerTitulares,
   obtenerConvocatoriaDetallada,
   simularPartido,
-  obtenerJornadasRivales
+  obtenerJornadasRivales,
+  actualizarConvocatoria,
 };

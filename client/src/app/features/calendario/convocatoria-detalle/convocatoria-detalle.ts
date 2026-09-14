@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Location } from '@angular/common'; 
@@ -27,6 +27,10 @@ export class ConvocatoriaDetalle implements OnInit {
   fecha = signal<string>('');
   loading = signal(true);
   errorMsg = signal('');
+  minimoConvocados = 17;
+  convocadosCount = computed(() => this.jugadores().filter(j => j.convocado).length);
+  guardando = signal(false);
+  mensajeGuardado = signal('');
 
   constructor(
     private route: ActivatedRoute,
@@ -82,7 +86,7 @@ export class ConvocatoriaDetalle implements OnInit {
     return 'no-convocado';
   }
 
-    cargarEstadisticas(id: string) {
+  cargarEstadisticas(id: string) {
     this.jugadorServie.obtenerEstadisticasJugador(id).subscribe({
       next: (response) => {
         // Actualiza SOLO el jugador correspondiente dentro del array existente
@@ -99,6 +103,44 @@ export class ConvocatoriaDetalle implements OnInit {
       }
     });
   }
+
+  toggleConvocado(jugador: JugadorConvocatoria, event: Event) {
+  event.stopPropagation(); // evita que el click en el checkbox navegue a la ficha del jugador
+
+  if (jugador.lesionado || jugador.sancionado) return; // no se puede convocar a alguien lesionado/sancionado
+
+  this.jugadores.update(actuales =>
+    actuales.map(j => j._id === jugador._id ? { ...j, convocado: !j.convocado } : j)
+  );
+}
+
+guardarConvocatoria() {
+  const count = this.convocadosCount();
+  if (count < this.minimoConvocados) {
+    this.mensajeGuardado.set(`Necesitas convocar al menos ${this.minimoConvocados} jugadores (tienes ${count})`);
+    return;
+  }
+
+  const partidoId = this.route.snapshot.paramMap.get('id');
+  if (!partidoId) return;
+
+  const idsConvocados = this.jugadores().filter(j => j.convocado).map(j => j._id);
+
+  this.guardando.set(true);
+  this.mensajeGuardado.set('');
+
+  this.partidoService.actualizarConvocatoria(partidoId, idsConvocados).subscribe({
+    next: () => {
+      this.guardando.set(false);
+      this.mensajeGuardado.set('¡Convocatoria guardada correctamente!');
+    },
+    error: (err) => {
+      console.error(err);
+      this.guardando.set(false);
+      this.mensajeGuardado.set(err.error?.message ?? 'Error al guardar la convocatoria');
+    }
+  });
+}
 
   volver(){
     this.locacion.back();

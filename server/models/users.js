@@ -35,6 +35,10 @@ const usersSchema = new Schema({
   resetPasswordToken: {
     type: String
   },
+  formacion: {
+  type: String,
+  default: '4-3-3'
+  },
   resetPasswordExpires: {
     type: Date
   },

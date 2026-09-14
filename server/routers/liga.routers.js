@@ -26,5 +26,6 @@ router.get("/:id/balance", verificarToken, partido.obtenerBalanceTactico);
 router.get("/:id/titulares", verificarToken, partido.obtenerTitulares);
 router.get("/:id/convocatoria-detalle", verificarToken, partido.obtenerConvocatoriaDetallada);
 router.post('/partidos/simular', verificarToken, partido.simularPartido);
+router.put("/:id/convocatoria-manual", verificarToken, partido.actualizarConvocatoria);
 
 module.exports = router;

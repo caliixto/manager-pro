@@ -95,4 +95,8 @@ export class PartidoService {
   obtenerJornadasRivales() {
     return this.http.get<{ status: string; jornadas: any[] }>(`${this.apiUrl}/liga/jornadas`,{ headers: this.getHeaders() });
   }
+
+  actualizarConvocatoria(partidoId: string, convocados: string[]): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${partidoId}/convocatoria-manual`, { convocados }, { headers: this.getHeaders() });
+  }
 }

@@ -9,6 +9,7 @@ interface AlineacionResponse {
   status: string;
   mensaje?: string;
   alineacion: Jugador[];
+  formacion?: string;
 }
 
 @Injectable({
@@ -32,7 +33,7 @@ export class TacticaService {
     return this.http.get<AlineacionResponse>(`${this.apiUrl}/alineacion`, { headers: this.getHeaders() });
   }
 
-  guardarAlineacion(idsJugadores: string[]): Observable<AlineacionResponse> {
-    return this.http.put<AlineacionResponse>(`${this.apiUrl}/alineacion`, { alineacion: idsJugadores }, { headers: this.getHeaders() });
+  guardarAlineacion(idsJugadores: string[],formacion?: string): Observable<AlineacionResponse> {
+    return this.http.put<AlineacionResponse>(`${this.apiUrl}/alineacion`, { alineacion: idsJugadores, formacion }, { headers: this.getHeaders() });
   }
 }

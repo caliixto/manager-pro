@@ -8,6 +8,7 @@ import { PartidoService, Partido } from '../../../calendario/partido';
 import { JugadorService, Jugador } from '../../../plantilla/jugador';
 import { TacticaService } from '../../../../shared/tactica';
 import { PartidoLive } from '../../../../shared/partido-live';
+import { FORMACIONES,SlotFormacion } from '../../../../shared/formaciones';
 
 interface PlayerPosicionado {
   x: number;
@@ -32,6 +33,7 @@ export class Dashboard {
   simulando = signal(false);
   ultimoResultadoSimulado = signal<string | null>(null);
   errorSimulacion = signal<string | null>(null);
+  sinAlineacionGuardada = signal(false);
 
   constructor(private authService: AuthService, private router: Router, 
     private partido:PartidoService, private jugador:JugadorService, 
@@ -108,13 +110,6 @@ export class Dashboard {
     return tipo === 'win' ? 'W' : tipo === 'draw' ? 'D' : 'L';
   }
 
-  private posicionesCampo = [
-  { x: 150, y: 400, isGoalkeeper: true }, // Portero
-  { x: 50, y: 330 }, { x: 110, y: 340 }, { x: 190, y: 340 }, { x: 250, y: 330 }, // Defensas
-  { x: 90, y: 240 }, { x: 150, y: 220 }, { x: 210, y: 240 }, // Centrocampistas
-  { x: 70, y: 110 }, { x: 150, y: 90 }, { x: 230, y: 110 }, // Delanteros
-];
-
   //Jugador Destacado
   cargarJugadorDestacado() {
     this.jugador.listar().subscribe({
@@ -137,26 +132,59 @@ export class Dashboard {
   }
 
   //Titular Esquema Tactico
-    cargarTitulares() {
-    // En lugar de obtener los titulares del partido, consultamos la alineación general del usuario
-    this.tactica.obtenerAlineacion().subscribe({
-      next: (response) => {
-        const titulares = response.alineacion || [];
+ cargarTitulares() {
+  this.tactica.obtenerAlineacion().subscribe({
+    next: (response) => {
+      const titulares = response.alineacion || [];
+      const formacion = response.formacion || '4-3-3';
 
-        if (titulares.length === 0) {
-          console.warn("No hay titulares asignados en la alineación.");
-        }
-        
-        const combinados = this.posicionesCampo.map((pos, index) => ({
-          ...pos,
-          jugador: titulares[index] || null
-        }));
-        
-        this.playersEnCampo.set(combinados);
-      },
-      error: (err) => console.error("Error al cargar la alineación en el dashboard", err)
-    });
-  }
+      if (titulares.length === 0) {
+        this.sugerirAlineacionAutomatica(formacion);
+      } else {
+        this.pintarEnCampo(titulares, formacion);
+        this.sinAlineacionGuardada.set(false);
+      }
+    },
+    error: (err) => console.error("Error al cargar la alineación en el dashboard", err)
+  });
+}
+
+sugerirAlineacionAutomatica(formacion: string) {
+  this.jugador.listarConEstadisticas().subscribe({
+    next: (res) => {
+      const jugadores = res.jugadores;
+      const porteros = jugadores.filter(j => j.posicion === 'POR');
+      const defensas = jugadores.filter(j => j.posicion === 'DEF');
+      const centros = jugadores.filter(j => j.posicion === 'CEN');
+      const delanteros = jugadores.filter(j => j.posicion === 'DEL');
+
+      const sugeridos = [
+        ...porteros.slice(0, 1),
+        ...defensas.slice(0, 4),
+        ...centros.slice(0, 3),
+        ...delanteros.slice(0, 3),
+      ];
+
+      this.pintarEnCampo(sugeridos, formacion);
+      this.sinAlineacionGuardada.set(true);
+    },
+    error: (err) => console.error("Error al sugerir alineación automática", err)
+  });
+}
+
+// Convierte los slots (top/left en %) del catálogo de formaciones al SVG 300x450 del Dashboard
+pintarEnCampo(titulares: Jugador[], formacionId: string) {
+  const slots: SlotFormacion[] = FORMACIONES[formacionId] ?? FORMACIONES['4-3-3'];
+
+  const combinados = slots.map((slot, index) => ({
+    x: (slot.left / 100) * 300,
+    y: (slot.top / 100) * 450,
+    isGoalkeeper: slot.posicion === 'POR',
+    jugador: titulares[index] || null,
+  }));
+
+  this.playersEnCampo.set(combinados);
+}
  
   //Nombre Jugadores
   getNombreCorto(nombreCompleto: string): string {

@@ -89,14 +89,17 @@ const forgotPassword = async (req, res) => {
 const obtenerAlineacion = async (req, res) => {
   try {
     const equipoId = req.user.id;
-
     const user = await Users.findById(equipoId).populate('alineacion');
 
     if (!user) {
       return res.status(404).json({ status: "error", message: "Usuario no encontrado" });
     }
 
-    return res.json({ status: "success", alineacion: user.alineacion });
+    return res.json({ 
+      status: "success", 
+      alineacion: user.alineacion,
+      formacion: user.formacion || '4-3-3' // ← nuevo
+    });
 
   } catch (error) {
     console.log(error);
@@ -107,19 +110,29 @@ const obtenerAlineacion = async (req, res) => {
 const guardarAlineacion = async (req, res) => {
   try {
     const equipoId = req.user.id;
-    const { alineacion } = req.body; // array de 11 IDs de jugadores
+    const { alineacion, formacion } = req.body; // ← nuevo: aceptamos formacion también
 
     if (!Array.isArray(alineacion) || alineacion.length !== 11) {
       return res.status(400).json({ status: "error", message: "La alineación debe tener exactamente 11 jugadores" });
     }
 
+    const camposActualizar = { alineacion };
+    if (formacion) {
+      camposActualizar.formacion = formacion; // ← solo actualiza si viene informado
+    }
+
     const user = await Users.findByIdAndUpdate(
       equipoId,
-      { alineacion },
+      camposActualizar,
       { new: true }
     ).populate('alineacion');
 
-    return res.json({ status: "success", mensaje: "Alineación guardada correctamente", alineacion: user.alineacion });
+    return res.json({ 
+      status: "success", 
+      mensaje: "Alineación guardada correctamente", 
+      alineacion: user.alineacion,
+      formacion: user.formacion // ← nuevo
+    });
 
   } catch (error) {
     console.log(error);

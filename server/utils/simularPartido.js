@@ -68,8 +68,12 @@ async function simularSiguientePartido(equipoId) {
     .filter(j => j.sancionado)
     .map(j => j._id.toString());
 
+  const idsConvocados = new Set((partido.convocados || []).map(id => id.toString()));
+  const hayConvocatoria = idsConvocados.size > 0;
+
   const puedeJugar = (jugador) =>
-    jugador && !jugador.lesionado && !jugador.sancionado && jugador.resistencia >= UMBRAL_ENERGIA_MINIMA;
+  jugador && !jugador.lesionado && !jugador.sancionado && jugador.resistencia >= UMBRAL_ENERGIA_MINIMA &&
+  (!hayConvocatoria || idsConvocados.has(jugador._id.toString()));
 
   let titulares = [];
   const usados = new Set();

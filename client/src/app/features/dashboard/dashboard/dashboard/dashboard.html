@@ -163,6 +163,9 @@
       <div class="card card--pizarra" (click)="irATactica()" style="cursor: pointer;">
             <div class="card__header">
                 <h3>Pizarra Táctica</h3>
+                <p *ngIf="sinAlineacionGuardada()" class="aviso-sin-alineacion">
+                    Sugerencia automática — <a routerLink="/tacticas" (click)="$event.stopPropagation()">configura tu alineación</a>
+                </p>
             </div>
 
             <div class="pitch-container">
@@ -205,7 +208,7 @@
                 </line>
                 </svg>
             </div>
-      </div>
+        </div>
 
     </div>
   </section>

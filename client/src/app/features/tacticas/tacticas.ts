@@ -29,6 +29,7 @@ export class Tacticas implements OnInit {
   cambiarFormacion(nuevaFormacion: string): void {
     this.formacionSeleccionada.set(nuevaFormacion);
     this.recolocarTitulares();
+    this.guardarCambios();
   }
   
 
@@ -58,6 +59,9 @@ export class Tacticas implements OnInit {
   cargarAlineacion(): void {
     this.tacticaService.obtenerAlineacion().subscribe({
       next: (res) => {
+        if (res.formacion) {
+          this.formacionSeleccionada.set(res.formacion); // ← nuevo, ANTES de recolocar
+        }
         this.titulares.set(res.alineacion);
         this.recolocarTitulares();
         this.loading.set(false);
@@ -67,8 +71,8 @@ export class Tacticas implements OnInit {
         this.errorMsg.set('Error al cargar la alineación');
         this.loading.set(false);
       }
-  });
-}
+    });
+  }
 
   recolocarTitulares(): void {
     const slots = FORMACIONES[this.formacionSeleccionada()];
@@ -91,6 +95,7 @@ export class Tacticas implements OnInit {
 
     this.titulares.set(nuevaAlineacion);
   }
+  
 
   // Combina cada titular con su slot correspondiente, en orden
   get titularesConSlot(): { jugador: Jugador; slot: SlotFormacion }[] {
@@ -161,7 +166,7 @@ export class Tacticas implements OnInit {
       .filter((id): id is string => !!id);
 
     // 3. Guardamos en el backend usando tu TacticaService
-    this.tacticaService.guardarAlineacion(idsAlineacion).subscribe({
+    this.tacticaService.guardarAlineacion(idsAlineacion, this.formacionSeleccionada()).subscribe({
       next: () => {
         console.log('Alineación guardada correctamente en el servidor');
       },
@@ -182,4 +187,14 @@ export class Tacticas implements OnInit {
     return this.jugadorSeleccionado()?._id === jugador._id;
   }
 
+  guardarCambios(): void {
+    const idsAlineacion = this.titulares()
+      .map(j => j._id)
+      .filter((id): id is string => !!id);
+
+    this.tacticaService.guardarAlineacion(idsAlineacion, this.formacionSeleccionada()).subscribe({
+      next: () => console.log('Alineación y formación guardadas'),
+      error: (err) => console.error('Error al guardar:', err)
+    });
+  }
 }

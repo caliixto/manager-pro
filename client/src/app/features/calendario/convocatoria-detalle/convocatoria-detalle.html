@@ -3,11 +3,23 @@
   <div class="convocatoria-header">
     <a class="back-link" (click)="volver()">← Volver</a>
     <h1>Convocatoria vs. {{ rival() }}</h1>
-    <p class="convocatoria-subtitle">{{ jugadores().length }} jugadores en plantilla</p>
+    <p class="convocatoria-subtitle">
+      {{ convocadosCount() }} / {{ jugadores().length }} convocados 
+      (mínimo {{ minimoConvocados }})
+    </p>
   </div>
 
   <div class="convocatoria-list" *ngIf="!loading()">
     <div class="jugador-row" *ngFor="let jugador of jugadores()" [routerLink]="['/jugador', jugador._id]">
+      
+      <input 
+        type="checkbox" 
+        class="jugador-checkbox"
+        [checked]="jugador.convocado"
+        [disabled]="jugador.lesionado || jugador.sancionado"
+        (click)="toggleConvocado(jugador, $event)"
+      >
+
       <div class="jugador-avatar" *ngIf="!jugador.foto">{{ getIniciales(jugador.nombre) }}</div>
       <img *ngIf="jugador.foto" [src]="jugador.foto" class="jugador-avatar-img">
       
@@ -20,6 +32,13 @@
         {{ getEstadoTexto(jugador) }}
       </span>
     </div>
+  </div>
+
+  <div class="convocatoria-footer" *ngIf="!loading()">
+    <p *ngIf="mensajeGuardado()" class="mensaje-guardado">{{ mensajeGuardado() }}</p>
+    <button class="btn-guardar-convocatoria" (click)="guardarConvocatoria()" [disabled]="guardando()">
+      {{ guardando() ? 'Guardando...' : 'Guardar convocatoria' }}
+    </button>
   </div>
 
   <p *ngIf="loading()" class="loading-state">Cargando convocatoria...</p>

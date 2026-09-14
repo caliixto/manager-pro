@@ -120,3 +120,49 @@
   padding: 3rem;
   color: var(--text-color-secondary);
 }
+
+.jugador-checkbox {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: #22c55e;
+}
+
+.jugador-checkbox:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.convocatoria-footer {
+  position: sticky;
+  bottom: 0;
+  background: #1a1e21;
+  padding: 16px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.mensaje-guardado {
+  font-size: 13px;
+  color: #22c55e;
+}
+
+.btn-guardar-convocatoria {
+  background: #22c55e;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 32px;
+  font-weight: 700;
+  cursor: pointer;
+  width: 100%;
+  max-width: 300px;
+}
+
+.btn-guardar-convocatoria:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
