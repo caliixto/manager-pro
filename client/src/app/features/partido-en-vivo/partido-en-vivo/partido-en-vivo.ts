@@ -1,10 +1,9 @@
-import { Component, OnDestroy  } from '@angular/core';
+import { Component, OnDestroy, effect } from '@angular/core'; // ← añade effect
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../auth/auth';
 import { PartidoLive } from '../../../shared/partido-live';
 import { Authmodal } from "../../auth/authmodal/authmodal";
-
 
 @Component({
   selector: 'app-partido-en-vivo',
@@ -13,10 +12,23 @@ import { Authmodal } from "../../auth/authmodal/authmodal";
   styleUrl: './partido-en-vivo.css',
 })
 export class PartidoEnVivo implements OnDestroy {
-   nombreEquipoPropio = 'Tu equipo';
-   
+  nombreEquipoPropio = 'Tu equipo';
+
   constructor(public live: PartidoLive, private router: Router, private auth: AuthService) {
     this.nombreEquipoPropio = this.auth.getUser()?.nombreEquipo ?? 'Tu equipo';
+
+    // Solo actualizamos el saldo de monedas cuando el partido termina de verdad (visualmente)
+    effect(() => {
+      if (this.live.finalizado()) {
+        const userActual = this.auth.getUser();
+        if (userActual) {
+          this.auth.saveUser({
+            ...userActual,
+            monedas: this.live.monedasActuales(),
+          });
+        }
+      }
+    });
   }
 
   get zonaBalon(): string {

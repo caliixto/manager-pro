@@ -34,6 +34,7 @@
         class="jugador-en-campo"
         [class.seleccionado]="esSeleccionado(item.jugador)"
         [class.compatible]="esCompatible(item.jugador)"
+        [class.no-disponible]="item.jugador.sancionado || item.jugador.lesionado"
         [style.top.%]="item.slot.top"
         [style.left.%]="item.slot.left"
         (click)="seleccionarJugador(item.jugador)"
@@ -43,11 +44,13 @@
           <span class="badge-resistencia" [class]="item.jugador.resistencia | colorResistencia">
             {{ item.jugador.resistencia }}
           </span>
+          <span class="badge-estado" *ngIf="item.jugador.sancionado" title="Sancionado">🚫</span>
+          <span class="badge-estado" *ngIf="item.jugador.lesionado" title="Lesionado">🤕</span>
         </div>
         <span class="jugador-nombre-campo">{{ item.jugador.nombre }}</span>
       </div>
-    </div> <!-- Cierre correcto de .campo-futbol -->
-  </div> <!-- Cierre correcto de .tacticas-campo-wrapper -->
+    </div>
+  </div>
 
   <!-- Columna derecha: banquillo / convocados -->
   <div class="banquillo-panel">
@@ -58,9 +61,14 @@
         class="jugador-banquillo"
         [class.seleccionado]="esSeleccionado(jugador)"
         [class.compatible]="esCompatible(jugador)"
+        [class.no-disponible]="jugador.sancionado || jugador.lesionado"
         (click)="seleccionarJugador(jugador)"
       >
-        <img [src]="jugador.foto" [alt]="jugador.nombre" class="jugador-avatar-pequeno">
+        <div class="avatar-wrapper">
+          <img [src]="jugador.foto" [alt]="jugador.nombre" class="jugador-avatar-pequeno">
+          <span class="badge-estado badge-estado--pequeno" *ngIf="jugador.sancionado" title="Sancionado">🚫</span>
+          <span class="badge-estado badge-estado--pequeno" *ngIf="jugador.lesionado" title="Lesionado">🤕</span>
+        </div>
         <div class="jugador-banquillo-info">
           <span class="jugador-banquillo-nombre">{{ jugador.nombre }}</span>
           <span class="jugador-banquillo-posicion">{{ jugador.posicion }}</span>

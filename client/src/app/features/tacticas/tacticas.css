@@ -261,3 +261,36 @@
 .resistencia-roja {
   background-color: #ef4444;
 }
+
+.no-disponible {
+  opacity: 0.45;
+}
+
+.no-disponible .jugador-avatar,
+.no-disponible .jugador-avatar-pequeno {
+  filter: grayscale(1);
+}
+
+.badge-estado {
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  font-size: 14px;
+  background: #1a1e21;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #ef4444;
+}
+
+.badge-estado--pequeno {
+  position: static;
+  width: 16px;
+  height: 16px;
+  font-size: 10px;
+  margin-right: 4px;
+  border-width: 1px;
+}

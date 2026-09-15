@@ -199,48 +199,111 @@ async function simularSiguientePartido(equipoId) {
     });
   }
 
-  // 5. Tarjetas: pequeña probabilidad por jugador, más en defensas/centros
-  const participaciones = titulares.map(jugador => {
-    const probAmarilla = jugador.posicion === 'DEF' ? 0.18 : jugador.posicion === 'CEN' ? 0.12 : 0.06;
-    const tarjetaAmarilla = Math.random() < probAmarilla;
-    const tarjetaRoja = tarjetaAmarilla && Math.random() < 0.08;
+  // 5. Tarjetas: simulamos evento a evento, respetando que un expulsado no genera más tarjetas
+  const jugadoresExpulsados = new Set();
+  const jugadoresConAmarilla = new Set(); // quién ya tiene 1 amarilla, para la 2ª->roja
 
-    if (tarjetaAmarilla) {
-      const minuto = minutoAleatorioUnico(minutosUsados);
-      eventos.push({
-        minuto,
-        tipo: 'amarilla',
-        jugador: jugador.nombre,
-        equipo: 'propio',
-        descripcion: `Tarjeta amarilla para ${jugador.nombre}.`
-      });
+  // Generamos los "intentos" de tarjeta con su minuto, y los procesamos en orden cronológico
+  const intentosDeTarjeta = [];
+
+  for (const jugador of titulares) {
+    const probAmarilla = jugador.posicion === 'DEF' ? 0.18 : jugador.posicion === 'CEN' ? 0.12 : 0.06;
+    const probRojaDirecta = 0.015; // pequeña probabilidad, independiente de las amarillas
+
+    if (Math.random() < probAmarilla) {
+      intentosDeTarjeta.push({ jugador, minuto: minutoAleatorioUnico(minutosUsados), tipo: 'amarilla' });
     }
-    if (tarjetaRoja) {
-      const minuto = minutoAleatorioUnico(minutosUsados);
+    if (Math.random() < probRojaDirecta) {
+      intentosDeTarjeta.push({ jugador, minuto: minutoAleatorioUnico(minutosUsados), tipo: 'roja_directa' });
+    }
+    // Pequeña probabilidad de UNA SEGUNDA amarilla en el mismo partido (poco común, pero realista)
+    if (Math.random() < probAmarilla * 0.25) {
+      intentosDeTarjeta.push({ jugador, minuto: minutoAleatorioUnico(minutosUsados), tipo: 'amarilla' });
+    }
+  }
+
+  intentosDeTarjeta.sort((a, b) => a.minuto - b.minuto);
+
+  const registrosTarjetas = {}; // jugadorId -> { amarilla: bool, roja: bool }
+
+  for (const intento of intentosDeTarjeta) {
+    const idJugador = intento.jugador._id.toString();
+
+    // Si ya está expulsado, ignoramos cualquier intento posterior de tarjeta
+    if (jugadoresExpulsados.has(idJugador)) continue;
+
+    if (!registrosTarjetas[idJugador]) {
+      registrosTarjetas[idJugador] = { amarilla: false, roja: false };
+    }
+
+    if (intento.tipo === 'roja_directa') {
+      registrosTarjetas[idJugador].roja = true;
+      jugadoresExpulsados.add(idJugador);
       eventos.push({
-        minuto,
+        minuto: intento.minuto,
         tipo: 'roja',
-        jugador: jugador.nombre,
+        jugador: intento.jugador.nombre,
         equipo: 'propio',
-        descripcion: `¡Tarjeta roja directa para ${jugador.nombre}! Se queda con diez.`
+        descripcion: `¡Tarjeta roja directa para ${intento.jugador.nombre}! Se queda con diez.`
+      });
+      continue;
+    }
+
+    // Es una amarilla
+    if (jugadoresConAmarilla.has(idJugador)) {
+      // Es su SEGUNDA amarilla → expulsión automática
+      registrosTarjetas[idJugador].roja = true;
+      jugadoresExpulsados.add(idJugador);
+      eventos.push({
+        minuto: intento.minuto,
+        tipo: 'amarilla',
+        jugador: intento.jugador.nombre,
+        equipo: 'propio',
+        descripcion: `Segunda amarilla para ${intento.jugador.nombre}.`
+      });
+      eventos.push({
+        minuto: intento.minuto,
+        tipo: 'roja',
+        jugador: intento.jugador.nombre,
+        equipo: 'propio',
+        descripcion: `¡${intento.jugador.nombre} ve la roja tras la doble amarilla! Se queda con diez.`
+      });
+    } else {
+      // Primera amarilla del partido para este jugador
+      jugadoresConAmarilla.add(idJugador);
+      registrosTarjetas[idJugador].amarilla = true;
+      eventos.push({
+        minuto: intento.minuto,
+        tipo: 'amarilla',
+        jugador: intento.jugador.nombre,
+        equipo: 'propio',
+        descripcion: `Tarjeta amarilla para ${intento.jugador.nombre}.`
       });
     }
+  }
+
+  const participaciones = titulares.map(jugador => {
+    const idJugador = jugador._id.toString();
+    const tarjetas = registrosTarjetas[idJugador] ?? { amarilla: false, roja: false };
 
     return {
       jugador: jugador._id,
       partido: partido._id,
       goles: registrosGol[jugador._id] ?? 0,
       asistencias: registrosAsist[jugador._id] ?? 0,
-      tarjetaAmarilla,
-      tarjetaRoja,
+      tarjetaAmarilla: tarjetas.amarilla,
+      tarjetaRoja: tarjetas.roja,
       minutosJugados: 90,
     };
   });
 
   // Eventos de "ambiente" sin efecto en el marcador, para rellenar el partido
-  const numEventosRelleno = Math.floor(Math.random() * 7) + 8; // entre 8 y 14
+  const numEventosRelleno = Math.floor(Math.random() * 7) + 8;
   for (let i = 0; i < numEventosRelleno; i++) {
-    const jugador = elegirJugadorPonderado(titulares, pesoGol);
+    const candidatosRelleno = titulares.filter(j => !jugadoresExpulsados.has(j._id.toString()));
+    if (candidatosRelleno.length === 0) break;
+
+    const jugador = elegirJugadorPonderado(candidatosRelleno, pesoGol);
     const minuto = minutoAleatorioUnico(minutosUsados);
     const esParada = Math.random() < 0.5;
 

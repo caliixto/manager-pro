@@ -24,6 +24,8 @@ export interface Jugador {
   tarjetasAmarillas?: number;
   tarjetasRojas?: number;
   resistencia:number;
+  sancionado?: boolean;
+  lesionado?: boolean; 
 }
 
 interface JugadoresResponse {

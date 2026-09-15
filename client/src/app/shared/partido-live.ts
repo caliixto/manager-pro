@@ -20,6 +20,7 @@ export interface ResultadoSimulado {
   goleadores: string[];
   premio?: number;
   progresiones?: ProgresionJugador[];
+  monedasActuales?: number;
 }
 
 export interface ProgresionJugador {
@@ -44,6 +45,7 @@ export class PartidoLive {
   descuentoSegundaParte = signal<number>(0);
   premio = signal<number>(0);
   progresiones = signal<ProgresionJugador[]>([]);
+  monedasActuales = signal<number>(0);
 
   private eventosPendientes: EventoPartido[] = [];
   private intervalId: any = null;
@@ -62,6 +64,7 @@ export class PartidoLive {
     this.eventosPendientes = [...resultado.eventos].sort((a, b) => a.minuto - b.minuto);
     this.reproduciendo.set(true);
     this.progresiones.set(resultado.progresiones ?? []);
+    this.monedasActuales.set(resultado.monedasActuales ?? 0);
  if (this.intervalId) clearInterval(this.intervalId);
     this.arrancarIntervalo();
   }

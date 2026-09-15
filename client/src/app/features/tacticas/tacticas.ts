@@ -64,6 +64,7 @@ export class Tacticas implements OnInit {
         }
         this.titulares.set(res.alineacion);
         this.recolocarTitulares();
+        this.corregirTitularesNoDisponibles();
         this.loading.set(false);
       },
       error: (err) => {
@@ -197,4 +198,42 @@ export class Tacticas implements OnInit {
       error: (err) => console.error('Error al guardar:', err)
     });
   }
+
+  corregirTitularesNoDisponibles(): void {
+  const titularesActuales = this.titulares();
+  const hayNoDisponible = titularesActuales.some(j => j.sancionado || j.lesionado);
+
+  if (!hayNoDisponible) return; // todo bien, no hace falta tocar nada
+
+  const disponibles = this.plantillaCompleta().filter(j => !j.sancionado && !j.lesionado);
+  const usados = new Set<string>();
+  const nuevaAlineacion: Jugador[] = [];
+
+  for (const titular of titularesActuales) {
+    if (!titular.sancionado && !titular.lesionado) {
+      nuevaAlineacion.push(titular);
+      usados.add(titular._id!);
+    } else {
+      // Buscamos un suplente disponible de la misma posición
+      const suplente = disponibles.find(j => j.posicion === titular.posicion && !usados.has(j._id!));
+      if (suplente) {
+        nuevaAlineacion.push(suplente);
+        usados.add(suplente._id!);
+      } else {
+        nuevaAlineacion.push(titular); // no hay alternativa, se queda (poco probable con 25 jugadores)
+      }
+    }
+  }
+
+  this.titulares.set(nuevaAlineacion);
+
+  // Guardamos el cambio automático en el backend
+  const idsAlineacion = nuevaAlineacion.map(j => j._id).filter((id): id is string => !!id);
+  this.tacticaService.guardarAlineacion(idsAlineacion, this.formacionSeleccionada()).subscribe({
+    next: () => console.log('Alineación corregida automáticamente por sanción/lesión'),
+    error: (err) => console.error('Error al guardar corrección automática:', err)
+  });
+}
+
+
 }
