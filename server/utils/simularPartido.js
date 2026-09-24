@@ -427,6 +427,74 @@ async function simularSiguientePartido(equipoId) {
     await Promise.all(actualizacionesSancion);
   }
 
+    // 7. Estadísticas del partido (estilo FIFA/eFootball) — para descanso y resumen final
+  const remateFueraPropio = eventos.filter(e => e.tipo === 'remate_fuera' && e.equipo === 'propio').length;
+  const paradasRivalContraNosotros = eventos.filter(e => e.tipo === 'parada' && e.equipo === 'propio').length; // paradas del portero RIVAL
+
+  const tirosPuertaPropios = golesPropios + paradasRivalContraNosotros;
+  const disparosPropios = tirosPuertaPropios + remateFueraPropio;
+
+  const paradasPropias = Math.round(Math.random() * 4); // paradas de NUESTRO portero ante el rival
+  const remateFueraRival = Math.round(Math.random() * 6);
+  const tirosPuertaRival = golesRival + paradasPropias;
+  const disparosRival = tirosPuertaRival + remateFueraRival;
+
+  const cornersPropios = Math.round(Math.random() * 7 + 2);
+  const cornersRival = Math.round(Math.random() * 7 + 2);
+  const faltasPropias = Math.round(Math.random() * 9 + 3);
+  const faltasRival = Math.round(Math.random() * 9 + 3);
+  const fueraDeJuegoPropio = Math.round(Math.random() * 3);
+  const fueraDeJuegoRival = Math.round(Math.random() * 3);
+
+  const amarillasPropias = Object.values(registrosTarjetas).filter(t => t.amarilla).length;
+  const rojasPropias = Object.values(registrosTarjetas).filter(t => t.roja).length;
+  const amarillasRival = Math.random() < 0.75 ? Math.round(Math.random() * 3) : 0;
+  const rojasRival = Math.random() < 0.07 ? 1 : 0;
+
+  let posesionPropia = 50 + Math.round(diferencia / 3);
+  posesionPropia = Math.min(68, Math.max(32, posesionPropia));
+
+  const estadisticas = {
+    propio: {
+      disparos: disparosPropios, tirosPuerta: tirosPuertaPropios,
+      corners: cornersPropios, faltas: faltasPropias, fueraDeJuego: fueraDeJuegoPropio,
+      amarillas: amarillasPropias, rojas: rojasPropias, posesion: posesionPropia,
+    },
+    rival: {
+      disparos: disparosRival, tirosPuerta: tirosPuertaRival,
+      corners: cornersRival, faltas: faltasRival, fueraDeJuego: fueraDeJuegoRival,
+      amarillas: amarillasRival, rojas: rojasRival, posesion: 100 - posesionPropia,
+    }
+  };
+
+  // Snapshot aproximado a mitad de partido (los goles/tarjetas salen exactos de los eventos, el resto se prorratea)
+  const corte1P = 45 + descuentoPrimeraParte;
+  const factorMitad = () => 0.38 + Math.random() * 0.24;
+
+  const amarillasPropias1P = intentosDeTarjeta.filter(t => t.tipo === 'amarilla' && t.minuto <= corte1P).length;
+  const rojasPropias1P = intentosDeTarjeta.filter(t => t.tipo === 'roja_directa' && t.minuto <= corte1P).length;
+
+  const estadisticasPrimeraParte = {
+    propio: {
+      disparos: Math.round(disparosPropios * factorMitad()),
+      tirosPuerta: Math.round(tirosPuertaPropios * factorMitad()),
+      corners: Math.round(cornersPropios * factorMitad()),
+      faltas: Math.round(faltasPropias * factorMitad()),
+      fueraDeJuego: Math.round(fueraDeJuegoPropio * factorMitad()),
+      amarillas: amarillasPropias1P, rojas: rojasPropias1P,
+      posesion: posesionPropia,
+    },
+    rival: {
+      disparos: Math.round(disparosRival * factorMitad()),
+      tirosPuerta: Math.round(tirosPuertaRival * factorMitad()),
+      corners: Math.round(cornersRival * factorMitad()),
+      faltas: Math.round(faltasRival * factorMitad()),
+      fueraDeJuego: Math.round(fueraDeJuegoRival * factorMitad()),
+      amarillas: 0, rojas: 0,
+      posesion: 100 - posesionPropia,
+    }
+  };
+
   console.log('--- Resistencia actualizada ---');
   todaLaPlantilla.forEach(j => {
     const jugo = idsTitulares.includes(j._id.toString());
@@ -441,6 +509,7 @@ async function simularSiguientePartido(equipoId) {
 
   return {
     rival: partido.rival,
+    escudoRival: partido.escudo,
     resultado: `${golesPropios} - ${golesRival}`,
     nivelEquipo: Math.round(nivelEquipo),
     nivelRival,
@@ -449,7 +518,9 @@ async function simularSiguientePartido(equipoId) {
     descuentoSegundaParte,
     premio,
     monedasActuales: usuarioActualizado.monedas,
-     progresiones,
+    progresiones,
+    estadisticas,              // ← nuevo
+    estadisticasPrimeraParte,
     goleadores: Object.entries(registrosGol).map(([id, goles]) => {
       const j = titulares.find(t => t._id.toString() === id);
       return `${j.nombre}: ${goles}`;

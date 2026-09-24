@@ -212,16 +212,6 @@ simularPartido() {
   this.partido.simularSiguientePartido().subscribe({
     next: (res) => {
       this.simulando.set(false);
-
-      // Actualizamos el usuario local con el nuevo saldo de monedas
-      const userActual = this.authService.getUser();
-      if (userActual && res.resultado.monedasActuales !== undefined) {
-        this.authService.saveUser({
-          ...userActual,
-          monedas: res.resultado.monedasActuales,
-        });
-      }
-
       this.partidoLive.iniciarPartido(res.resultado);
       this.router.navigate(['/partido-en-vivo']);
     },

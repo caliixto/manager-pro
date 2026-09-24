@@ -200,3 +200,83 @@
   color: #22c55e;
   margin-bottom: 12px;
 }
+
+.stats-card {
+  max-width: 420px;
+  width: 90%;
+}
+
+.stats-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.stats-equipo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.stats-header .stats-equipo:last-child {
+  flex-direction: row-reverse;
+}
+
+.stats-escudo {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.stats-equipo-nombre {
+  font-weight: 700;
+  font-size: 13px;
+  flex: 1;
+}
+
+.stats-marcador {
+  background: #1a1e21;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-weight: 800;
+  font-size: 15px;
+}
+
+.stats-tabla {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.stats-tabla tr {
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.stats-valor {
+  width: 60px;
+  text-align: center;
+  font-weight: 700;
+  padding: 8px 4px;
+}
+
+.stats-label {
+  text-align: center;
+  font-size: 11px;
+  color: rgba(255,255,255,0.6);
+  letter-spacing: 0.5px;
+}
+
+.posesion-bar {
+  width: 100%;
+  height: 6px;
+  background: #ef4444;
+  border-radius: 3px;
+  overflow: hidden;
+  margin: 6px 0 10px;
+}
+
+.posesion-bar-propio {
+  height: 100%;
+  background: #22c55e;
+}

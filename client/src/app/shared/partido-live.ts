@@ -9,8 +9,25 @@ export interface EventoPartido {
   descripcion: string;
 }
 
+export interface EstadisticasEquipo {
+  disparos: number;
+  tirosPuerta: number;
+  corners: number;
+  faltas: number;
+  fueraDeJuego: number;
+  amarillas: number;
+  rojas: number;
+  posesion: number;
+}
+
+export interface EstadisticasPartido {
+  propio: EstadisticasEquipo;
+  rival: EstadisticasEquipo;
+}
+
 export interface ResultadoSimulado {
   rival: string;
+  escudoRival?: string;
   resultado: string;
   nivelEquipo: number;
   nivelRival: number;
@@ -21,6 +38,8 @@ export interface ResultadoSimulado {
   premio?: number;
   progresiones?: ProgresionJugador[];
   monedasActuales?: number;
+  estadisticas?: EstadisticasPartido;
+  estadisticasPrimeraParte?: EstadisticasPartido;
 }
 
 export interface ProgresionJugador {
@@ -49,6 +68,9 @@ export class PartidoLive {
 
   private eventosPendientes: EventoPartido[] = [];
   private intervalId: any = null;
+  estadisticas = signal<EstadisticasPartido | null>(null);
+  estadisticasPrimeraParte = signal<EstadisticasPartido | null>(null);
+  escudoRival = signal<string>('');
 
   iniciarPartido(resultado: ResultadoSimulado): void {
     this.rival.set(resultado.rival);
@@ -65,9 +87,13 @@ export class PartidoLive {
     this.reproduciendo.set(true);
     this.progresiones.set(resultado.progresiones ?? []);
     this.monedasActuales.set(resultado.monedasActuales ?? 0);
+    this.estadisticas.set(resultado.estadisticas ?? null);
+    this.estadisticasPrimeraParte.set(resultado.estadisticasPrimeraParte ?? null);
+    this.escudoRival.set(resultado.escudoRival ?? '');
  if (this.intervalId) clearInterval(this.intervalId);
     this.arrancarIntervalo();
   }
+
 
   private arrancarIntervalo(): void {
     this.intervalId = setInterval(() => {

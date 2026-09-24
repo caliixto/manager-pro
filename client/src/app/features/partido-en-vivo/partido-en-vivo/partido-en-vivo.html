@@ -37,40 +37,104 @@
     </div>
   </div>
 
-  <!--Descanso-->
-
-   <div class="descanso-overlay" *ngIf="live.enDescanso()">
-        <div class="descanso-card">
-            <h2>Descanso</h2>
-            <p class="descanso-marcador">{{ nombreEquipoPropio }} {{ live.golesPropios() }} - {{ live.golesRival() }} {{ live.rival() }}</p>
-            <p *ngIf="live.descuentoPrimeraParte() > 0" class="descanso-descuento">
-            Se añadieron {{ live.descuentoPrimeraParte() }} minutos de descuento en la primera parte.
-            </p>
-            <p *ngIf="live.descuentoPrimeraParte() === 0" class="descanso-descuento">
-            Sin tiempo añadido en la primera parte.
-            </p>
-            <button (click)="live.continuarSegundaParte()">Comenzar segunda parte</button>
-        </div>
+  <!-- Plantilla reutilizable de la tabla de estadísticas -->
+  <ng-template #tablaEstadisticas let-stats="stats" let-nombrePropio="nombrePropio" let-nombreRival="nombreRival">
+    <div class="stats-header">
+      <div class="stats-equipo">
+        <img [src]="escudoPropio" class="stats-escudo" [alt]="nombrePropio">
+        <span class="stats-equipo-nombre">{{ nombrePropio }}</span>
+      </div>
+      <span class="stats-marcador">{{ live.golesPropios() }} - {{ live.golesRival() }}</span>
+      <div class="stats-equipo">
+        <span class="stats-equipo-nombre">{{ nombreRival }}</span>
+        <img [src]="live.escudoRival()" class="stats-escudo" [alt]="nombreRival">
+      </div>
     </div>
 
-<div class="resumen-overlay" *ngIf="live.finalizado()">
-  <div class="resumen-card">
-    <h2>Final del partido</h2>
-    <p>{{ nombreEquipoPropio }} {{ live.golesPropios() }} - {{ live.golesRival() }} {{ live.rival() }}</p>
-    
-    <p class="premio-ganado" *ngIf="live.premio() > 0">
-      💰 Has ganado {{ live.premio() | number:'1.0-0' }} monedas
-    </p>
+    <table class="stats-tabla" *ngIf="stats">
+      <tr>
+        <td class="stats-valor">{{ stats.propio.disparos }}</td>
+        <td class="stats-label">DISPAROS</td>
+        <td class="stats-valor">{{ stats.rival.disparos }}</td>
+      </tr>
+      <tr>
+        <td class="stats-valor">{{ stats.propio.tirosPuerta }}</td>
+        <td class="stats-label">TIROS A PUERTA</td>
+        <td class="stats-valor">{{ stats.rival.tirosPuerta }}</td>
+      </tr>
+      <tr>
+        <td class="stats-valor">{{ stats.propio.corners }}</td>
+        <td class="stats-label">CORNERS</td>
+        <td class="stats-valor">{{ stats.rival.corners }}</td>
+      </tr>
+      <tr>
+        <td class="stats-valor">{{ stats.propio.faltas }}</td>
+        <td class="stats-label">FALTAS</td>
+        <td class="stats-valor">{{ stats.rival.faltas }}</td>
+      </tr>
+      <tr>
+        <td class="stats-valor">{{ stats.propio.fueraDeJuego }}</td>
+        <td class="stats-label">FUERA DE JUEGO</td>
+        <td class="stats-valor">{{ stats.rival.fueraDeJuego }}</td>
+      </tr>
+      <tr>
+        <td class="stats-valor">{{ stats.propio.amarillas }}</td>
+        <td class="stats-label">TARJETAS AMARILLAS</td>
+        <td class="stats-valor">{{ stats.rival.amarillas }}</td>
+      </tr>
+      <tr>
+        <td class="stats-valor">{{ stats.propio.rojas }}</td>
+        <td class="stats-label">TARJETAS ROJAS</td>
+        <td class="stats-valor">{{ stats.rival.rojas }}</td>
+      </tr>
+      <tr class="stats-posesion-row">
+        <td class="stats-valor">{{ stats.propio.posesion }}%</td>
+        <td class="stats-label">POSESIÓN</td>
+        <td class="stats-valor">{{ stats.rival.posesion }}%</td>
+      </tr>
+      <tr>
+        <td colspan="3">
+          <div class="posesion-bar">
+            <div class="posesion-bar-propio" [style.width.%]="stats.propio.posesion"></div>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </ng-template>
 
-    <p *ngIf="live.descuentoSegundaParte() > 0" class="descanso-descuento">
-      Se añadieron {{ live.descuentoSegundaParte() }} minutos de descuento en la segunda parte.
-    </p>
-    <p *ngIf="live.descuentoSegundaParte() === 0" class="descanso-descuento">
-      Sin tiempo añadido en la segunda parte.
-    </p>
+  <!-- Descanso -->
+  <div class="descanso-overlay" *ngIf="live.enDescanso()">
+    <div class="descanso-card stats-card">
+      <h2>Descanso</h2>
 
-    <button (click)="volverAlDashboard()">Volver al Dashboard</button>
+      <ng-container *ngTemplateOutlet="tablaEstadisticas; context: { stats: live.estadisticasPrimeraParte(), nombrePropio: nombreEquipoPropio, nombreRival: live.rival() }"></ng-container>
+
+      <p *ngIf="live.descuentoPrimeraParte() > 0" class="descanso-descuento">
+        Se añadieron {{ live.descuentoPrimeraParte() }} minutos de descuento en la primera parte.
+      </p>
+      <p *ngIf="live.descuentoPrimeraParte() === 0" class="descanso-descuento">
+        Sin tiempo añadido en la primera parte.
+      </p>
+      <button (click)="live.continuarSegundaParte()">Comenzar segunda parte</button>
+    </div>
   </div>
-</div>
+
+  <!-- Final -->
+  <div class="resumen-overlay" *ngIf="live.finalizado()">
+    <div class="resumen-card stats-card">
+      <h2>Final del partido</h2>
+
+      <ng-container *ngTemplateOutlet="tablaEstadisticas; context: { stats: live.estadisticas(), nombrePropio: nombreEquipoPropio, nombreRival: live.rival() }"></ng-container>
+
+      <p *ngIf="live.descuentoSegundaParte() > 0" class="descanso-descuento">
+        Se añadieron {{ live.descuentoSegundaParte() }} minutos de descuento en la segunda parte.
+      </p>
+      <p *ngIf="live.descuentoSegundaParte() === 0" class="descanso-descuento">
+        Sin tiempo añadido en la segunda parte.
+      </p>
+
+      <button (click)="volverAlDashboard()">Volver al Dashboard</button>
+    </div>
+  </div>
 
 </div>

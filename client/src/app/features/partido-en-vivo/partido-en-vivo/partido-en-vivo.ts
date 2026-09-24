@@ -13,9 +13,11 @@ import { Authmodal } from "../../auth/authmodal/authmodal";
 })
 export class PartidoEnVivo implements OnDestroy {
   nombreEquipoPropio = 'Tu equipo';
+  escudoPropio = '';
 
   constructor(public live: PartidoLive, private router: Router, private auth: AuthService) {
     this.nombreEquipoPropio = this.auth.getUser()?.nombreEquipo ?? 'Tu equipo';
+    this.escudoPropio = this.auth.getUser()?.escudo ?? '/img/miteam.webp';
 
     // Solo actualizamos el saldo de monedas cuando el partido termina de verdad (visualmente)
     effect(() => {
