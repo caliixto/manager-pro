@@ -38,6 +38,7 @@ const playersRouter = require("./routers/player");
 const partidoRouter = require("./routers/liga.routers");
 const participacionRouter = require("./routers/participacion");
 const ligaRouter = require('./routers/liga.routers');
+const notificaciones = require('./routers/notificacion.routes.js');
 
 app.use("/api/admin", Adminrouter);
 app.use('/api/users', Usersrouter);
@@ -46,6 +47,7 @@ app.use("/api/players", playersRouter);
 app.use("/api/partidos", partidoRouter);
 app.use("/api/participaciones", participacionRouter);
 app.use('/api/liga', ligaRouter);
+app.use('/api/notificaciones', notificaciones);
 
 app.get('/', (req, res) => {
     res.send('¡API del ManagerPro funcionando!');

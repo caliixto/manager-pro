@@ -8,6 +8,7 @@ const { simularJornadaEntreRivales } = require('./simularJornadaRivales');
 const { golesAleatorios } = require('./golesPoisson');
 const { calcularPremioPartido } = require('./calcularPremio');
 const { progresionTrasPartido } = require('./progresionJugador');
+const Notificacion = require('../models/notificacion');
 
 
 // Nivel de un jugador: media de sus 12 stats
@@ -323,7 +324,7 @@ async function simularSiguientePartido(equipoId) {
 
   await Participacion.insertMany(participaciones);
 
-  // 5.5. Calculamos y otorgamos el premio en monedas
+  // 5.5. Calculamos el premio y lo dejamos como notificación PENDIENTE (no se suma aún a las monedas)
   const premio = calcularPremioPartido({
     nivelRival,
     competicion: partido.competicion,
@@ -331,7 +332,17 @@ async function simularSiguientePartido(equipoId) {
     golesRival,
   });
 
-  const usuarioActualizado = await Users.findByIdAndUpdate(equipoId, { $inc: { monedas: premio } },  { new: true });
+  const tipoResultado = golesPropios > golesRival ? 'Victoria' : golesPropios === golesRival ? 'Empate' : 'Derrota';
+  const mensajePremio = `${tipoResultado} vs ${partido.rival} (${golesPropios}-${golesRival}): +${premio.toLocaleString('es-ES')} monedas`;
+
+  await Notificacion.create({
+    equipo: equipoId,
+    tipo: 'premio_partido',
+    mensaje: mensajePremio,
+    monto: premio,
+  });
+
+  const usuarioActualizado = equipo;
 
   // 6. Actualizamos el Partido con el resultado real
   partido.jugado = true;
