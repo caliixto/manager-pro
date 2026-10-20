@@ -10,7 +10,37 @@
       <span class="cantidad">{{ monedasFormateadas }}</span>
     </div>
 
-    <i class="pi pi-bell"></i>
+    <div class="notificaciones-wrapper">
+      <div class="campana-click" (click)="toggleNotificaciones()">
+        <i class="pi pi-bell"></i>
+        <span class="badge-rojo" *ngIf="notificaciones().length > 0">{{ notificaciones().length }}</span>
+      </div>
+
+      <div class="notificaciones-dropdown" *ngIf="notificacionesAbierto">
+        <div class="notificaciones-header">
+          <h4>Recompensas</h4>
+        </div>
+
+        <div class="notificaciones-lista" *ngIf="notificaciones().length > 0">
+          <div class="notificacion-item" *ngFor="let n of notificaciones()">
+            <span class="notificacion-mensaje">{{ n.mensaje }}</span>
+          </div>
+        </div>
+
+        <p class="notificaciones-vacio" *ngIf="notificaciones().length === 0">
+          No tienes recompensas pendientes.
+        </p>
+
+        <button
+          class="btn-reclamar"
+          *ngIf="notificaciones().length > 0"
+          (click)="reclamarTodas()"
+          [disabled]="reclamando()"
+        >
+          {{ reclamando() ? 'Reclamando...' : '💰 Reclamar todo' }}
+        </button>
+      </div>
+    </div>
     
     <div class="user-profile-wrapper">
       <div class="user-profile" (click)="toggleMenu()">

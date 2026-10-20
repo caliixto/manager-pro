@@ -3,11 +3,10 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../auth/auth';
 import { PartidoLive } from '../../../shared/partido-live';
-import { Authmodal } from "../../auth/authmodal/authmodal";
 
 @Component({
   selector: 'app-partido-en-vivo',
-  imports: [CommonModule, Authmodal],
+  imports: [CommonModule],
   templateUrl: './partido-en-vivo.html',
   styleUrl: './partido-en-vivo.css',
 })
