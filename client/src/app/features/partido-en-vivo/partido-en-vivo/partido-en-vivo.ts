@@ -1,8 +1,9 @@
-import { Component, OnDestroy, effect } from '@angular/core'; // ← añade effect
+import { Component, OnDestroy, effect, inject, untracked  } from '@angular/core'; // ← añade effect
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../auth/auth';
 import { PartidoLive } from '../../../shared/partido-live';
+import { NotificacionService } from '../../../shared/notificaciones';
 
 @Component({
   selector: 'app-partido-en-vivo',
@@ -13,6 +14,7 @@ import { PartidoLive } from '../../../shared/partido-live';
 export class PartidoEnVivo implements OnDestroy {
   nombreEquipoPropio = 'Tu equipo';
   escudoPropio = '';
+  private notificacionesService = inject(NotificacionService);
 
   constructor(public live: PartidoLive, private router: Router, private auth: AuthService) {
     this.nombreEquipoPropio = this.auth.getUser()?.nombreEquipo ?? 'Tu equipo';
@@ -21,6 +23,7 @@ export class PartidoEnVivo implements OnDestroy {
     // Solo actualizamos el saldo de monedas cuando el partido termina de verdad (visualmente)
     effect(() => {
       if (this.live.finalizado()) {
+        untracked(() => this.notificacionesService.cargar());
         const userActual = this.auth.getUser();
         if (userActual) {
           this.auth.saveUser({
@@ -48,4 +51,5 @@ export class PartidoEnVivo implements OnDestroy {
   ngOnDestroy(): void {
     this.live.detener();
   }
+
 }

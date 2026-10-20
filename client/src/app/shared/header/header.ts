@@ -1,8 +1,8 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, inject } from '@angular/core';
 import { AuthService } from '../../features/auth/auth';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { NotificacionService, Notificacion } from '../notificaciones';
+import { NotificacionService } from '../notificaciones';
 
 @Component({
   selector: 'app-header',
@@ -14,10 +14,11 @@ export class Header {
   menuAbierto = false; 
   notificacionesAbierto = false;
 
-  notificaciones = signal<Notificacion[]>([]);
+  private notificacionService = inject(NotificacionService);
   reclamando = signal(false);
+  notificaciones = this.notificacionService.notificaciones;
 
-  constructor(private auth: AuthService, private router: Router, private notificacionService: NotificacionService) {}
+  constructor(private auth: AuthService, private router: Router) {}
   name:any = "";
 
   ngOnInit(){

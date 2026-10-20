@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from '../features/auth/auth';
@@ -24,8 +24,11 @@ interface ReclamarResponse {
   monedasActuales: number;
 }
 
+
 @Injectable({ providedIn: 'root' })
 export class NotificacionService {
+  notificaciones = signal<Notificacion[]>([]);
+
   private apiUrl = `${environment.apiUrl}/notificaciones`;
 
   constructor(private http: HttpClient, private auth: AuthService) {}
@@ -41,5 +44,12 @@ export class NotificacionService {
 
   reclamarTodas(): Observable<ReclamarResponse> {
     return this.http.post<ReclamarResponse>(`${this.apiUrl}/reclamar-todas`, {}, { headers: this.getHeaders() });
+  }
+
+  cargar() {
+    this.obtenerNotificaciones().subscribe({
+      next: res => this.notificaciones.set(res.notificaciones),
+      error: err => console.error(err)
+    });
   }
 }
