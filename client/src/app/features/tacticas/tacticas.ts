@@ -5,6 +5,7 @@ import { FORMACIONES, SlotFormacion } from '../../shared/formaciones';
 import { CommonModule } from '@angular/common';
 import { ColorResistenciaPipe } from '../../shared/color-resistencia-pipe';
 import { computed } from '@angular/core';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-tacticas',
@@ -20,6 +21,10 @@ export class Tacticas implements OnInit {
   errorMsg = signal('');
   formacionSeleccionada = signal<string>('4-3-3');
   formacionesDisponibles = Object.keys(FORMACIONES);
+
+  noDisponible(j: Jugador): boolean {
+    return !!(j.sancionado || j.lesionado);
+  }
   
   suplentes = computed(() => {
   const idstitulares = new Set(this.titulares().map(j => j._id));
@@ -59,19 +64,24 @@ export class Tacticas implements OnInit {
   cargarAlineacion(): void {
     this.tacticaService.obtenerAlineacion().subscribe({
       next: (res) => {
-        if (res.formacion) {
-          this.formacionSeleccionada.set(res.formacion); // ← nuevo, ANTES de recolocar
-        }
-        this.titulares.set(res.alineacion);
-        this.recolocarTitulares();
-        this.corregirTitularesNoDisponibles();
-        this.loading.set(false);
-      },
-      error: (err) => {
-        console.log(err);
-        this.errorMsg.set('Error al cargar la alineación');
-        this.loading.set(false);
+      this.titulares.set(res.alineacion);
+      if (res.formacion) this.formacionSeleccionada.set(res.formacion);
+
+      const habiaNoDisponibles = res.alineacion.some((t: Jugador) => {
+        const actual = this.plantillaCompleta().find(p => p._id === t._id);
+        return actual && this.noDisponible(actual);
+      });
+
+      this.recolocarTitulares();
+
+      if (habiaNoDisponibles) {
+        this.();
+        Swal.fire({ toast: true, position: 'top-end', icon: 'info',
+          title: 'Se han sustituido jugadores no disponibles',
+          showConfirmButton: false, timer: 3000, background: '#272C30', color: '#fff' });
       }
+      this.loading.set(false);
+    },
     });
   }
 
@@ -79,9 +89,9 @@ export class Tacticas implements OnInit {
     const slots = FORMACIONES[this.formacionSeleccionada()];
     const disponibles = [...this.titulares(), ...this.plantillaCompleta()];
     // quitamos duplicados por si un jugador ya estaba en titulares
-    const disponiblesUnicos = disponibles.filter((j, i, arr) =>
-      arr.findIndex(x => x._id === j._id) === i
-    );
+    const disponiblesUnicos = disponibles
+  .filter((j, i, arr) => arr.findIndex(x => x._id === j._id) === i)
+  .filter(j => !this.noDisponible(j));
 
     const nuevaAlineacion: Jugador[] = [];
     const usados = new Set<string>();
@@ -107,6 +117,12 @@ export class Tacticas implements OnInit {
     jugadorSeleccionado = signal<Jugador | null>(null);
 
   seleccionarJugador(jugador: Jugador): void {
+
+    const enCampo = this.titulares().some(t => t._id === jugador._id);
+    if (this.noDisponible(jugador) && !enCampo) {
+      this.avisarNoDisponible(jugador);
+      return;
+    }
     const actual = this.jugadorSeleccionado();
 
     // Si no hay nadie seleccionado, seleccionamos este
@@ -143,6 +159,7 @@ export class Tacticas implements OnInit {
     // CASO 1: Uno en campo y otro en banquillo (Sustitución clásica)
     if (aEnTitulares !== bEnTitulares) {
       const [titular, suplente] = aEnTitulares ? [jugadorA, jugadorB] : [jugadorB, jugadorA];
+      if (this.noDisponible(suplente)) { this.avisarNoDisponible(suplente); return; }
       nuevosTitulares = this.titulares().map(j =>
         j._id === titular._id ? suplente : j
       );
@@ -199,41 +216,13 @@ export class Tacticas implements OnInit {
     });
   }
 
-  corregirTitularesNoDisponibles(): void {
-  const titularesActuales = this.titulares();
-  const hayNoDisponible = titularesActuales.some(j => j.sancionado || j.lesionado);
-
-  if (!hayNoDisponible) return; // todo bien, no hace falta tocar nada
-
-  const disponibles = this.plantillaCompleta().filter(j => !j.sancionado && !j.lesionado);
-  const usados = new Set<string>();
-  const nuevaAlineacion: Jugador[] = [];
-
-  for (const titular of titularesActuales) {
-    if (!titular.sancionado && !titular.lesionado) {
-      nuevaAlineacion.push(titular);
-      usados.add(titular._id!);
-    } else {
-      // Buscamos un suplente disponible de la misma posición
-      const suplente = disponibles.find(j => j.posicion === titular.posicion && !usados.has(j._id!));
-      if (suplente) {
-        nuevaAlineacion.push(suplente);
-        usados.add(suplente._id!);
-      } else {
-        nuevaAlineacion.push(titular); // no hay alternativa, se queda (poco probable con 25 jugadores)
-      }
-    }
-  }
-
-  this.titulares.set(nuevaAlineacion);
-
-  // Guardamos el cambio automático en el backend
-  const idsAlineacion = nuevaAlineacion.map(j => j._id).filter((id): id is string => !!id);
-  this.tacticaService.guardarAlineacion(idsAlineacion, this.formacionSeleccionada()).subscribe({
-    next: () => console.log('Alineación corregida automáticamente por sanción/lesión'),
-    error: (err) => console.error('Error al guardar corrección automática:', err)
+private avisarNoDisponible(j: Jugador) {
+  Swal.fire({
+    toast: true, position: 'top-end', icon: 'warning',
+    title: `${j.nombre} no puede jugar (${j.sancionado ? 'sancionado' : 'lesionado'})`,
+    showConfirmButton: false, timer: 2500,
+    background: '#272C30', color: '#ffffff'
   });
 }
-
 
 }

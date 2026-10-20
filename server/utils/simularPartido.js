@@ -83,6 +83,21 @@ async function simularSiguientePartido(equipoId) {
   const alineacionGuardada = equipo?.alineacion?.length === 11 ? equipo.alineacion : null;
 
   if (alineacionGuardada) {
+    const problemas = alineacionGuardada
+      .map(g => todaLaPlantilla.find(j => j._id.toString() === g._id.toString()))
+      .filter(j => j && (j.sancionado || j.lesionado));
+
+    if (problemas.length > 0) {
+      const nombres = problemas
+        .map(j => `${j.nombre} (${j.sancionado ? 'sancionado' : 'lesionado'})`)
+        .join(', ');
+      const err = new Error(`Tu once tiene jugadores no disponibles: ${nombres}. Cámbialos en Tácticas.`);
+      err.codigo = 'ALINEACION_INVALIDA';
+      throw err;
+    }
+  }
+
+  if (alineacionGuardada) {
     for (const jugadorGuardado of alineacionGuardada) {
       // el jugador puede haber cambiado de estado desde que se guardó la alineación
       const jugadorActual = todaLaPlantilla.find(j => j._id.toString() === jugadorGuardado._id.toString());
@@ -109,6 +124,9 @@ async function simularSiguientePartido(equipoId) {
       }
     }
   }
+
+  //HACER QUE HAYA LOCAL Y FUERA DE CASA Y HACER QUE SI TIENE MAS DE 5 AMARIULLAS, SE PERDA EL PROXIMO PARTIDO
+  //hACER QUE SI DESCONVOCO A ALGUIEN, ESTE DESAPAREZACA DE AL ALIEACION
 
   // Red de seguridad: sin alineación guardada (o incompleta), reparto automático como antes
   if (titulares.length < 7) {

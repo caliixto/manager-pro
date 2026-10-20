@@ -273,11 +273,11 @@ const simularPartido = async (req, res) => {
 
     return res.json({ status: 'success', resultado });
   } catch (error) {
-    console.error(error);
-    // Si no hay partidos pendientes, es un caso normal, no un error 500
-    if (error.message === 'No hay partidos pendientes en el calendario') {
+    if (error.codigo === 'ALINEACION_INVALIDA' ||
+       error.message === 'No hay partidos pendientes en el calendario') {
       return res.status(400).json({ status: 'error', message: error.message });
     }
+    console.error(error);   // solo los errores de verdad
     return res.status(500).json({ status: 'error', message: 'Error en el servidor al simular el partido' });
   }
 };
