@@ -5,6 +5,7 @@ const { simularSiguientePartido } = require('../utils/simularPartido');
 const PartidoRival = require('../models/partidoRival');
 const Users = require("../models/users");
 const MINIMO_CONVOCADOS = 17;
+const { corregirAlineacion } = require('../utils/corregirAlineacion');
 
 const crearPartido = async (req, res) => {
   try {
@@ -274,10 +275,16 @@ const simularPartido = async (req, res) => {
     return res.json({ status: 'success', resultado });
   } catch (error) {
     if (error.codigo === 'ALINEACION_INVALIDA' ||
-       error.message === 'No hay partidos pendientes en el calendario') {
-      return res.status(400).json({ status: 'error', message: error.message });
+        error.message === 'No hay partidos pendientes en el calendario' ||
+        error.message.startsWith('No hay suficientes jugadores')) {
+      return res.status(400).json({
+        status: 'error',
+        codigo: error.codigo,
+        message: error.message,
+        jugadores: error.jugadores
+      });
     }
-    console.error(error);   // solo los errores de verdad
+    console.error(error);
     return res.status(500).json({ status: 'error', message: 'Error en el servidor al simular el partido' });
   }
 };
@@ -357,10 +364,14 @@ const actualizarConvocatoria = async (req, res) => {
       return res.status(404).json({ status: "error", message: "Partido no encontrado" });
     }
 
+    const { cambios, sinSustituto } = await corregirAlineacion(req.user.id, convocados);
+
     return res.json({
       status: "success",
       mensaje: "Convocatoria actualizada correctamente",
       totalConvocados: convocados.length,
+      cambios, 
+      sinSustituto,
       partido: partidoActualizado
     });
   } catch (error) {

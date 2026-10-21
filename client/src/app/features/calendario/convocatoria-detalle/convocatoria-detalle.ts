@@ -4,6 +4,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Location } from '@angular/common'; 
 import { PartidoService } from '../partido';
 import { JugadorService } from '../../plantilla/jugador';
+import Swal from 'sweetalert2';
 
 interface JugadorConvocatoria {
   _id: string;
@@ -130,10 +131,30 @@ guardarConvocatoria() {
   this.mensajeGuardado.set('');
 
   this.partidoService.actualizarConvocatoria(partidoId, idsConvocados).subscribe({
-    next: () => {
-      this.guardando.set(false);
-      this.mensajeGuardado.set('¡Convocatoria guardada correctamente!');
-    },
+  next: (res: any) => {
+    this.guardando.set(false);
+    this.mensajeGuardado.set('¡Convocatoria guardada correctamente!');
+
+    const cambios: { sale: string; entra: string }[] = res.cambios ?? [];
+    const sin: string[] = res.sinSustituto ?? [];
+
+    if (cambios.length > 0 || sin.length > 0) {
+      const filasCambios = cambios.map(c =>
+        `<li style="margin:6px 0"><b>${c.sale}</b> sale del once → entra <b>${c.entra}</b></li>`).join('');
+      const filasSin = sin.map(n =>
+        `<li style="margin:6px 0"><b>${n}</b> no tiene sustituto en su posición</li>`).join('');
+
+      Swal.fire({
+        icon: sin.length ? 'warning' : 'info',
+        title: 'Tu once ha cambiado',
+        html: `<ul style="text-align:left; list-style:none; padding:0">${filasCambios}${filasSin}</ul>`,
+        confirmButtonText: 'Entendido',
+        confirmButtonColor: '#22c55e',
+        background: '#272C30',
+        color: '#ffffff'
+      });
+    }
+  },
     error: (err) => {
       console.error(err);
       this.guardando.set(false);

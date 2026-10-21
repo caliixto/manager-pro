@@ -67,21 +67,20 @@ export class Tacticas implements OnInit {
       this.titulares.set(res.alineacion);
       if (res.formacion) this.formacionSeleccionada.set(res.formacion);
 
-      const habiaNoDisponibles = res.alineacion.some((t: Jugador) => {
-        const actual = this.plantillaCompleta().find(p => p._id === t._id);
-        return actual && this.noDisponible(actual);
-      });
+      const idsGuardados = res.alineacion.map((j: Jugador) => j._id).join(',');
 
       this.recolocarTitulares();
 
-      if (habiaNoDisponibles) {
-        this.();
+      const idsNuevos = this.titulares().map(j => j._id).join(',');
+
+      if (idsGuardados !== idsNuevos) {
+        this.guardarCambios();
         Swal.fire({ toast: true, position: 'top-end', icon: 'info',
           title: 'Se han sustituido jugadores no disponibles',
           showConfirmButton: false, timer: 3000, background: '#272C30', color: '#fff' });
       }
       this.loading.set(false);
-    },
+  },
     });
   }
 

@@ -11,6 +11,30 @@ const { progresionTrasPartido } = require('./progresionJugador');
 const Notificacion = require('../models/notificacion');
 
 
+// ---- Parámetros de fatiga
+const DESGASTE_BASE_MIN = 10;
+const DESGASTE_BASE_MAX = 16;
+const FACTOR_POSICION = { POR: 0.25, DEF: 0.9, CEN: 1.1, DEL: 1.0 };
+const RECUPERACION_DIA_SUPLENTE = 5; 
+const RECUPERACION_DIA_TITULAR = 2;
+const DIAS_DESCANSO_MAX = 4; 
+
+function calcularDesgaste(jugador) {
+  const base = DESGASTE_BASE_MIN + Math.random() * (DESGASTE_BASE_MAX - DESGASTE_BASE_MIN);
+  const factorPosicion = FACTOR_POSICION[jugador.posicion] ?? 1;
+  const staminaStat = jugador.stats?.resistencia ?? 50;       // atributo, no la energía actual
+  const factorStamina = 1.4 - (staminaStat / 100) * 0.8;      // 99 → 0.6 | 50 → 1.0 | 1 → 1.4
+  return Math.max(1, Math.round(base * factorPosicion * factorStamina));
+}
+
+function calcularRecuperacion(jugador, diasDescanso, jugo) {
+  const dias = Math.min(diasDescanso, DIAS_DESCANSO_MAX);
+  const staminaStat = jugador.stats?.resistencia ?? 50;
+  const factor = 0.7 + (staminaStat / 100) * 0.6;   // 1 → 0.7 | 50 → 1.0 | 99 → 1.3
+  const porDia = jugo ? RECUPERACION_DIA_TITULAR : RECUPERACION_DIA_SUPLENTE;
+  return Math.round(dias * porDia * factor);
+}
+
 // Nivel de un jugador: media de sus 12 stats
 function calcularNivelJugador(jugador) {
   const s = jugador.stats;
@@ -60,7 +84,7 @@ async function simularSiguientePartido(equipoId) {
 
   // 2. Determinamos titulares: partimos de la alineación guardada por el usuario,
   // sustituyendo automáticamente a quien esté lesionado, sancionado o con energía muy baja
-  const UMBRAL_ENERGIA_MINIMA = 20; // por debajo de esto, no puede jugar si hay alternativa
+  const UMBRAL_ENERGIA_MINIMA = 40; // por debajo de esto, no puede jugar si hay alternativa
 
   const equipo = await Users.findById(equipoId).populate('alineacion');
   const todaLaPlantilla = await Jugador.find({ equipo: equipoId });
@@ -83,16 +107,19 @@ async function simularSiguientePartido(equipoId) {
   const alineacionGuardada = equipo?.alineacion?.length === 11 ? equipo.alineacion : null;
 
   if (alineacionGuardada) {
+    const motivo = j => j.sancionado ? 'sancionado'
+                      : j.lesionado ? 'lesionado'
+                      : `cansado (${j.resistencia}%)`;
+
     const problemas = alineacionGuardada
       .map(g => todaLaPlantilla.find(j => j._id.toString() === g._id.toString()))
-      .filter(j => j && (j.sancionado || j.lesionado));
+      .filter(j => j && (j.sancionado || j.lesionado || j.resistencia < UMBRAL_ENERGIA_MINIMA));
 
     if (problemas.length > 0) {
-      const nombres = problemas
-        .map(j => `${j.nombre} (${j.sancionado ? 'sancionado' : 'lesionado'})`)
-        .join(', ');
-      const err = new Error(`Tu once tiene jugadores no disponibles: ${nombres}. Cámbialos en Tácticas.`);
+      const nombres = problemas.map(j => `${j.nombre} (${motivo(j)})`).join(', ');
+      const err = new Error(`Tu once tiene jugadores que no pueden jugar: ${nombres}. Cámbialos en Tácticas.`);
       err.codigo = 'ALINEACION_INVALIDA';
+      err.jugadores = problemas.map(j => ({ nombre: j.nombre, motivo: motivo(j) }));
       throw err;
     }
   }
@@ -125,8 +152,6 @@ async function simularSiguientePartido(equipoId) {
     }
   }
 
-  //HACER QUE HAYA LOCAL Y FUERA DE CASA Y HACER QUE SI TIENE MAS DE 5 AMARIULLAS, SE PERDA EL PROXIMO PARTIDO
-  //hACER QUE SI DESCONVOCO A ALGUIEN, ESTE DESAPAREZACA DE AL ALIEACION
 
   // Red de seguridad: sin alineación guardada (o incompleta), reparto automático como antes
   if (titulares.length < 7) {
@@ -389,18 +414,15 @@ async function simularSiguientePartido(equipoId) {
 
   const actualizacionesResistencia = todaLaPlantilla.map(jugador => {
     const jugo = idsTitulares.includes(jugador._id.toString());
-    let nuevaResistencia;
+    const recuperacion = calcularRecuperacion(jugador, diasDescanso, jugo);
 
-    if (jugo) {
-      const desgaste = Math.floor(Math.random() * 11) + 15; // entre 15 y 25
-      nuevaResistencia = Math.max(0, jugador.resistencia - desgaste);
-    } else {
-      const recuperacion = diasDescanso * 10;
-      nuevaResistencia = Math.min(100, jugador.resistencia + recuperacion);
-    }
+    let nuevaResistencia = jugo
+      ? jugador.resistencia + recuperacion - calcularDesgaste(jugador)
+      : jugador.resistencia + recuperacion;
 
+    nuevaResistencia = Math.max(0, Math.min(100, nuevaResistencia));
     return Jugador.findByIdAndUpdate(jugador._id, { resistencia: nuevaResistencia });
-  });
+  });;
 
   await Promise.all(actualizacionesResistencia);
 
@@ -548,7 +570,7 @@ async function simularSiguientePartido(equipoId) {
     premio,
     monedasActuales: usuarioActualizado.monedas,
     progresiones,
-    estadisticas,              // ← nuevo
+    estadisticas,              
     estadisticasPrimeraParte,
     goleadores: Object.entries(registrosGol).map(([id, goles]) => {
       const j = titulares.find(t => t._id.toString() === id);

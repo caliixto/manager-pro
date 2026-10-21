@@ -132,59 +132,59 @@ export class Dashboard {
   }
 
   //Titular Esquema Tactico
- cargarTitulares() {
-  this.tactica.obtenerAlineacion().subscribe({
-    next: (response) => {
-      const titulares = response.alineacion || [];
-      const formacion = response.formacion || '4-3-3';
+  cargarTitulares() {
+    this.tactica.obtenerAlineacion().subscribe({
+      next: (response) => {
+        const titulares = response.alineacion || [];
+        const formacion = response.formacion || '4-3-3';
 
-      if (titulares.length === 0) {
-        this.sugerirAlineacionAutomatica(formacion);
-      } else {
-        this.pintarEnCampo(titulares, formacion);
-        this.sinAlineacionGuardada.set(false);
-      }
-    },
-    error: (err) => console.error("Error al cargar la alineación en el dashboard", err)
-  });
-}
+        if (titulares.length === 0) {
+          this.sugerirAlineacionAutomatica(formacion);
+        } else {
+          this.pintarEnCampo(titulares, formacion);
+          this.sinAlineacionGuardada.set(false);
+        }
+      },
+      error: (err) => console.error("Error al cargar la alineación en el dashboard", err)
+    });
+  }
 
-sugerirAlineacionAutomatica(formacion: string) {
-  this.jugador.listarConEstadisticas().subscribe({
-    next: (res) => {
-      const jugadores = res.jugadores;
-      const porteros = jugadores.filter(j => j.posicion === 'POR');
-      const defensas = jugadores.filter(j => j.posicion === 'DEF');
-      const centros = jugadores.filter(j => j.posicion === 'CEN');
-      const delanteros = jugadores.filter(j => j.posicion === 'DEL');
+  sugerirAlineacionAutomatica(formacion: string) {
+    this.jugador.listarConEstadisticas().subscribe({
+      next: (res) => {
+        const jugadores = res.jugadores;
+        const porteros = jugadores.filter(j => j.posicion === 'POR');
+        const defensas = jugadores.filter(j => j.posicion === 'DEF');
+        const centros = jugadores.filter(j => j.posicion === 'CEN');
+        const delanteros = jugadores.filter(j => j.posicion === 'DEL');
 
-      const sugeridos = [
-        ...porteros.slice(0, 1),
-        ...defensas.slice(0, 4),
-        ...centros.slice(0, 3),
-        ...delanteros.slice(0, 3),
-      ];
+        const sugeridos = [
+          ...porteros.slice(0, 1),
+          ...defensas.slice(0, 4),
+          ...centros.slice(0, 3),
+          ...delanteros.slice(0, 3),
+        ];
 
-      this.pintarEnCampo(sugeridos, formacion);
-      this.sinAlineacionGuardada.set(true);
-    },
-    error: (err) => console.error("Error al sugerir alineación automática", err)
-  });
-}
+        this.pintarEnCampo(sugeridos, formacion);
+        this.sinAlineacionGuardada.set(true);
+      },
+      error: (err) => console.error("Error al sugerir alineación automática", err)
+    });
+  }
 
-// Convierte los slots (top/left en %) del catálogo de formaciones al SVG 300x450 del Dashboard
-pintarEnCampo(titulares: Jugador[], formacionId: string) {
-  const slots: SlotFormacion[] = FORMACIONES[formacionId] ?? FORMACIONES['4-3-3'];
+ // Convierte los slots (top/left en %) del catálogo de formaciones al SVG 300x450 del Dashboard
+  pintarEnCampo(titulares: Jugador[], formacionId: string) {
+    const slots: SlotFormacion[] = FORMACIONES[formacionId] ?? FORMACIONES['4-3-3'];
 
-  const combinados = slots.map((slot, index) => ({
-    x: (slot.left / 100) * 300,
-    y: (slot.top / 100) * 450,
-    isGoalkeeper: slot.posicion === 'POR',
-    jugador: titulares[index] || null,
-  }));
+    const combinados = slots.map((slot, index) => ({
+      x: (slot.left / 100) * 300,
+      y: (slot.top / 100) * 450,
+      isGoalkeeper: slot.posicion === 'POR',
+      jugador: titulares[index] || null,
+    }));
 
-  this.playersEnCampo.set(combinados);
-}
+    this.playersEnCampo.set(combinados);
+  }
  
   //Nombre Jugadores
   getNombreCorto(nombreCompleto: string): string {
@@ -192,34 +192,59 @@ pintarEnCampo(titulares: Jugador[], formacionId: string) {
   if (partes.length === 1) return partes[0];
   
   return `${partes[0]} ${partes[1][0]}.`;
-}
-
-irAConvocatoria() {
-  const partido = this.proximoPartido();
-  if (partido?._id) {
-    this.router.navigate(['/convocatoria', partido._id]);
   }
-}
 
-irATactica() {
-    this.router.navigate(['/tacticas']); //Hacer que los jugadores al estar cansados, no te deje jugar
-}
-
-simularPartido() {
-  this.simulando.set(true);
-  this.errorSimulacion.set(null);
-
-  this.partido.simularSiguientePartido().subscribe({
-    next: (res) => {
-      this.simulando.set(false);
-      this.partidoLive.iniciarPartido(res.resultado);
-      this.router.navigate(['/partido-en-vivo']);
-    },
-    error: (err) => {
-      this.errorSimulacion.set(err.error?.message ?? 'Error al simular el partido');
-      this.simulando.set(false);
+  irAConvocatoria() {
+    const partido = this.proximoPartido();
+    if (partido?._id) {
+      this.router.navigate(['/convocatoria', partido._id]);
     }
-  });
-}
+  }
+
+  irATactica() {
+      this.router.navigate(['/tacticas']); //Hacer que los jugadores al estar cansados, no te deje jugar
+  }
+
+  simularPartido() {
+    this.simulando.set(true);
+    this.errorSimulacion.set(null);
+
+    this.partido.simularSiguientePartido().subscribe({
+      next: (res) => {
+        this.simulando.set(false);
+        this.partidoLive.iniciarPartido(res.resultado);
+        this.router.navigate(['/partido-en-vivo']);
+      },
+      error: (err) => {
+      this.simulando.set(false);
+      const body = err.error;
+
+      if (body?.codigo === 'ALINEACION_INVALIDA') {
+        const lista = (body.jugadores ?? [])
+          .map((j: { nombre: string; motivo: string }) =>
+            `<li style="margin:6px 0"><b>${j.nombre}</b> — ${j.motivo}</li>`)
+          .join('');
+
+        Swal.fire({
+          icon: 'warning',
+          title: 'No puedes jugar el partido',
+          html: `<p>Hay jugadores en tu once que no pueden jugar:</p>
+                <ul style="text-align:left; list-style:none; padding:0">${lista}</ul>`,
+          showCancelButton: true,
+          confirmButtonText: 'Ir a Tácticas',
+          cancelButtonText: 'Cerrar',
+          confirmButtonColor: '#22c55e',
+          background: '#272C30',
+          color: '#ffffff'
+        }).then(r => {
+          if (r.isConfirmed) this.router.navigate(['/tacticas']);
+        });
+        return;
+      }
+
+      this.errorSimulacion.set(body?.message ?? 'Error al simular el partido');
+    },
+    });
+  }
 }
 
